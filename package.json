@@ -1,5 +1,5 @@
 {
-  "name": "nuxt-app",
+  "name": "aws-stuttgart-pickup-dates-service",
   "private": true,
   "type": "module",
   "scripts": {
