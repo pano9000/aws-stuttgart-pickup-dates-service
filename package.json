@@ -10,7 +10,12 @@
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
+    "got": "^14.4.1",
+    "luxon": "^3.4.4",
     "nuxt": "^3.12.3",
     "vue": "latest"
+  },
+  "devDependencies": {
+    "@types/luxon": "^3.4.2"
   }
 }
