@@ -6,33 +6,34 @@ import { z } from "zod";
 export default class AwsAPIClient {
   #apiUrl: URL;
   #got: Got;
-  hasAddressSet: boolean = false;
   #eventNames = new Map<AwsAPIRawResponseEventName,AwsAPIClientEventName>([
     ["Restmüll", "residual"],
     ["Biomüll", "organic"],
     ["Altpapier", "paper"],
     ["Gelber Sack", "recycle"],
-  ]);;
+  ]);
 
   constructor(apiUrl: string = process.env.AWSAPPENV_AWS_API_URL as string, gotClient: Got = defaultGot) {
     this.#got = gotClient;
     this.#apiUrl = new URL(apiUrl);
   }
 
-  async #executeRequest(operationId: string = ""): Promise<AwsAPIRawResponse> {
-    if (!this.hasAddressSet) {
-      throw new Error("No address set, please call setAddress first");
-    }
-    const response = await this.#got(this.#apiUrl).json() as AwsAPIRawResponse;
-    //TODO validate
-    return response;
+  async #executeRequest(streetname: string, streetno: string, operationId: string = ""): Promise<AwsAPIRawResponse> {
+    const requestUrl = new URL(this.#apiUrl);
+    requestUrl.searchParams.append("street", streetname);
+    requestUrl.searchParams.append("streetnr", streetno);
+    const response = await this.#got(requestUrl).json();
+    const validatedData = SchemaAwsAPIRawResponse.parse(response);
+    return validatedData;
   }
 
   #transformEvent(rawEvent: AwsAPIRawResponseEvent): AwsAPIClientEvent {
-    // TODO: get rid of "as"
+    const eventName = this.#eventNames.get(rawEvent.FRAKTION);
+    const date = DateTime.fromFormat(rawEvent.BASICDATE, "yyyyMMdd").toISODate();
+    if (!eventName || !date) throw new Error("Transforming event data failed due to unexpected data");
     return {
-      date: DateTime.fromFormat(rawEvent.BASICDATE, "yyyyMMdd").toISODate() as string,
-      name: this.#eventNames.get(rawEvent.FRAKTION) as AwsAPIClientEventName,
+      date: date,
+      name: eventName,
       frequency: rawEvent.TURNUS,
       irregularSchedule: !!rawEvent.VERSCHOBEN
     }
@@ -40,6 +41,7 @@ export default class AwsAPIClient {
 
 
   #transformDataUpcoming(apiData: AwsAPIRawResponse) {
+
     const groupedData = apiData.SERVLET.DIALOG.TERMINELIST.SERVICETYPES;
 
     const transformedData: AwsAPIClientResponseUpcoming = {
@@ -50,27 +52,19 @@ export default class AwsAPIClient {
       data: {
         // expecting data to be correctly sorted by API - should be checked, if that really is always the case
         // or just go the extra step and sort ourselves
-        residual: this.#transformEvent(groupedData.Restmüll.at(0) as AwsAPIRawResponseEvent),
-        organic: this.#transformEvent(groupedData.Biomüll.at(0) as AwsAPIRawResponseEvent),
-        paper: this.#transformEvent(groupedData.Altpapier.at(0) as AwsAPIRawResponseEvent),
-        recycle: this.#transformEvent(groupedData["Gelber Sack"].at(0) as AwsAPIRawResponseEvent)
+        residual: this.#transformEvent(groupedData.Restmüll[0]),
+        organic: this.#transformEvent(groupedData.Biomüll[0]),
+        paper: this.#transformEvent(groupedData.Altpapier[0]),
+        recycle: this.#transformEvent(groupedData["Gelber Sack"][0])
       }
     }
-
 
     return transformedData;
   }
 
-  setAddress(streetname: string, streetno: string) {
-    this.#apiUrl.searchParams.append("street", streetname);
-    this.#apiUrl.searchParams.append("streetnr", streetno);
-    this.hasAddressSet = true;
-    return this
-  }
-
-  async getRaw(operationId: string = ""): Promise<AwsAPIRawResponse> {
+  async getRaw(streetname: string, streetno: string, operationId: string = ""): Promise<AwsAPIRawResponse> {
     try {
-      const data = await this.#executeRequest();
+      const data = await this.#executeRequest(streetname, streetno);
       return data
     } catch(error) {
       console.log(error)
@@ -78,10 +72,10 @@ export default class AwsAPIClient {
     }
   }
 /*
-  async getAll(operationId: string = ""): Promise<AwsAPIClientResponseAll> {
+  async getAll(streetname: string, streetno: string, operationId: string = ""): Promise<AwsAPIClientResponseAll> {
 
     try {
-      const data = await this.#executeRequest();
+      const data = await this.#executeRequest(streetname, streetno);
       return data.SERVLET.DIALOG.TERMINELIST.SERVICETYPES
     } catch(error) {
       console.log(error)
@@ -91,11 +85,11 @@ export default class AwsAPIClient {
   }
   */
 
-  async getUpcoming(operationId: string = ""): Promise<AwsAPIClientResponseUpcoming> {
+  async getUpcoming(streetname: string, streetno: string, operationId: string = ""): Promise<AwsAPIClientResponseUpcoming> {
 
     try {
-      const data = await this.#executeRequest();
-      const transformedData = this.#transformDataUpcoming(data);
+      const apiData = await this.#executeRequest(streetname, streetno);
+      const transformedData = this.#transformDataUpcoming(apiData);
 
       return transformedData
     } catch(error) {
@@ -106,6 +100,7 @@ export default class AwsAPIClient {
 
 }
 
+export const awsAPIClient = new AwsAPIClient();
 
 type AwsAPIClientResponseInformation = {
   streetname: string;
