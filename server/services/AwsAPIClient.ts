@@ -1,6 +1,7 @@
 import { got as defaultGot } from "got";
 import type {Got} from "got";
 import { DateTime } from "luxon";
+import { z } from "zod";
 
 export default class AwsAPIClient {
   #apiUrl: URL;
@@ -105,93 +106,6 @@ export default class AwsAPIClient {
 
 }
 
-interface AwsAPIRawResponseEvent {
-  /** dd.MM.YYYY format */
-  DATE: string;
-
-  /** unknown, but type seem to be mixed, e.g. Restmüll sometimes is 0001, 0003, 1  */
-  TYPE: "0" | "1" | "2" | "0001" | "0003" | "",
-
-  /** yyyyMMdd format */
-  BASICDATE: string;
-
-  /** '' when event is in regular schedule, or '*' when event takes place out of its regular schedule, e.g. due to holidays or similar */
-  VERSCHOBEN: "" | "*";
-
-  /** Type of pickup event */
-  FRAKTION: "Altpapier" | "Biomüll" | "Gelber Sack" | "Restmüll";
-
-  /** Schedule of the event: weekly, bi-weekly or tri-weekly */
-  TURNUS: "01-wöchentl." | "02-wöchentl." | "03-wöchentl.";
-
-  /** unknown, currently always empty */
-  TONNENGRUPPE: string;
-
-  /** unknown remark of some sorts, currently always empty */
-  BEMERK: string;
-
-  /** German localized date string 'DDDD', e.g. "Montag, 12. August 2024" */
-  FULLDATE: string;
-
-  /** German localized date string 'cccc' */
-  WEEKDAY: "Montag" | "Dienstag" | "Mittwoch" | "Donnerstag" | "Freitag";
-}
-
-type AwsAPIRawResponseEventName = "Restmüll" | "Biomüll" | "Altpapier" | "Gelber Sack";
-
-interface AwsAPIRawResponse {
-  SERVLET: {
-    SESSIONDATA: {
-      APPLICATIONNAME: string;
-      BUILD: string;
-      MODULNAME: string;
-      SESSIONID: string;
-    }
-    DIALOG: {
-      TERMINELIST: {
-        /** Array of AwsAPIRawResponseEvent ordered by Servicetype first then date */
-        TERMIN: AwsAPIRawResponseEvent[],
-        SERVICETYPES: {
-          [key in AwsAPIRawResponseEventName]: AwsAPIRawResponseEvent[]
-        }
-      },
-      LOCATION: {
-        "IDSTANDORT": string;
-        "STANDORT": string;
-        "ID": number;
-        "TYPE": "Adresse" | string;
-        "NAME": string;
-        "CX": number;
-        "CY": number;
-        "XMIN": number;
-        "YMIN": number;
-        "XMAX": number;
-        "YMAX": number;
-        "STRASSENSCHLUESSEL": string;
-        "STRASSENNAME": string;
-        "HAUSNUMMER": string;
-        "MRID": string;
-        "UUID": string;
-        "GBE_POLIZEIR_NAME": string;
-        "GBE_POLIZEIR_REV_ID": string;
-        "DIESEL_VVZ_KLEIN": "JA" | "NEIN";
-        "N": string;
-        "Q": string;
-        "S": string;
-        "ADRESSE_STADTTEIL": string;
-        "ADRESSE_STADTTEILNR": string;
-        "ADRESSE_STADTBEZIRK": string;
-        "ADRESSE_STADTBEZIRKNR": string;
-        "ADRESSE_POSTLEITZAHL": string;
-        "ADRESSE_GEMEINDENAME": string;
-        "ADRESSE_STADTVIERTELNR": string;
-        "ADRESSE_BAUBLOCKNR": string;
-        "ADRESSE_BAUBLOCKSEITENR": string;
-      }
-    }
-  }
-
-}
 
 type AwsAPIClientResponseInformation = {
   streetname: string;
@@ -228,5 +142,99 @@ interface AwsAPIClientEvent {
 
   irregularSchedule: boolean;
 
-
 }
+
+const SchemaAwsAPIRawResponseEvent = z.object({
+  /** dd.MM.YYYY format */
+  DATE: z.string(),
+
+  /** unknown, but type seem to be mixed, e.g. Restmüll sometimes is 0001, 0003, 1  */
+  TYPE: z.enum(["0", "1", "2", "0001", "0003", ""]),
+
+  /** yyyyMMdd format */
+  BASICDATE: z.custom(),
+
+  /** '' when event is in regular schedule, or '*' when event takes place out of its regular schedule, e.g. due to holidays or similar */
+  VERSCHOBEN: z.union([z.literal(""), z.literal("*")]),
+
+  /** Type of pickup event */
+  FRAKTION: z.enum(["Altpapier", "Biomüll", "Gelber Sack", "Restmüll"]),
+
+  /** Schedule of the event: weekly, bi-weekly or tri-weekly */
+  TURNUS: z.enum(["01-wöchentl.", "02-wöchentl.", "03-wöchentl."]),
+
+  /** unknown, currently always empty */
+  TONNENGRUPPE: z.string(),
+
+  /** unknown remark of some sorts, currently always empty */
+  BEMERK: z.string().optional(),
+
+  /** German localized date string 'DDDD', e.g. "Montag, 12. August 2024" */
+  FULLDATE: z.string(),
+
+  /** German localized date string 'cccc' */
+  WEEKDAY: z.enum(["Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag"])
+});
+
+const SchemaAwsAPIRawResponseEventName = z.enum(["Restmüll", "Biomüll", "Altpapier", "Gelber Sack"]);
+
+const SchemaAwsAPIRawResponse = z.object({
+  SERVLET: z.object({
+    SESSIONDATA: z.object({
+      APPLICATIONNAME: z.string(),
+      BUILD: z.string(),
+      MODULNAME: z.string(),
+      SESSIONID: z.string(),
+    }),
+    DIALOG: z.object({
+      TERMINELIST: z.object({
+        TERMIN: z.array(SchemaAwsAPIRawResponseEvent),
+        SERVICETYPES: z.object({
+          "Restmüll": z.array(SchemaAwsAPIRawResponseEvent),
+          "Biomüll": z.array(SchemaAwsAPIRawResponseEvent),
+          "Altpapier": z.array(SchemaAwsAPIRawResponseEvent),
+          "Gelber Sack": z.array(SchemaAwsAPIRawResponseEvent)
+        })
+      }),
+      LOCATION: z.object({
+        "IDSTANDORT": z.string(),
+        "STANDORT": z.string(),
+        "ID": z.number(),
+        "TYPE": z.union([z.literal("Adresse"), z.string()]),
+        "NAME": z.string(),
+        "CX": z.number(),
+        "CY": z.number(),
+        "XMIN": z.number(),
+        "YMIN": z.number(),
+        "XMAX": z.number(),
+        "YMAX": z.number(),
+        "STRASSENSCHLUESSEL": z.string(),
+        "STRASSENNAME": z.string(),
+        "HAUSNUMMER": z.string(),
+        "MRID": z.string(),
+        "UUID": z.string(),
+        "GBE_POLIZEIR_NAME": z.string(),
+        "GBE_POLIZEIR_REV_ID": z.string(),
+        "DIESEL_VVZ_KLEIN": z.enum(["JA", "NEIN"]),
+        "N": z.string(),
+        "Q": z.string(),
+        "S": z.string(),
+        "ADRESSE_STADTTEIL": z.string(),
+        "ADRESSE_STADTTEILNR": z.string(),
+        "ADRESSE_STADTBEZIRK": z.string(),
+        "ADRESSE_STADTBEZIRKNR": z.string(),
+        "ADRESSE_POSTLEITZAHL": z.string(),
+        "ADRESSE_GEMEINDENAME": z.string(),
+        "ADRESSE_STADTVIERTELNR": z.string(),
+        "ADRESSE_BAUBLOCKNR": z.string(),
+        "ADRESSE_BAUBLOCKSEITENR": z.string(),
+      })
+
+    })
+
+  })
+});
+
+export type AwsAPIRawResponseEventName = z.infer<typeof SchemaAwsAPIRawResponseEventName>;
+export type AwsAPIRawResponse = z.infer<typeof SchemaAwsAPIRawResponse>;
+export type AwsAPIRawResponseEvent = z.infer<typeof SchemaAwsAPIRawResponseEvent>;
