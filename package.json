@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "got": "^14.4.1",
+    "ioredis": "^5.4.1",
     "luxon": "^3.4.4",
     "nuxt": "^3.12.3",
     "vue": "latest",
