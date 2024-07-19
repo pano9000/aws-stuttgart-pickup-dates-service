@@ -1,50 +1,104 @@
-import { got as defaultGot } from "got";
+import { got as defaultGot, HTTPError } from "got";
 import type {Got} from "got";
 import { DateTime } from "luxon";
-import { z } from "zod";
+import { z, ZodError } from "zod";
 
-export default class AwsAPIClient {
+/**
+ * Service to fetch, validate and transform data from the AWS Stuttgart API
+ */
+export default class AwsApiService {
   #apiUrl: URL;
   #got: Got;
-  #eventNames = new Map<AwsAPIRawResponseEventName,AwsAPIClientEventName>([
+  #logger: Console;
+  #typeNames = new Map<AwsApiRawResponseEventTypeName,AwsApiServiceEventTypeName>([
     ["Restmüll", "residual"],
     ["Biomüll", "organic"],
     ["Altpapier", "paper"],
     ["Gelber Sack", "recycle"],
   ]);
+  #scheduleNames = new Map<AwsApiRawResponseEventScheduleType, AwsApiServiceEventScheduleName>([
+    ["01-wöchentl.", "W1"],
+    ["02-wöchentl.", "W2"],
+    ["03-wöchentl.", "W3"]
+  ]);
 
-  constructor(apiUrl: string = process.env.AWSAPPENV_AWS_API_URL as string, gotClient: Got = defaultGot) {
+  constructor(apiUrl: string = process.env.AWSAPPENV_AWS_API_URL as string, gotClient: Got = defaultGot, logger: Console = console) {
     this.#got = gotClient;
     this.#apiUrl = new URL(apiUrl);
+    this.#logger = logger;
   }
 
-  async #executeRequest(streetname: string, streetno: string, operationId: string = ""): Promise<AwsAPIRawResponse> {
+  async #executeRequest(streetname: string, streetno: string, operationId: string = ""): Promise<AwsApiRawResponse> {
     const requestUrl = new URL(this.#apiUrl);
     requestUrl.searchParams.append("street", streetname);
     requestUrl.searchParams.append("streetnr", streetno);
     const response = await this.#got(requestUrl).json();
-    const validatedData = SchemaAwsAPIRawResponse.parse(response);
+    const validatedData = SchemaAwsApiRawResponse.parse(response);
     return validatedData;
   }
 
-  #transformEvent(rawEvent: AwsAPIRawResponseEvent): AwsAPIClientEvent {
-    const eventName = this.#eventNames.get(rawEvent.FRAKTION);
+  #getHandledError(error: unknown) {
+      //@TODO handle errors
+
+    if (error instanceof ZodError) {
+      this.#logger.error("Zod  error handled")
+      return error
+    }
+    else if(error instanceof HTTPError) {
+      this.#logger.error("HTTP  error handled")
+      return error
+    } else if(error instanceof Error) {
+      this.#logger.error("generic error handled")
+      return error
+    } else {
+      this.#logger.error("other error handled - this shouldn't technically occur")
+
+      return error
+    }
+  }
+
+  #transformEvent(rawEvent: AwsApiRawResponseEvent): AwsApiServiceEvent {
+    const eventName = this.#typeNames.get(rawEvent.FRAKTION);
+    const scheduleName = this.#scheduleNames.get(rawEvent.TURNUS);
     const date = DateTime.fromFormat(rawEvent.BASICDATE, "yyyyMMdd").toISODate();
-    if (!eventName || !date) throw new Error("Transforming event data failed due to unexpected data");
+    if (!eventName || !date || !scheduleName) throw new Error("Transforming event data failed due to unexpected data");
+
     return {
       date: date,
-      name: eventName,
-      frequency: rawEvent.TURNUS,
+      unixDate: DateTime.fromISO(date, {zone: "utc"}).toUnixInteger(),
+      type: eventName,
+      schedule: scheduleName,
       irregularSchedule: !!rawEvent.VERSCHOBEN
     }
   }
 
+  #transformDataAll(apiData: AwsApiRawResponse) {
+    const apiEventData = apiData.SERVLET.DIALOG.TERMINELIST.TERMIN;
+    const transformedEvents = apiEventData.map(event => this.#transformEvent(event));
 
-  #transformDataUpcoming(apiData: AwsAPIRawResponse) {
+    //lexicographical order by date earliest to last
+    transformedEvents.sort((a, b) => {
+      if (a.date > b.date) return 1;
+      if (a.date < b.date) return -1;
+      return 0
+    })
+
+    return {
+      information: {
+        streetname: apiData.SERVLET.DIALOG.LOCATION.STRASSENNAME,
+        streetno: apiData.SERVLET.DIALOG.LOCATION.HAUSNUMMER
+      },
+      data: transformedEvents
+    }
+
+  }
+
+/*
+  #transformDataUpcoming(apiData: AwsApiRawResponse) {
 
     const groupedData = apiData.SERVLET.DIALOG.TERMINELIST.SERVICETYPES;
 
-    const transformedData: AwsAPIClientResponseUpcoming = {
+    const transformedData: AwsApiServiceResponseUpcoming = {
       information: {
         streetname: apiData.SERVLET.DIALOG.LOCATION.STRASSENNAME,
         streetno: apiData.SERVLET.DIALOG.LOCATION.HAUSNUMMER
@@ -61,31 +115,28 @@ export default class AwsAPIClient {
 
     return transformedData;
   }
-
-  async getRaw(streetname: string, streetno: string, operationId: string = ""): Promise<AwsAPIRawResponse> {
+*/
+  async getRaw(streetname: string, streetno: string, operationId: string = ""): Promise<AwsApiRawResponse> {
     try {
-      const data = await this.#executeRequest(streetname, streetno);
-      return data
+      const apiData = await this.#executeRequest(streetname, streetno);
+      return apiData
     } catch(error) {
-      console.log(error)
-      throw error
+      throw this.#getHandledError(error)
     }
   }
+
+  async getAll(streetname: string, streetno: string, operationId: string = ""): Promise<AwsApiServiceResponseAll> {
+
+    try {
+      const apiData = await this.#executeRequest(streetname, streetno);
+      return this.#transformDataAll(apiData);
+    } catch(error) {
+      throw this.#getHandledError(error)
+    }
+  }
+
 /*
-  async getAll(streetname: string, streetno: string, operationId: string = ""): Promise<AwsAPIClientResponseAll> {
-
-    try {
-      const data = await this.#executeRequest(streetname, streetno);
-      return data.SERVLET.DIALOG.TERMINELIST.SERVICETYPES
-    } catch(error) {
-      console.log(error)
-      throw error
-    }
-
-  }
-  */
-
-  async getUpcoming(streetname: string, streetno: string, operationId: string = ""): Promise<AwsAPIClientResponseUpcoming> {
+  async getUpcoming(streetname: string, streetno: string, operationId: string = ""): Promise<AwsApiServiceResponseUpcoming> {
 
     try {
       const apiData = await this.#executeRequest(streetname, streetno);
@@ -93,70 +144,76 @@ export default class AwsAPIClient {
 
       return transformedData
     } catch(error) {
-
+      console.log(error)
       throw error
     }
   }
-
+*/
 }
 
-export const awsAPIClient = new AwsAPIClient();
+export const awsApiService = new AwsApiService();
 
-type AwsAPIClientResponseInformation = {
+
+
+
+type AwsApiServiceResponseUpcomingData = {
+  [key in AwsApiServiceEventTypeName]: AwsApiServiceEvent
+}
+
+export type AwsApiServiceResponseInformation = {
   streetname: string;
   streetno: string;
 }
 
-type AwsAPIClientResponseUpcomingData = {
-  [key in AwsAPIClientEventName]: AwsAPIClientEvent
-}
-
-interface AwsAPIClientResponse {
-  information: AwsAPIClientResponseInformation;
+interface AwsApiServiceResponse {
+  information: AwsApiServiceResponseInformation;
   data: any;
 }
 
-interface AwsAPIClientResponseUpcoming extends AwsAPIClientResponse {
-  data: AwsAPIClientResponseUpcomingData
+interface AwsApiServiceResponseUpcoming extends AwsApiServiceResponse {
+  data: AwsApiServiceResponseUpcomingData
 }
 
-interface AwsAPIClientResponseAll extends AwsAPIClientResponse {
-  data: AwsAPIClientEvent[]
+interface AwsApiServiceResponseAll extends AwsApiServiceResponse {
+  data: AwsApiServiceEvent[]
 }
 
-type AwsAPIClientEventName = "residual" | "organic" | "paper" | "recycle";
+export type AwsApiServiceEventTypeName = "residual" | "organic" | "paper" | "recycle";
 
-interface AwsAPIClientEvent {
+/** weekly, bi-weekly or tri-weekly schedule codes */
+export type AwsApiServiceEventScheduleName = "W1" | "W2" | "W3";
 
-  /** in yyyy-MM-dd format */
+interface AwsApiServiceEvent {
+
+  /** date in yyyy-MM-dd format */
   date: string;
-
-  name: AwsAPIClientEventName;
-
-  frequency: string;
-
+  unixDate: number;
+  type: AwsApiServiceEventTypeName;
+  schedule: AwsApiServiceEventScheduleName;
   irregularSchedule: boolean;
-
 }
 
-const SchemaAwsAPIRawResponseEvent = z.object({
-  /** dd.MM.YYYY format */
-  DATE: z.string(),
+const SchemaAwsApiRawResponseEventTypeName = z.enum([ "Altpapier", "Biomüll", "Gelber Sack", "Restmüll"]);
+const SchemaAwsApiRawResponseEventScheduleType = z.enum(["01-wöchentl.", "02-wöchentl.", "03-wöchentl."]);
 
-  /** unknown, but type seem to be mixed, e.g. Restmüll sometimes is 0001, 0003, 1  */
+const SchemaAwsApiRawResponseEvent = z.object({
+  /** dd.MM.YYYY format */
+  DATE: z.string(), //@TODO add custom validator
+
+  /** unknown, but type seem to be mixed, e.g. Restmüll sometimes is 0001, 0003, 1 || does it have to do with schedule maybe? */
   TYPE: z.enum(["0", "1", "2", "0001", "0003", ""]),
 
   /** yyyyMMdd format */
-  BASICDATE: z.custom(),
+  BASICDATE: z.string(), //@TODO add custom validator
 
   /** '' when event is in regular schedule, or '*' when event takes place out of its regular schedule, e.g. due to holidays or similar */
   VERSCHOBEN: z.union([z.literal(""), z.literal("*")]),
 
   /** Type of pickup event */
-  FRAKTION: z.enum(["Altpapier", "Biomüll", "Gelber Sack", "Restmüll"]),
+  FRAKTION: SchemaAwsApiRawResponseEventTypeName,
 
   /** Schedule of the event: weekly, bi-weekly or tri-weekly */
-  TURNUS: z.enum(["01-wöchentl.", "02-wöchentl.", "03-wöchentl."]),
+  TURNUS: SchemaAwsApiRawResponseEventScheduleType,
 
   /** unknown, currently always empty */
   TONNENGRUPPE: z.string(),
@@ -171,9 +228,7 @@ const SchemaAwsAPIRawResponseEvent = z.object({
   WEEKDAY: z.enum(["Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag"])
 });
 
-const SchemaAwsAPIRawResponseEventName = z.enum(["Restmüll", "Biomüll", "Altpapier", "Gelber Sack"]);
-
-const SchemaAwsAPIRawResponse = z.object({
+const SchemaAwsApiRawResponse = z.object({
   SERVLET: z.object({
     SESSIONDATA: z.object({
       APPLICATIONNAME: z.string(),
@@ -183,12 +238,12 @@ const SchemaAwsAPIRawResponse = z.object({
     }),
     DIALOG: z.object({
       TERMINELIST: z.object({
-        TERMIN: z.array(SchemaAwsAPIRawResponseEvent),
+        TERMIN: z.array(SchemaAwsApiRawResponseEvent),
         SERVICETYPES: z.object({
-          "Restmüll": z.array(SchemaAwsAPIRawResponseEvent),
-          "Biomüll": z.array(SchemaAwsAPIRawResponseEvent),
-          "Altpapier": z.array(SchemaAwsAPIRawResponseEvent),
-          "Gelber Sack": z.array(SchemaAwsAPIRawResponseEvent)
+          "Restmüll": z.array(SchemaAwsApiRawResponseEvent),
+          "Biomüll": z.array(SchemaAwsApiRawResponseEvent),
+          "Altpapier": z.array(SchemaAwsApiRawResponseEvent),
+          "Gelber Sack": z.array(SchemaAwsApiRawResponseEvent)
         })
       }),
       LOCATION: z.object({
@@ -230,6 +285,7 @@ const SchemaAwsAPIRawResponse = z.object({
   })
 });
 
-export type AwsAPIRawResponseEventName = z.infer<typeof SchemaAwsAPIRawResponseEventName>;
-export type AwsAPIRawResponse = z.infer<typeof SchemaAwsAPIRawResponse>;
-export type AwsAPIRawResponseEvent = z.infer<typeof SchemaAwsAPIRawResponseEvent>;
+export type AwsApiRawResponseEventTypeName = z.infer<typeof SchemaAwsApiRawResponseEventTypeName>;
+export type AwsApiRawResponse = z.infer<typeof SchemaAwsApiRawResponse>;
+export type AwsApiRawResponseEvent = z.infer<typeof SchemaAwsApiRawResponseEvent>;
+export type AwsApiRawResponseEventScheduleType = z.infer<typeof SchemaAwsApiRawResponseEventScheduleType>;
