@@ -8,7 +8,9 @@
     "mockapi": "node ./mocks/apiMock.js",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
-    "postinstall": "nuxt prepare"
+    "postinstall": "nuxt prepare",
+    "test": "vitest",
+    "testAndCoverage": "vitest run --coverage"
   },
   "dependencies": {
     "got": "^14.4.1",
