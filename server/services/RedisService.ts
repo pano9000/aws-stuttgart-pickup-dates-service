@@ -14,6 +14,36 @@ export class RedisService {
 
   }
 
+  async jsonGET(key: string, filter?: string) {
+    try {
+      if (filter) {
+        //@TODO implement
+        return null;
+      }
+      const result = await this.#client.call("JSON.GET", key);
+      //@TODO validate and error handle
+      return result
+    }
+    catch(error) {
+
+    }
+  }
+
+  //@TODO: check if there is a type for "JSON parseable thing"?
+  async jsonSET(key: string, value: any) {
+    try {
+      const result = await this.#client.call("JSON.SET", key, "$", JSON.stringify(value))
+      //@TODO validate and error handle
+      return result
+    }
+    catch(error) {
+      console.error(error)
+    }
+  }
+
+}
+
+
 export default new RedisService({
   port: +(process.env.AWSAPPENV_REDIS_SERVER_PORT as string),
   host: process.env.AWSAPPENV_REDIS_SERVER_HOST as string,
