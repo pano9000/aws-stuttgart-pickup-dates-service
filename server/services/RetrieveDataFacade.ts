@@ -1,4 +1,4 @@
-import type AwsApiService from "./AwsApiService";
+import type AwsApiService from "./AwsApiService.ts";
 import { awsApiService as defaultAwsApiService } from "./AwsApiService";
 import { RedisService, default as defaultRedisService } from "./RedisService";
 
