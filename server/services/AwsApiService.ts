@@ -183,15 +183,25 @@ export type AwsApiServiceEventTypeName = "residual" | "organic" | "paper" | "rec
 /** weekly, bi-weekly or tri-weekly schedule codes */
 export type AwsApiServiceEventScheduleName = "W1" | "W2" | "W3";
 
-interface AwsApiServiceEvent {
+export const SchemaAwsApiServiceEvent = z.object({
+  date: z.string().describe("date in yyyy-MM-dd format"),
+  unixDate: z.number(),
+  type: z.custom<AwsApiServiceEventTypeName>(),
+  schedule: z.custom<AwsApiServiceEventScheduleName>(),
+  irregularSchedule: z.boolean()
+})
 
-  /** date in yyyy-MM-dd format */
-  date: string;
-  unixDate: number;
-  type: AwsApiServiceEventTypeName;
-  schedule: AwsApiServiceEventScheduleName;
-  irregularSchedule: boolean;
-}
+
+const SchemaAwsApiServiceResponseInformation = z.object({
+  streetname: z.string(),
+  streetno: z.string()
+});
+
+export const SchemaAwsApiServiceResponseAll = z.object({
+  information: SchemaAwsApiServiceResponseInformation,
+  data: z.array(SchemaAwsApiServiceEvent)
+})
+
 
 const SchemaAwsApiRawResponseEventTypeName = z.enum([ "Altpapier", "Biomüll", "Gelber Sack", "Restmüll"]);
 const SchemaAwsApiRawResponseEventScheduleType = z.enum(["01-wöchentl.", "02-wöchentl.", "03-wöchentl."]);
@@ -289,3 +299,5 @@ export type AwsApiRawResponseEventTypeName = z.infer<typeof SchemaAwsApiRawRespo
 export type AwsApiRawResponse = z.infer<typeof SchemaAwsApiRawResponse>;
 export type AwsApiRawResponseEvent = z.infer<typeof SchemaAwsApiRawResponseEvent>;
 export type AwsApiRawResponseEventScheduleType = z.infer<typeof SchemaAwsApiRawResponseEventScheduleType>;
+
+export type AwsApiServiceEvent = z.infer<typeof SchemaAwsApiServiceEvent>;
