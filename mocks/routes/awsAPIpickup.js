@@ -3,7 +3,7 @@
 // https://mocks-server.org/docs/usage/routes
 
 //w 200 status
-const awsPickupDataSuccess = {
+export const awsPickupDataSuccess = {
   "SERVLET": {
     "SESSIONDATA": {
       "APPLICATIONNAME": "Abfuhrtermine",
@@ -2004,7 +2004,7 @@ const awsPickupDataSuccess = {
 }
 
 //with 404 status
-const awsPickupDataNonExisting = {
+export const awsPickupDataNonExisting = {
   "message": "Es wurde keine StandortID angegeben",
   "success": false,
   "errors": [
@@ -2015,7 +2015,7 @@ const awsPickupDataNonExisting = {
   ]
 };
 
-const awsPickupDataWrongUrlParam = {"message":"Fehlende Pflichtangaben!","success":false,"errors":[{"code":3130,"message":"Fehlende Pflichtangaben!"}]}
+export const awsPickupDataWrongUrlParam = {"message":"Fehlende Pflichtangaben!","success":false,"errors":[{"code":3130,"message":"Fehlende Pflichtangaben!"}]}
 
 //https://service.stuttgart.de/lhs-services/aws/api/
 export default [
