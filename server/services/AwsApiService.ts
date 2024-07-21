@@ -2,6 +2,7 @@ import { got as defaultGot, HTTPError } from "got";
 import type {Got} from "got";
 import { DateTime } from "luxon";
 import { z, ZodError } from "zod";
+import { AwsApiServiceError } from "./AwsApiServiceError";
 
 /**
  * Service to fetch, validate and transform data from the AWS Stuttgart API
@@ -37,23 +38,23 @@ export default class AwsApiService {
     return validatedData;
   }
 
-  #getHandledError(error: unknown) {
-      //@TODO handle errors
+  #getHandledError(error: unknown): AwsApiServiceError {
 
     if (error instanceof ZodError) {
-      this.#logger.error("Zod  error handled")
-      return error
+      return new AwsApiServiceError("validation", error);
     }
-    else if(error instanceof HTTPError) {
-      this.#logger.error("HTTP  error handled")
-      return error
-    } else if(error instanceof Error) {
-      this.#logger.error("generic error handled")
-      return error
-    } else {
-      this.#logger.error("other error handled - this shouldn't technically occur")
 
-      return error
+    else if(error instanceof HTTPError) {
+      return new AwsApiServiceError("http", error);
+    }
+
+    else if(error instanceof Error) {
+      return new AwsApiServiceError("generic", error);
+    }
+
+    else {
+      // error that is not an instance of Error -> that shouldn't be possible, but handle anyways
+      return new AwsApiServiceError("generic", error);
     }
   }
 
