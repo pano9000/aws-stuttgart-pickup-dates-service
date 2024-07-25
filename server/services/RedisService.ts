@@ -22,11 +22,12 @@ export class RedisService {
         // two calls, because otherwise redis behaves weird and makes us do extra work to transform the data back to its original state
         // e.g. return information as array, and renames the data property to the used filter...
         let resultInformation = await this.#client.call("JSON.GET", key, "information") as string;
-        if (typeof resultInformation !== "string" && resultInformation !== null) throw new Error(`Received back an unexpected type of data. Expected string or null, but got ${typeof resultInformation}`)
+        if (resultInformation === null) return null; // item not found -> exit early
+        if (typeof resultInformation !== "string") throw new Error(`Received back an unexpected type of data. Expected string or null, but got ${typeof resultInformation}`);
 
         let resultData = await this.#client.call("JSON.GET", key, filter) as string;
-        if (typeof resultData !== "string" && resultData !== null) throw new Error(`Received back an unexpected type of data. Expected string or null, but got ${typeof resultData}`)
-
+        if (resultData === null) return null; // item not found -> exit early
+        if (typeof resultData !== "string") throw new Error(`Received back an unexpected type of data. Expected string or null, but got ${typeof resultData}`);
 
         const output = {
           information: JSON.parse(resultInformation),
