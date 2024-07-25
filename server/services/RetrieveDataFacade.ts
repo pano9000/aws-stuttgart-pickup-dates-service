@@ -1,5 +1,7 @@
 import { AwsApiService, awsApiService as defaultAwsApiService, SchemaAwsApiServiceResponseAll } from "./AwsApiService";
+import type { AwsApiServiceResponseAll } from "./AwsApiService"
 import { RedisService, redisService as defaultRedisService } from "./RedisService";
+import { DateTime } from "luxon";
 
 
 export class RetrieveDataFacade {
@@ -24,6 +26,22 @@ export class RetrieveDataFacade {
 
     const validatedRedisResult = SchemaAwsApiServiceResponseAll.parse(redisResult)
     return validatedRedisResult;
+  }
+
+  async getRemaining(streetname: string, streetno: string, operationId: string = ""): Promise<AwsApiServiceResponseAll> {
+    const redisKey = this.redisService.getRedisKey(streetname, streetno);
+    const currentDate = DateTime.now().toFormat("yyyy-MM-dd");
+    const filterString = `(@.date >= '${currentDate}')`;
+    const redisResult = await this.redisService.jsonGET(redisKey, `$.data[?${filterString}]`);
+
+    if (!redisResult) {
+      await this.#refetchFromAwsApi(streetname, streetno);
+      return await this.getRemaining(streetname, streetno);
+    }
+
+    const validatedRedisResult = SchemaAwsApiServiceResponseAll.parse(redisResult)
+    return validatedRedisResult;
+
   }
 
   // Fetch Full Data from AWS Stuttgart API and store in our redis DB, throws an error if anything goes wrong in any step
