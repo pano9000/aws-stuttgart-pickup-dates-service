@@ -15,7 +15,7 @@ export class RetrieveDataFacade {
   }
 
 
-  async getAll(streetname: string, streetno: string, operationId: string = ""): Promise<any> {
+  async getAll(streetname: string, streetno: string, operationId: string = ""): Promise<AwsApiServiceResponseAll> {
     const redisKey = this.redisService.getRedisKey(streetname, streetno);
     const redisResult = await this.redisService.jsonGET(redisKey)
 
