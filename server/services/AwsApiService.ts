@@ -175,9 +175,6 @@ interface AwsApiServiceResponseUpcoming extends AwsApiServiceResponse {
   data: AwsApiServiceResponseUpcomingData
 }
 
-interface AwsApiServiceResponseAll extends AwsApiServiceResponse {
-  data: AwsApiServiceEvent[]
-}
 
 export const SchemaAwsApiServiceEventTypeName = z.enum(["residual", "organic", "paper", "recycle"]);
 export type AwsApiServiceEventTypeName = z.infer<typeof SchemaAwsApiServiceEventTypeName>;
@@ -296,6 +293,8 @@ const SchemaAwsApiRawResponse = z.object({
 
   })
 });
+
+export type AwsApiServiceResponseAll = z.infer<typeof SchemaAwsApiServiceResponseAll>;
 
 export type AwsApiRawResponseEventTypeName = z.infer<typeof SchemaAwsApiRawResponseEventTypeName>;
 export type AwsApiRawResponse = z.infer<typeof SchemaAwsApiRawResponse>;
