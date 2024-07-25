@@ -1,6 +1,5 @@
-import type AwsApiService from "./AwsApiService.ts";
-import { awsApiService as defaultAwsApiService } from "./AwsApiService";
-import { RedisService, default as defaultRedisService } from "./RedisService";
+import { AwsApiService, awsApiService as defaultAwsApiService } from "./AwsApiService";
+import { RedisService, redisService as defaultRedisService } from "./RedisService";
 
 
 export class RetrieveDataFacade {
