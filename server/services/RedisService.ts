@@ -1,5 +1,6 @@
-import { Redis } from "ioredis";
+import { Redis, ReplyError } from "ioredis";
 import type { RedisOptions } from "ioredis";
+
 export class RedisService {
 
   #client: Redis;
@@ -25,7 +26,22 @@ export class RedisService {
       return result
     }
     catch(error) {
+      //@TODO implement error handling
 
+      if (error instanceof ReplyError) {
+        console.error("redis error", error)
+        throw error
+      }
+
+      else if (error instanceof Error) {
+        console.error("redis error other", error)
+        throw error
+      }
+
+      else {
+        console.error("redis unknown other error", error)
+        throw error
+      }
     }
   }
 
