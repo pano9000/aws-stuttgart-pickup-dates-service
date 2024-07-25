@@ -59,8 +59,7 @@ export class RedisService {
 
 }
 
-
-export default new RedisService({
+export const redisService = new RedisService({
   port: +(process.env.AWSAPPENV_REDIS_SERVER_PORT as string),
   host: process.env.AWSAPPENV_REDIS_SERVER_HOST as string,
   password: process.env.AWSAPPENV_REDIS_SERVER_PASSWORD as string
