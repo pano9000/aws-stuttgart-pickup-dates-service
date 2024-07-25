@@ -15,6 +15,10 @@ export class RedisService {
 
   }
 
+  getRedisKey(streetname: string, streetno: string) {
+    return `address_${streetname}|${streetno}`.toLowerCase();
+  }
+
   async jsonGET(key: string, filter?: string) {
     try {
 

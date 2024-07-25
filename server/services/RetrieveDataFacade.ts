@@ -13,12 +13,9 @@ export class RetrieveDataFacade {
     this.redisService = redisService;
   }
 
-  #createRedisKey(streetname: string, streetno: string) {
-    return `address_${streetname}|${streetno}`.toLowerCase();
-  }
 
   async getAll(streetname: string, streetno: string, operationId: string = ""): Promise<any> {
-    const redisKey = this.#createRedisKey(streetname, streetno);
+    const redisKey = this.redisService.getRedisKey(streetname, streetno);
     const redisResult = await this.redisService.jsonGET(redisKey)
 
     if (!redisResult) {
