@@ -117,5 +117,13 @@ describe("RedisService Unit Tests", async () => {
     //@TODO
   })
 
+  describe("getRedisKey", () => {
+    test("should transform a streetname and streetno, into a string that can be used as key in redis", () => {
+      const expected = "address_königstr.|10"
+      const actual = redisService.getRedisKey("Königstr.", "10")
+      assert.equal(expected, actual)
+    })
+  })
+
 
 })
