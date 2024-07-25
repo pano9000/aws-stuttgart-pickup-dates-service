@@ -1,4 +1,4 @@
-import { AwsApiService, awsApiService as defaultAwsApiService } from "./AwsApiService";
+import { AwsApiService, awsApiService as defaultAwsApiService, SchemaAwsApiServiceResponseAll } from "./AwsApiService";
 import { RedisService, redisService as defaultRedisService } from "./RedisService";
 
 
@@ -22,9 +22,8 @@ export class RetrieveDataFacade {
       return await this.getAll(streetname, streetno);
     }
 
-    if (typeof redisResult !== "string") throw new Error("DB did not return a valid string")
-    //@TODO try/catch JSON parse?
-    return JSON.parse(redisResult);
+    const validatedRedisResult = SchemaAwsApiServiceResponseAll.parse(redisResult)
+    return validatedRedisResult;
   }
 
     // Fetch Full Data from AWS Stuttgart API and store in our redis DB, throws an error if anything goes wrong in any step
