@@ -28,7 +28,6 @@ test("should correctly return a default instance", () => {
     //process.env.AWSAPPENV_AWS_API_URL = "https://test.com/api"
     //constructor(apiUrl: string = process.env.AWSAPPENV_AWS_API_URL as string, gotClient: Got = defaultGot, logger: Console = console) {
     const awsApiServiceInstance = new AwsApiService("https://test.com/api")
-    console.log(Object.getPrototypeOf(awsApiServiceInstance), "yoooo")
     assert.instanceOf(awsApiServiceInstance, AwsApiService)
 })
 
