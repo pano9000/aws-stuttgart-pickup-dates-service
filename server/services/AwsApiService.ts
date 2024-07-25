@@ -7,7 +7,7 @@ import { AwsApiServiceError } from "./AwsApiServiceError";
 /**
  * Service to fetch, validate and transform data from the AWS Stuttgart API
  */
-export default class AwsApiService {
+export class AwsApiService {
   #apiUrl: URL;
   #got: Got;
   #logger: Console;
