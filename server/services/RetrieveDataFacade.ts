@@ -1,5 +1,11 @@
-import { AwsApiService, awsApiService as defaultAwsApiService, SchemaAwsApiServiceResponseAll } from "./AwsApiService";
-import type { AwsApiServiceResponseAll } from "./AwsApiService"
+import {
+  AwsApiService,
+  awsApiService as defaultAwsApiService,
+  SchemaAwsApiServiceResponseAll,
+  SchemaAwsApiServiceEventTypeName,
+  SchemaAwsApiServiceEventScheduleName,
+} from "./AwsApiService";
+import type { AwsApiServiceResponseAll, AwsApiServiceEvent } from "./AwsApiService"
 import { RedisService, redisService as defaultRedisService } from "./RedisService";
 import { DateTime } from "luxon";
 
@@ -42,6 +48,28 @@ export class RetrieveDataFacade {
     const validatedRedisResult = SchemaAwsApiServiceResponseAll.parse(redisResult)
     return validatedRedisResult;
 
+  }
+
+  async getUpcoming(streetname: string, streetno: string, operationId: string = ""): Promise<AwsApiServiceResponseAll> {
+    const remainingEvents = await this.getRemaining(streetname, streetno, operationId);
+    /*
+    * find first occurence of W1, residual | W2, residual | ... | W1, paper ...
+    */
+   // naive, and slow approach - //@TODO improve at some point
+    const filteredEvents = (() => {
+      const result: AwsApiServiceEvent[] = [];
+      SchemaAwsApiServiceEventTypeName.options.forEach(eventName => {
+        SchemaAwsApiServiceEventScheduleName.options.forEach(scheduleName => {
+          const found = remainingEvents.data.find(event => event.type == eventName && event.schedule == scheduleName);
+          if (found) result.push(found);
+        })
+      })
+      return result
+    })()
+
+    remainingEvents.data = filteredEvents
+
+    return remainingEvents;
   }
 
   // Fetch Full Data from AWS Stuttgart API and store in our redis DB, throws an error if anything goes wrong in any step
