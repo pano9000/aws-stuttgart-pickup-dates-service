@@ -91,14 +91,65 @@ describe("RetrieveDataFacade Unit Tests", async () => {
   })
 
   describe("getRemaining", () => {
-    test.skip("should hit the redis cache first, and return that value, without calling AwsApiService", async () => {
-      const mockRedisServiceInstance = createMockRedisService("address_königstr.|10", null, "OK");
-      const mockMockAwsApiService = createMockAwsApiService("wat")
+    test("w/ existing address in redis, should call the RedisService 1x, and not call the AwsApiService", async () => {
+      const mockRedisServiceInstance = createMockRedisService("address_königstr.|10", fakeDataSuccess, "OK");
+      const mockAwsApiServiceInstance = createMockAwsApiService("whatever")
 
       //@ts-expect-error
-      const retrieveDataFacadeInstance = new RetrieveDataFacade(mockMockAwsApiService, mockRedisServiceInstance);
-      await retrieveDataFacadeInstance.getRemaining("Königstr.", "10")
-      //console.log(await mockMockAwsApiService.getAll("asdkasjdk"), mockMockAwsApiService.getAll.mock.calls)
+      const retrieveDataFacadeInstance = new RetrieveDataFacade(mockAwsApiServiceInstance, mockRedisServiceInstance);
+
+      const data = await retrieveDataFacadeInstance.getRemaining("Königstr.", "10");
+
+      assert.lengthOf(mockAwsApiServiceInstance.getAll.mock.calls, 0);
+      assert.lengthOf(mockRedisServiceInstance.jsonGET.mock.calls, 1);
+    })
+
+    test("w/o existing address in redis, should execute refetchFromAwsApi before returning data from redis", async () => {
+
+      const mockRedisServiceInstance = createMockRedisService("address_königstr.|10", null, "OK");
+      // overwrite jsonGET method -> needs to return 'null', if value is not in redis first, then later resolve with successfull data
+      mockRedisServiceInstance.jsonGET.mockResolvedValueOnce(null).mockResolvedValueOnce(fakeDataSuccess)
+
+      const mockAwsApiServiceInstance = createMockAwsApiService("whatever");
+
+      //@ts-expect-error
+      const retrieveDataFacadeInstance = new RetrieveDataFacade(mockAwsApiServiceInstance, mockRedisServiceInstance);
+
+      const returnedData = await retrieveDataFacadeInstance.getRemaining("Königstr.", "10");
+
+      // called
+      assert.lengthOf(mockAwsApiServiceInstance.getAll.mock.calls, 1);
+      assert.lengthOf(mockRedisServiceInstance.jsonSET.mock.calls, 1);
+      // called twice: original run, then after refetchFromAwsApi was successfully
+      assert.lengthOf(mockRedisServiceInstance.jsonGET.mock.calls, 2);
+      assert.deepEqual(returnedData, fakeDataSuccess)
+
+    })
+
+    test("w/o existing address in redis, should execute refetchFromAwsApi and throw an error, if anything fails during refetchFromAwsApi", async () => {
+
+      const mockRedisServiceInstance = createMockRedisService("address_königstr.|10", null, "OK");
+      // overwrite jsonGET method -> needs to return 'null', if value is not in redis first, then later resolve with successfull data
+      mockRedisServiceInstance.jsonGET.mockResolvedValueOnce(null).mockResolvedValueOnce(fakeDataSuccess)
+      mockRedisServiceInstance.jsonSET.mockImplementationOnce(() => { throw new Error("FakeRedisError during JSON.SET")});
+      const mockAwsApiServiceInstance = createMockAwsApiService("whatever");
+
+      //@ts-expect-error
+      const retrieveDataFacadeInstance = new RetrieveDataFacade(mockAwsApiServiceInstance, mockRedisServiceInstance);
+
+      const errorResult = await (async () => {
+        try { await retrieveDataFacadeInstance.getRemaining("Königstr.", "10") }
+        catch(error) { return error }
+      })()
+
+      //@TODO improve this -> could fail, if we don't throw an instance of Error but other Error
+      assert.instanceOf(errorResult, Error)
+
+      // called
+      assert.lengthOf(mockAwsApiServiceInstance.getAll.mock.calls, 1);
+      assert.lengthOf(mockRedisServiceInstance.jsonSET.mock.calls, 1);
+      // called once: original run ony, since refetchFromAwsApi throws, it is not called a 2nd time
+      assert.lengthOf(mockRedisServiceInstance.jsonGET.mock.calls, 1);
 
     })
   })
