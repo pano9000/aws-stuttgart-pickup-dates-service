@@ -175,18 +175,17 @@ interface AwsApiServiceResponseUpcoming extends AwsApiServiceResponse {
   data: AwsApiServiceResponseUpcomingData
 }
 
-
 export const SchemaAwsApiServiceEventTypeName = z.enum(["residual", "organic", "paper", "recycle"]);
-export type AwsApiServiceEventTypeName = z.infer<typeof SchemaAwsApiServiceEventTypeName>;
 
 /** weekly, bi-weekly or tri-weekly schedule codes */
-export type AwsApiServiceEventScheduleName = "W1" | "W2" | "W3";
+export const SchemaAwsApiServiceEventScheduleName = z.enum(["W1", "W2", "W3"]);
+
 
 export const SchemaAwsApiServiceEvent = z.object({
   date: z.string().describe("date in yyyy-MM-dd format"),
   unixDate: z.number(),
   type: SchemaAwsApiServiceEventTypeName,
-  schedule: z.custom<AwsApiServiceEventScheduleName>(),
+  schedule: SchemaAwsApiServiceEventScheduleName,
   irregularSchedule: z.boolean()
 })
 
@@ -302,3 +301,5 @@ export type AwsApiRawResponseEvent = z.infer<typeof SchemaAwsApiRawResponseEvent
 export type AwsApiRawResponseEventScheduleType = z.infer<typeof SchemaAwsApiRawResponseEventScheduleType>;
 
 export type AwsApiServiceEvent = z.infer<typeof SchemaAwsApiServiceEvent>;
+export type AwsApiServiceEventTypeName = z.infer<typeof SchemaAwsApiServiceEventTypeName>;
+export type AwsApiServiceEventScheduleName = z.infer<typeof SchemaAwsApiServiceEventScheduleName>;
