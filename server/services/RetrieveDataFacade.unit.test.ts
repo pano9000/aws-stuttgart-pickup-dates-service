@@ -154,4 +154,23 @@ describe("RetrieveDataFacade Unit Tests", async () => {
     })
   })
 
+  describe("getUpcoming", () => {
+    test("should return a filtered list of only the next upcoming events/schedule type", async () => {
+
+      const fakeDate = new Date("2024-07-24")
+      vi.setSystemTime(fakeDate)
+
+      const mockRedisServiceInstance = createMockRedisService("address_königstr.|10", fakeDataSuccess, "OK");
+      const mockAwsApiServiceInstance = createMockAwsApiService("whatever")
+
+      //@ts-expect-error
+      const retrieveDataFacadeInstance = new RetrieveDataFacade(mockAwsApiServiceInstance, mockRedisServiceInstance);
+
+      const upcoming = await retrieveDataFacadeInstance.getUpcoming("Königstr.", "10");
+
+      assert.lengthOf(upcoming.data, 5);
+
+    })
+  })
+
 })
