@@ -6,7 +6,11 @@ import { createVuetify } from "vuetify"
 
 export default defineNuxtPlugin((app) => {
   const vuetify = createVuetify({
-    // ... your configuration
+    defaults: {
+      global: {
+        ripple: false,
+      }
+    }
   })
   app.vueApp.use(vuetify)
 })
