@@ -10,7 +10,8 @@ export default defineNuxtPlugin((app) => {
       global: {
         ripple: false,
       }
-    }
-  })
+    },
+    ssr: true
+  });
   app.vueApp.use(vuetify)
 })
