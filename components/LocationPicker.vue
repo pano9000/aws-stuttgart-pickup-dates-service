@@ -46,10 +46,10 @@
 </template>
 
 <script setup lang="ts">
-import { userCookieUserConfig } from './useCookieUserConfig';
+import { useCookieUserConfig } from './useCookieUserConfig';
 
 
-const { cookieStreet } = userCookieUserConfig();
+const { cookieStreet } = useCookieUserConfig();
 const streetname = ref(cookieStreet.value.streetname);
 const streetno = ref(cookieStreet.value.streetno);
 const locationPickerActive = ref(false);
