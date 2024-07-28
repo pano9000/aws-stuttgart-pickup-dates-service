@@ -1,4 +1,4 @@
-export function userCookieUserConfig() {
+export function useCookieUserConfig() {
 
 
   //@TODO can we get rid of the default here?
