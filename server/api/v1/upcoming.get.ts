@@ -7,8 +7,12 @@ export default defineEventHandler(async (event) => {
   try {
     const query = getQuery(event);
     const validatedQuery = schemaQuery.parse(query);
-    const data = await retrieveDataFacade.getUpcoming(validatedQuery.streetname, validatedQuery.streetno);
-    return data;
+    const apiData = await retrieveDataFacade.getUpcoming({
+      streetname: validatedQuery.streetname, 
+      streetno: validatedQuery.streetno,
+      typeFilter: undefined
+    });
+    return apiData;
   }
   catch(error) {
     errorHandler(error);
