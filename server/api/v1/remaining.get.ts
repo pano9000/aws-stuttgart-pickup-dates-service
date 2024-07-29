@@ -9,7 +9,7 @@ export default defineEventHandler(async (event) => {
     const apiData = await retrieveDataFacade.getRemaining({
       streetname: validatedQuery.streetname,
       streetno: validatedQuery.streetno,
-      typeFilter: undefined
+      typeFilter: validatedQuery.type
     });
     return apiData
   }
