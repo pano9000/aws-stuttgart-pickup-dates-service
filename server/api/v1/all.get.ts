@@ -6,7 +6,11 @@ export default defineEventHandler(async (event) => {
   try {
     const query = getQuery(event);
     const validatedQuery = schemaQuery.parse(query);
-    const apiData = await retrieveDataFacade.getAll(validatedQuery.streetname, validatedQuery.streetno);
+    const apiData = await retrieveDataFacade.getAll({
+      streetname: validatedQuery.streetname,
+      streetno: validatedQuery.streetno,
+      typeFilter: undefined
+    });
     return apiData
   }
   catch(error) {
