@@ -1,5 +1,6 @@
 import { assert, describe, test, vi } from "vitest"
-import { RetrieveDataFacade, retrieveDataFacade, RetrieveDataFacadeOptions } from "./RetrieveDataFacade"
+import { RetrieveDataFacade, retrieveDataFacade } from "./RetrieveDataFacade"
+import type { RetrieveDataFacadeOptions } from "./RetrieveDataFacade"
 
 
 describe("RetrieveDataFacade Unit Tests", async () => {
