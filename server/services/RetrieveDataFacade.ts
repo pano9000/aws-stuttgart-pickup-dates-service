@@ -124,5 +124,5 @@ export type RetrieveDataFacadeOptions = {
   operationId?: string;
 }
 
-const SchemeRetrieveDataFacadeFormat = z.enum(["json", "ical", "csv"]);
-export type RetrieveDataFacadeFormat = z.infer<typeof SchemeRetrieveDataFacadeFormat>;
+export const SchemaRetrieveDataFacadeFormat = z.enum(["json", "ical", "csv"]);
+export type RetrieveDataFacadeFormat = z.infer<typeof SchemaRetrieveDataFacadeFormat>;
