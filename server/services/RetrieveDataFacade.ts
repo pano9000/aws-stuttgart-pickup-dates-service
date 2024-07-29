@@ -8,7 +8,7 @@ import {
 import type { AwsApiServiceResponseAll, AwsApiServiceEvent, AwsApiServiceEventTypeName } from "./AwsApiService"
 import { RedisService, redisService as defaultRedisService } from "./RedisService";
 import { DateTime } from "luxon";
-
+import { z } from "zod";
 
 export class RetrieveDataFacade {
 
@@ -120,5 +120,9 @@ export type RetrieveDataFacadeOptions = {
   streetname: string;
   streetno: string;
   typeFilter: undefined | AwsApiServiceEventTypeName[];
+  format: RetrieveDataFacadeFormat
   operationId?: string;
 }
+
+const SchemeRetrieveDataFacadeFormat = z.enum(["json", "ical", "csv"]);
+export type RetrieveDataFacadeFormat = z.infer<typeof SchemeRetrieveDataFacadeFormat>;
