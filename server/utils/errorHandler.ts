@@ -1,10 +1,10 @@
-import { z, ZodError } from "zod";
+import { ZodError } from "zod";
 
 /** Handle server errors */
 export default function(error: unknown) {
 
   console.error(error)
-  if (error instanceof z.ZodError) {
+  if (error instanceof ZodError) {
     throw createError({
       status: 400,
       message: "Invalid Input",
