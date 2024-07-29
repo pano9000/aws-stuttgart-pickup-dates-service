@@ -10,7 +10,7 @@ export default defineEventHandler(async (event) => {
     const apiData = await retrieveDataFacade.getUpcoming({
       streetname: validatedQuery.streetname, 
       streetno: validatedQuery.streetno,
-      typeFilter: undefined
+      typeFilter: validatedQuery.type
     });
     return apiData;
   }

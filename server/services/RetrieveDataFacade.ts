@@ -23,7 +23,22 @@ export class RetrieveDataFacade {
 
   async getAll(options: RetrieveDataFacadeOptions): Promise<AwsApiServiceResponseAll> {
     const redisKey = this.redisService.getRedisKey(options.streetname, options.streetno);
-    const redisResult = await this.redisService.jsonGET(redisKey)
+
+    //@TODO refactor code flow
+    let redisResult = ""
+    if (options.typeFilter) {
+      const typeFilter = options.typeFilter.map(filter => `(@.type == "${filter}")`).join(" || ");
+      const filterString = this.#createFilterString([typeFilter])
+
+      redisResult = await this.redisService.jsonGET(redisKey, filterString);
+
+    } else {
+      redisResult = await this.redisService.jsonGET(redisKey);
+
+    }
+
+
+    //const redisResult = await this.redisService.jsonGET(redisKey);
 
     if (!redisResult) {
       await this.#refetchFromAwsApi(options);
@@ -37,8 +52,13 @@ export class RetrieveDataFacade {
   async getRemaining(options: RetrieveDataFacadeOptions): Promise<AwsApiServiceResponseAll> {
     const redisKey = this.redisService.getRedisKey(options.streetname, options.streetno);
     const currentDate = DateTime.now().toFormat("yyyy-MM-dd");
-    const filterString = `(@.date >= '${currentDate}')`;
-    const redisResult = await this.redisService.jsonGET(redisKey, `$.data[?${filterString}]`);
+
+    const dateFilter = `(@.date >= '${currentDate}')`;
+    const typeFilter = (options.typeFilter) ? options.typeFilter.map(filter => `(@.type == "${filter}")`).join(" || ") : undefined;
+    const filters = (typeFilter) ? [dateFilter, typeFilter] : [dateFilter]
+    const filterString = this.#createFilterString(filters)
+
+    const redisResult = await this.redisService.jsonGET(redisKey, filterString);
 
     if (!redisResult) {
       await this.#refetchFromAwsApi(options);
@@ -88,6 +108,10 @@ export class RetrieveDataFacade {
     }
   }
 
+  #createFilterString(filters: string[]) {
+    //e.g. $.data[?(@.date >= "2024-10-16") && ((@.type == "recycle") || (@.type == "paper"))]'
+    return `$.data[?${filters.join(" && ")}]`
+  }
 }
 
 export const retrieveDataFacade = new RetrieveDataFacade();
