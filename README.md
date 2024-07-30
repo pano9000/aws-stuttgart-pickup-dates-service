@@ -8,6 +8,7 @@ To achieve this it queries the public API of the `Abfallwirtschaft Stuttgart (AW
 It (will) consist of two parts:
 * a REST-like API that allows to retrieve data about the pickups in different formats:
   * JSON for general usage (also powers the frontend of this app)
+  * CSV for general usage, e.g. within Excel/Spreadsheets
   * iCal for usage in Calendars and such
 * a VueJS based frontend site
   * allowing to quickly get an overview
