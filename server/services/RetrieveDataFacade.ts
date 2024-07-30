@@ -8,7 +8,7 @@ import {
 import type { AwsApiServiceResponseAll, AwsApiServiceEvent, AwsApiServiceEventTypeName } from "./AwsApiService"
 import { RedisService, redisService as defaultRedisService } from "./RedisService";
 import { DateTime } from "luxon";
-
+import { z } from "zod";
 
 export class RetrieveDataFacade {
 
@@ -45,8 +45,9 @@ export class RetrieveDataFacade {
       return await this.getAll(options);
     }
 
-    const validatedRedisResult = SchemaAwsApiServiceResponseAll.parse(redisResult)
-    return validatedRedisResult;
+    const validatedRedisResult = SchemaAwsApiServiceResponseAll.parse(redisResult);
+
+    return this.#transformData(validatedRedisResult, options.format);
   }
 
   async getRemaining(options: RetrieveDataFacadeOptions): Promise<AwsApiServiceResponseAll> {
@@ -65,9 +66,8 @@ export class RetrieveDataFacade {
       return await this.getRemaining(options);
     }
 
-    const validatedRedisResult = SchemaAwsApiServiceResponseAll.parse(redisResult)
-    return validatedRedisResult;
-
+    const validatedRedisResult = SchemaAwsApiServiceResponseAll.parse(redisResult);
+    return this.#transformData(validatedRedisResult, options.format);
   }
 
   async getUpcoming(options: RetrieveDataFacadeOptions): Promise<AwsApiServiceResponseAll> {
@@ -88,8 +88,8 @@ export class RetrieveDataFacade {
     })()
 
     remainingEvents.data = filteredEvents
+    return this.#transformData(remainingEvents, options.format);
 
-    return remainingEvents;
   }
 
   // Fetch Full Data from AWS Stuttgart API and store in our redis DB, throws an error if anything goes wrong in any step
@@ -112,6 +112,43 @@ export class RetrieveDataFacade {
     //e.g. $.data[?(@.date >= "2024-10-16") && ((@.type == "recycle") || (@.type == "paper"))]'
     return `$.data[?${filters.join(" && ")}]`
   }
+
+  #transformData(originalData: AwsApiServiceResponseAll, format: RetrieveDataFacadeFormat) {
+
+    switch (format) {
+      case "csv":
+        return this.#transformToCSV(originalData);
+
+      case "ical":
+        //@TODO implement
+        throw new Error("not supported yet");
+
+      // no transformation needed for json
+      case "json":
+        return originalData;
+
+      default:
+        return originalData;
+    }
+
+
+  }
+
+  #transformToCSV(originalData: AwsApiServiceResponseAll): string {
+    //@TODO investigate if LF/CR could be come an issue?
+
+    /**
+     * date,type,schedule,irregularSchedule,streetname,streetno
+     */
+    const csvHeader = `data,type,schedule,irregularSchedule,streetname,streetno\r\n`;
+    const csvLines = originalData.data.map((event) => {
+      //@TODO investigate if we need to wrap values in double quotes -> not sure if streetname/number might cause issues, if not
+      return [event.date, event.type, event.schedule, event.irregularSchedule, originalData.information.streetname, originalData.information.streetno].join(",")
+    })
+
+    return csvHeader + csvLines.join("\r\n")
+
+  }
 }
 
 export const retrieveDataFacade = new RetrieveDataFacade();
@@ -120,5 +157,9 @@ export type RetrieveDataFacadeOptions = {
   streetname: string;
   streetno: string;
   typeFilter: undefined | AwsApiServiceEventTypeName[];
+  format: RetrieveDataFacadeFormat
   operationId?: string;
 }
+
+export const SchemaRetrieveDataFacadeFormat = z.enum(["json", "ical", "csv"]);
+export type RetrieveDataFacadeFormat = z.infer<typeof SchemaRetrieveDataFacadeFormat>;
