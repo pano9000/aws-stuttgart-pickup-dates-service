@@ -1,7 +1,6 @@
 import { assert, describe, test, vi } from "vitest"
 import { RetrieveDataFacade, retrieveDataFacade } from "./RetrieveDataFacade"
 import type { RetrieveDataFacadeOptions } from "./RetrieveDataFacade"
-import { AwsApiServiceResponseAll } from "./AwsApiService";
 
 
 describe("RetrieveDataFacade Unit Tests", async () => {
@@ -38,6 +37,13 @@ describe("RetrieveDataFacade Unit Tests", async () => {
       format: "csv"
     },
 
+    validWOFilterFormatIcal: {
+      streetname: "Königstr.",
+      streetno: "10",
+      typeFilter: undefined,
+      format: "ical"
+    },
+
     validWOFilterFormatUnsupported: {
       streetname: "Königstr.",
       streetno: "10",
@@ -60,6 +66,13 @@ describe("RetrieveDataFacade Unit Tests", async () => {
   const createMockAwsApiService = (fakeDataToReturn: any) => {
     return {
       getAll: vi.fn().mockResolvedValue(fakeDataToReturn),
+    }
+  }
+
+  const createMockTransformDataService = (fakeDataToReturn: any) => {
+    return {
+      toCSV: vi.fn().mockReturnValue(fakeDataToReturn),
+      toICal: vi.fn().mockReturnValue(fakeDataToReturn)
     }
   }
 
@@ -155,6 +168,7 @@ describe("RetrieveDataFacade Unit Tests", async () => {
       const retrieveDataFacadeInstance = new RetrieveDataFacade(mockAwsApiServiceInstance, mockRedisServiceInstance);
 
       const data = await retrieveDataFacadeInstance.getAll(testOptions.validWTwoTypeFilter);
+      //@ts-expect-error ignore that it could be undefined -> here it should not be
       const expectedCall = [ [ 'address_königstr.|10', `$.data[?(@.type == "${testOptions.validWTwoTypeFilter.typeFilter[0]}") || (@.type == "${testOptions.validWTwoTypeFilter.typeFilter[1]}")]` ] ]
       assert.deepEqual(mockRedisServiceInstance.jsonGET.mock.calls, expectedCall);
 
@@ -246,40 +260,57 @@ describe("RetrieveDataFacade Unit Tests", async () => {
 
   describe("Data transforming", async () => {
 
-    test("when called with format 'csv' should return a CSV string with appropriate header", async () => {
+    test("when called with format 'csv' should call the TransformDataService's toCSV method", async () => {
       const mockRedisServiceInstance = createMockRedisService("address_königstr.|10", fakeDataSuccess, "OK");
       const mockAwsApiServiceInstance = createMockAwsApiService("whatever");
+      const mockTransformDataService = createMockTransformDataService("whatever");
 
       //@ts-expect-error
-      const retrieveDataFacadeInstance = new RetrieveDataFacade(mockAwsApiServiceInstance, mockRedisServiceInstance);
+      const retrieveDataFacadeInstance = new RetrieveDataFacade(mockAwsApiServiceInstance, mockRedisServiceInstance, mockTransformDataService);
 
       const data = await retrieveDataFacadeInstance.getAll(testOptions.validWOFilterFormatCSV);
-      assert.isString(data);
-      //@ts-ignore -- isString is asserted above
-      assert.isTrue(data.startsWith("data,type,schedule,irregularSchedule,streetname,streetno\r\n"))
+
+      assert.lengthOf(mockTransformDataService.toCSV.mock.calls, 1)
 
     })
 
-    test("when called with format 'json' should return without extra transformation", async () => {
+    test("when called with format 'ical' should call the TransformDataService's toICal method", async () => {
       const mockRedisServiceInstance = createMockRedisService("address_königstr.|10", fakeDataSuccess, "OK");
       const mockAwsApiServiceInstance = createMockAwsApiService("whatever");
+      const mockTransformDataService = createMockTransformDataService("whatever");
+
+      //@ts-expect-error
+      const retrieveDataFacadeInstance = new RetrieveDataFacade(mockAwsApiServiceInstance, mockRedisServiceInstance, mockTransformDataService);
+
+      const data = await retrieveDataFacadeInstance.getAll(testOptions.validWOFilterFormatIcal);
+
+      assert.lengthOf(mockTransformDataService.toICal.mock.calls, 1)
+
+    })
+
+    test("when called with format 'json' should return without calling TransformDataService", async () => {
+      const mockRedisServiceInstance = createMockRedisService("address_königstr.|10", fakeDataSuccess, "OK");
+      const mockAwsApiServiceInstance = createMockAwsApiService("whatever");
+      const mockTransformDataService = createMockTransformDataService("whatever");
 
        //@ts-expect-error - due to mocks
-       const retrieveDataFacadeInstance = new RetrieveDataFacade(mockAwsApiServiceInstance, mockRedisServiceInstance);
+       const retrieveDataFacadeInstance = new RetrieveDataFacade(mockAwsApiServiceInstance, mockRedisServiceInstance, mockTransformDataService);
        const data = await retrieveDataFacadeInstance.getAll(testOptions.validWOFilter);
-       assert.deepEqual(data, fakeDataSuccess);
+       assert.lengthOf(mockTransformDataService.toCSV.mock.calls, 0)
+       assert.lengthOf(mockTransformDataService.toICal.mock.calls, 0)
 
     })
 
     test("when called with unknown format 'abc' should default to json and return without extra transformation", async () => {
       const mockRedisServiceInstance = createMockRedisService("address_königstr.|10", fakeDataSuccess, "OK");
       const mockAwsApiServiceInstance = createMockAwsApiService("whatever");
+      const mockTransformDataService = createMockTransformDataService("whatever");
 
        //@ts-expect-error - due to mocks
-       const retrieveDataFacadeInstance = new RetrieveDataFacade(mockAwsApiServiceInstance, mockRedisServiceInstance);
+       const retrieveDataFacadeInstance = new RetrieveDataFacade(mockAwsApiServiceInstance, mockRedisServiceInstance, mockTransformDataService);
        const data = await retrieveDataFacadeInstance.getAll(testOptions.validWOFilterFormatUnsupported);
-       assert.deepEqual(data, fakeDataSuccess);
-
+       assert.lengthOf(mockTransformDataService.toCSV.mock.calls, 0)
+       assert.lengthOf(mockTransformDataService.toICal.mock.calls, 0)
     })
   })
 
