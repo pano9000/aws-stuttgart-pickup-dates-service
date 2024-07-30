@@ -11,14 +11,15 @@ describe("RetrieveDataFacade Unit Tests", async () => {
     validWOFilter: {
       streetname: "Königstr.",
       streetno: "10",
-      typeFilter: undefined
+      typeFilter: undefined,
+      format: "json"
     },
 
     validWTypeFilterPaper: {
       streetname: "Königstr.",
       streetno: "10",
-      typeFilter: ["paper"]
-    }
+      typeFilter: ["paper"],
+      format: "json"
   }
 
   const createMockRedisService = (fakeDataGetRedis: string, fakeDataJsonGet: any, fakeDataJsonSet: any) => {
