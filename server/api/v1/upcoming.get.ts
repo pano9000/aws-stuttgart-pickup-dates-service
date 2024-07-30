@@ -1,5 +1,6 @@
 import { schemaQuery } from "~/server/validationSchemas/schemaQuery";
 import { retrieveDataFacade } from "~/server/services/RetrieveDataFacade";
+import getMIMEType from "~/server/utils/getMIMEType";
 
 //export default defineEventHandler({onRequest: [validateSchema(schemaQuery)], handler: async (event) => {
 
@@ -13,6 +14,11 @@ export default defineEventHandler(async (event) => {
       typeFilter: validatedQuery.type,
       format: validatedQuery.format
     });
+
+    setResponseHeaders(event, {
+      "content-type": getMIMEType(validatedQuery.format)
+    })
+
     return apiData;
   }
   catch(error) {
