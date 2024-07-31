@@ -1,8 +1,9 @@
 import type { AwsApiServiceResponseAll } from "./AwsApiService"
+import ical from 'ical-generator';
+import { DateTime } from "luxon";
 
+//@TODO: error handling?
 export class TransformDataService {
-
-
 
   static toCSV(originalData: AwsApiServiceResponseAll): string {
     //@TODO investigate if LF/CR could be come an issue?
@@ -13,11 +14,35 @@ export class TransformDataService {
     })
 
     return csvHeader + csvLines.join("\r\n")
-
   }
 
   static toICal(originalData: AwsApiServiceResponseAll): string {
-    throw new Error("TODO: implement");
+
+    const { streetname, streetno } = originalData.information;
+    const calendar = ical({
+      name: `Abfallwirtschaft Stuttgart Pickups ${streetname} ${streetno}`,
+      timezone: "Europe/Berlin"
+    })
+
+    const createDate = (dateString: string, hour: number, minute: number) => {
+      const date = DateTime.fromISO(dateString, {zone: "Europe/Berlin"}).set({hour, minute});
+      if (!date.isValid) {
+        throw new Error("Unable to create a valid date")
+      }
+      return date
+    }
+
+    originalData.data.forEach(event => {
+
+      calendar.createEvent({
+        start: createDate(event.date, 6, 30),
+        end: createDate(event.date, 7, 0),
+        summary: `AWS Pickup ${event.type} (${event.schedule})`,
+        location: `${streetname} ${streetno}`,
+      })
+    })
+
+    return calendar.toString()
   }
 
 }
