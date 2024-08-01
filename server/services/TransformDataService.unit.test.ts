@@ -48,16 +48,36 @@ describe("TransformDataService", () => {
       assert.equal(firstStartDate, "20240714")
     })
 
-    test.todo("should correctly set custom start end and end date if supplied", () => {
+    test("should correctly set custom start end and end date if supplied", () => {
+      const result = TransformDataService.toICal(fakeDataSuccess, {startTime: [8, 30], endTime: [9, 30] });
+      console.log(result)
+      const firstStartMatch = result.match(/DTSTART:(?<date>.+)/);
+      const firstEndMatch = result.match(/DTEND:(?<date>.+)/);
+
+      if (!firstStartMatch || !firstStartMatch.groups) throw new Error("No start date found!")
+      if (!firstEndMatch || !firstEndMatch.groups) throw new Error("No end date found!")
+
+      const firstStartDate = firstStartMatch.groups.date;
+      const firstEndDate = firstEndMatch.groups.date;
+      console.log(firstStartDate, firstEndDate)
+
+      assert.equal(firstStartDate, "20240715T083000")
+      assert.equal(firstEndDate, "20240715T093000")
+
 
     })
 
-    test.todo("should correctly set allDay property to events if supplied", () => {
-
+    test("should correctly set allDay property to events if supplied", () => {
+      const result = TransformDataService.toICal(fakeDataSuccess, {allDay: true });
+      assert.match(result, /X-MICROSOFT-CDO-ALLDAYEVENT:TRUE/)
     })
 
-    test.todo("should correctly set alarm property to events if supplied", () => {
-
+    test("should correctly set alarm property to events if supplied", () => {
+      const result = TransformDataService.toICal(fakeDataSuccess, {alarm: 24*60*60 }); // set alarm to 1D before (in seconds)
+      const firstAlertMatch = result.match(/TRIGGER:(?<alarm>.+)/);
+      if (!firstAlertMatch || !firstAlertMatch.groups) throw new Error("No alarm (TRIGGER) property found!")
+      const firstAlert = firstAlertMatch.groups.alarm;
+      assert.equal(firstAlert, "-P1D");
     })
 
 
