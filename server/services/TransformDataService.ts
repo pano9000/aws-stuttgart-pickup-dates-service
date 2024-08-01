@@ -47,7 +47,7 @@ export class TransformDataService {
 
       const currentEvent = calendar.createEvent({
         start: createDate(event.date, options?.startTime || [6, 30]),
-        end: createDate(event.date, options?.startTime || [7, 0]),
+        end: createDate(event.date, options?.endTime || [7, 0]),
         summary: createSummary(event.type, event.schedule),
         //description: `AWS Pickup ${event.type} (${event.schedule}) ${(options?.offsetEvent) ? 'offset' : ''}`,
         location: `${streetname} ${streetno}`,
