@@ -67,6 +67,23 @@ describe("TransformDataService", () => {
 
     })
 
+    test("should correctly offset start end and end date by supplied number AND set custom start/end time", () => {
+      const result = TransformDataService.toICal(fakeDataSuccess, {startTime: [10, 30], endTime: [12, 0], offsetEvent: 2});
+
+      const firstStartMatch = result.match(/DTSTART:(?<date>.+)/);
+      const firstEndMatch = result.match(/DTEND:(?<date>.+)/);
+
+      if (!firstStartMatch || !firstStartMatch.groups) throw new Error("No start date found!")
+      if (!firstEndMatch || !firstEndMatch.groups) throw new Error("No end date found!")
+
+      const firstStartDate = firstStartMatch.groups.date;
+      const firstEndDate = firstEndMatch.groups.date;
+
+      assert.equal(firstStartDate, "20240713T103000")
+      assert.equal(firstEndDate, "20240713T120000")
+
+    })
+
     test("should correctly set allDay property to events if supplied", () => {
       const result = TransformDataService.toICal(fakeDataSuccess, {allDay: true });
       assert.match(result, /X-MICROSOFT-CDO-ALLDAYEVENT:TRUE/)
