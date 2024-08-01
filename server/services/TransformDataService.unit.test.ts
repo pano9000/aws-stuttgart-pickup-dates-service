@@ -50,7 +50,7 @@ describe("TransformDataService", () => {
 
     test("should correctly set custom start end and end date if supplied", () => {
       const result = TransformDataService.toICal(fakeDataSuccess, {startTime: [8, 30], endTime: [9, 30] });
-      console.log(result)
+
       const firstStartMatch = result.match(/DTSTART:(?<date>.+)/);
       const firstEndMatch = result.match(/DTEND:(?<date>.+)/);
 
@@ -59,7 +59,6 @@ describe("TransformDataService", () => {
 
       const firstStartDate = firstStartMatch.groups.date;
       const firstEndDate = firstEndMatch.groups.date;
-      console.log(firstStartDate, firstEndDate)
 
       assert.equal(firstStartDate, "20240715T083000")
       assert.equal(firstEndDate, "20240715T093000")
