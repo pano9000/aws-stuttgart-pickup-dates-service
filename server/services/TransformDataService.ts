@@ -68,7 +68,7 @@ export class TransformDataService {
 }
 
 
-type HourMinuteTuple = [hour: number, minute: number];
+export type HourMinuteTuple = [hour: number, minute: number];
 export type ICalOptions = {
   startTime?: HourMinuteTuple; // e.g. [6, 30]
   endTime?: HourMinuteTuple; // e.g. [7, 15]
