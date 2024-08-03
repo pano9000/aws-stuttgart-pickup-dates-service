@@ -22,3 +22,5 @@ export const schemaQueryICal = schemaQuery.extend({
   offsetEvent: z.number().min(0).max(999).optional(),
   customSummary: z.string().max(600).optional()
 })
+
+export type ApiQueryICal = z.infer<typeof schemaQueryICal>;
