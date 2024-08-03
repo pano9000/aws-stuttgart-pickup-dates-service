@@ -1,18 +1,19 @@
-import { schemaQuery } from "~/server/validationSchemas/schemaQuery";
 import { retrieveDataFacade } from "~/server/services/RetrieveDataFacade";
 import getMIMEType from "~/server/utils/getMIMEType";
+import getValidatedDataAndOptions from "~/server/utils/getValidatedDataAndOptions";
 
 //export default defineEventHandler({onRequest: [validateSchema(schemaQuery)], handler: async (event) => {
 
 export default defineEventHandler(async (event) => {
   try {
     const query = getQuery(event);
-    const validatedQuery = schemaQuery.parse(query);
+    const [validatedQuery, formatOptions] = getValidatedDataAndOptions(query)
     const apiData = await retrieveDataFacade.getUpcoming({
       streetname: validatedQuery.streetname, 
       streetno: validatedQuery.streetno,
       typeFilter: validatedQuery.type,
-      format: validatedQuery.format
+      format: validatedQuery.format,
+      formatOptions: formatOptions
     });
 
     setResponseHeaders(event, {
