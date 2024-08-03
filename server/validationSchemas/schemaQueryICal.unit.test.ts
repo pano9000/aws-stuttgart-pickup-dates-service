@@ -20,7 +20,14 @@ describe("schemaQueryICal Unit Tests", () => {
     assert.isTrue(result.success);
     assert.deepEqual(result.data?.startTime, expectedStartTime)
     assert.deepEqual(result.data?.endTime, expectedEndTime)
+  })
 
+  it("should transform start/endtime into undefined, when nothing is supplied", () => {
+    const fakeData = { streetname: "Test Str.", streetno: "123", format: "ical", startTime: undefined, endTime: undefined }
+    const result = schemaQueryICal.safeParse(fakeData)
+    assert.isTrue(result.success);
+    assert.isUndefined(result.data?.startTime);
+    assert.isUndefined(result.data?.endTime);
   })
 
 })
