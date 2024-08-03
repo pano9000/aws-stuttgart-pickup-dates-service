@@ -44,6 +44,14 @@ describe("RetrieveDataFacade Unit Tests", async () => {
       format: "ical"
     },
 
+    validWOFilterFormatIcalWOptions: {
+      streetname: "Königstr.",
+      streetno: "10",
+      typeFilter: undefined,
+      format: "ical",
+      formatOptions: {customSummary: "Test Summary", offsetEvent: 1, alarm: 600}
+    },
+
     validWOFilterFormatUnsupported: {
       streetname: "Königstr.",
       streetno: "10",
@@ -285,6 +293,20 @@ describe("RetrieveDataFacade Unit Tests", async () => {
       const data = await retrieveDataFacadeInstance.getAll(testOptions.validWOFilterFormatIcal);
 
       assert.lengthOf(mockTransformDataService.toICal.mock.calls, 1)
+
+    })
+
+    test("when called with format 'ical' and formatOptions should call the TransformDataService's toICal method with those options", async () => {
+      const mockRedisServiceInstance = createMockRedisService("address_königstr.|10", fakeDataSuccess, "OK");
+      const mockAwsApiServiceInstance = createMockAwsApiService("whatever");
+      const mockTransformDataService = createMockTransformDataService("whatever");
+
+      //@ts-expect-error
+      const retrieveDataFacadeInstance = new RetrieveDataFacade(mockAwsApiServiceInstance, mockRedisServiceInstance, mockTransformDataService);
+
+      const data = await retrieveDataFacadeInstance.getAll(testOptions.validWOFilterFormatIcalWOptions);
+      assert.lengthOf(mockTransformDataService.toICal.mock.calls, 1)
+      assert.deepEqual(mockTransformDataService.toICal.mock.calls[0][1], testOptions.validWOFilterFormatIcalWOptions.formatOptions)
 
     })
 
