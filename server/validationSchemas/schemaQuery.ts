@@ -14,3 +14,5 @@ export const schemaQuery = z.object({
     })
     .pipe(z.array(SchemaAwsApiServiceEventTypeName).optional()).catch(undefined)
 });
+
+export type ApiQueryBase = z.infer<typeof schemaQuery>;
