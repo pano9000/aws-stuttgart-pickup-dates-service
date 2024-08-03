@@ -11,6 +11,8 @@ import { TransformDataService } from "./TransformDataService";
 import { DateTime } from "luxon";
 import { z } from "zod";
 
+import type { ICalOptions } from "./TransformDataService";
+
 export class RetrieveDataFacade {
 
   awsApiService: AwsApiService;
@@ -50,7 +52,7 @@ export class RetrieveDataFacade {
 
     const validatedRedisResult = SchemaAwsApiServiceResponseAll.parse(redisResult);
 
-    return this.#transformData(validatedRedisResult, options.format);
+    return this.#transformData(validatedRedisResult, options.format, options.formatOptions);
   }
 
   async getRemaining(options: RetrieveDataFacadeOptions): Promise<AwsApiServiceResponseAll> {
@@ -70,7 +72,7 @@ export class RetrieveDataFacade {
     }
 
     const validatedRedisResult = SchemaAwsApiServiceResponseAll.parse(redisResult);
-    return this.#transformData(validatedRedisResult, options.format);
+    return this.#transformData(validatedRedisResult, options.format, options.formatOptions);
   }
 
   async getUpcoming(options: RetrieveDataFacadeOptions): Promise<AwsApiServiceResponseAll> {
@@ -91,7 +93,7 @@ export class RetrieveDataFacade {
     })()
 
     remainingEvents.data = filteredEvents
-    return this.#transformData(remainingEvents, options.format);
+    return this.#transformData(remainingEvents, options.format, options.formatOptions);
 
   }
 
@@ -116,7 +118,7 @@ export class RetrieveDataFacade {
     return `$.data[?${filters.join(" && ")}]`
   }
 
-  #transformData(originalData: AwsApiServiceResponseAll, format: RetrieveDataFacadeFormat) {
+  #transformData(originalData: AwsApiServiceResponseAll, format: RetrieveDataFacadeFormat, formatOptions?: ICalOptions) {
 
     switch (format) {
       case "csv":
@@ -124,8 +126,8 @@ export class RetrieveDataFacade {
         return this.transformDataService.toCSV(originalData)
 
       case "ical":
-        //@ts-ignore - @TODO check why .toCSV is not recognized correctly
-        return this.transformDataService.toICal(originalData)
+        //@ts-ignore - @TODO check why .toICal is not recognized correctly
+        return this.transformDataService.toICal(originalData, formatOptions)
 
       // no transformation needed for json
       case "json":
@@ -144,6 +146,7 @@ export type RetrieveDataFacadeOptions = {
   streetno: string;
   typeFilter: undefined | AwsApiServiceEventTypeName[];
   format: RetrieveDataFacadeFormat
+  formatOptions?: ICalOptions
   operationId?: string;
 }
 
