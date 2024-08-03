@@ -3,6 +3,7 @@ import { schemaQuery } from "./schemaQuery";
 import type { HourMinuteTuple } from "~/server/services/TransformDataService"
 
 const timeToHourMinuteTupleTransformer = (timeString: string | undefined, ctx: z.RefinementCtx ) => {
+  if (!timeString) return undefined;
   const timeRegex = /^(?<hour>(0?[0-9])|(1[0-9])|(2[0-3])):(?<minute>(0[0-9])|[1-5][0-9])/
   const timeStringMatch = timeString?.match(timeRegex) // hh:mm format
   if (!timeStringMatch || !timeStringMatch.groups ) {
