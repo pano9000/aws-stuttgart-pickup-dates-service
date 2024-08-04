@@ -25,58 +25,46 @@ export class RetrieveDataFacade {
     this.transformDataService = transformDataService;
   }
 
-
   async getAll(options: RetrieveDataFacadeOptions): Promise<AwsApiServiceResponseAll> {
-    const redisKey = this.redisService.getRedisKey(options.streetname, options.streetno);
 
-    //@TODO refactor code flow
-    let redisResult = ""
-    if (options.typeFilter) {
-      const typeFilter = options.typeFilter.map(filter => `(@.type == "${filter}")`).join(" || ");
-      const filterString = this.#createFilterString([typeFilter])
-
-      redisResult = await this.redisService.jsonGET(redisKey, filterString);
-
-    } else {
-      redisResult = await this.redisService.jsonGET(redisKey);
-
-    }
-
-
-    //const redisResult = await this.redisService.jsonGET(redisKey);
-
-    if (!redisResult) {
-      await this.#refetchFromAwsApi(options);
-      return await this.getAll(options);
-    }
-
-    const validatedRedisResult = SchemaAwsApiServiceResponseAll.parse(redisResult);
+    const validatedRedisResult = await this.#fetchDataFromRedis(
+      options, 
+      (() => {
+        return (options.typeFilter) 
+          ? this.#createFilterString([this.#createTypeFilter(options.typeFilter)])
+          : undefined;
+      })()
+    )
 
     return this.#transformData(validatedRedisResult, options.format, options.formatOptions);
   }
 
   async getRemaining(options: RetrieveDataFacadeOptions): Promise<AwsApiServiceResponseAll> {
-    const redisKey = this.redisService.getRedisKey(options.streetname, options.streetno);
-    const currentDate = DateTime.now().toFormat("yyyy-MM-dd");
+    const validatedRedisResult = await this.#fetchDataFromRedis(
+      options, 
+      (() => {
+        const dateFilter = this.#createDateFilter();
+        const typeFilter = (options.typeFilter) ? this.#createTypeFilter(options.typeFilter) : undefined;
+        const filters = (typeFilter) ? [dateFilter, typeFilter] : [dateFilter];
+        return this.#createFilterString(filters);
+      })()
+    );
 
-    const dateFilter = `(@.date >= '${currentDate}')`;
-    const typeFilter = (options.typeFilter) ? options.typeFilter.map(filter => `(@.type == "${filter}")`).join(" || ") : undefined;
-    const filters = (typeFilter) ? [dateFilter, typeFilter] : [dateFilter]
-    const filterString = this.#createFilterString(filters)
-
-    const redisResult = await this.redisService.jsonGET(redisKey, filterString);
-
-    if (!redisResult) {
-      await this.#refetchFromAwsApi(options);
-      return await this.getRemaining(options);
-    }
-
-    const validatedRedisResult = SchemaAwsApiServiceResponseAll.parse(redisResult);
     return this.#transformData(validatedRedisResult, options.format, options.formatOptions);
   }
 
   async getUpcoming(options: RetrieveDataFacadeOptions): Promise<AwsApiServiceResponseAll> {
-    const remainingEvents = await this.getRemaining(options);
+  
+    const validatedRedisResult = await this.#fetchDataFromRedis(
+      options, 
+      (() => {
+        const dateFilter = this.#createDateFilter();
+        const typeFilter = (options.typeFilter) ? this.#createTypeFilter(options.typeFilter) : undefined;
+        const filters = (typeFilter) ? [dateFilter, typeFilter] : [dateFilter];
+        return this.#createFilterString(filters);
+      })()
+    );
+
     /*
     * find first occurence of W1, residual | W2, residual | ... | W1, paper ...
     */
@@ -85,16 +73,29 @@ export class RetrieveDataFacade {
       const result: AwsApiServiceEvent[] = [];
       SchemaAwsApiServiceEventTypeName.options.forEach(eventName => {
         SchemaAwsApiServiceEventScheduleName.options.forEach(scheduleName => {
-          const found = remainingEvents.data.find(event => event.type == eventName && event.schedule == scheduleName);
+          const found = validatedRedisResult.data.find(event => event.type == eventName && event.schedule == scheduleName);
           if (found) result.push(found);
         })
       })
       return result
     })()
 
-    remainingEvents.data = filteredEvents
-    return this.#transformData(remainingEvents, options.format, options.formatOptions);
+    validatedRedisResult.data = filteredEvents
+    return this.#transformData(validatedRedisResult, options.format, options.formatOptions);
 
+  }
+  
+  async #fetchDataFromRedis(options: RetrieveDataFacadeOptions, filterString: string | undefined): Promise<AwsApiServiceResponseAll> {
+    const redisKey = this.redisService.getRedisKey(options.streetname, options.streetno);
+    const redisResult = await this.redisService.jsonGET(redisKey, filterString);
+
+    if (!redisResult) {
+      await this.#refetchFromAwsApi(options);
+      return await this.#fetchDataFromRedis(options, filterString)
+    }
+
+    const validatedRedisResult = SchemaAwsApiServiceResponseAll.parse(redisResult);
+    return validatedRedisResult;
   }
 
   // Fetch Full Data from AWS Stuttgart API and store in our redis DB, throws an error if anything goes wrong in any step
@@ -111,6 +112,15 @@ export class RetrieveDataFacade {
       console.error("Refetch failed");
       throw error;
     }
+  }
+
+  #createDateFilter(): string {
+    const currentDate = DateTime.now().toFormat("yyyy-MM-dd");
+    return `(@.date >= '${currentDate}')`;
+  }
+
+  #createTypeFilter(typeFilter: AwsApiServiceEventTypeName[]): string {
+    return typeFilter.map(filter => `(@.type == "${filter}")`).join(" || ");
   }
 
   #createFilterString(filters: string[]) {
