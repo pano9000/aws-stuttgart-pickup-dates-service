@@ -13,7 +13,7 @@ describe("TransformDataService", () => {
 
       const result = TransformDataService.toCSV(fakeDataSuccess);
       assert.isString(result);
-      assert.isTrue(result.startsWith(`data,type,schedule,irregularSchedule,streetname,streetno\r\n`))
+      assert.isTrue(result.startsWith(`date,type,schedule,irregularSchedule,streetname,streetno\r\n`))
       assert.strictEqual(result.split("\r\n")[1], "2024-07-15,residual,W1,false,Königstr.,12")
       assert.lengthOf(result.split("\r\n"), 85); //84 events + 1 header
     })
