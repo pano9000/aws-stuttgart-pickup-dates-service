@@ -1,16 +1,22 @@
-import type { AwsApiServiceResponseAll } from "./AwsApiService"
+import type { AwsApiServiceResponseAll, AwsApiServiceEventTypeName, AwsApiServiceEventScheduleName } from "./AwsApiService"
 import ical, { ICalEventTransparency } from 'ical-generator';
 import { DateTime } from "luxon";
-
+import getTranslation from "~/server/utils/getTranslation"
 //@TODO: error handling?
 export class TransformDataService {
 
-  static toCSV(originalData: AwsApiServiceResponseAll): string {
+  static toCSV(originalData: AwsApiServiceResponseAll, options?: CSVOptions): string {
+
     //@TODO investigate if LF/CR could be come an issue?
-    const csvHeader = `data,type,schedule,irregularSchedule,streetname,streetno\r\n`;
+    const csvHeader = getTranslation(options?.translated, "csv_header") || `date,type,schedule,irregularSchedule,streetname,streetno\r\n`;
+
     //@TODO investigate if we need to wrap values in double quotes -> not sure if streetname/number might cause issues, if not
     const csvLines = originalData.data.map((event) => {
-      return [event.date, event.type, event.schedule, event.irregularSchedule, originalData.information.streetname, originalData.information.streetno].join(",")
+      const translations = {
+        eventType: getTranslation(options?.translated, `waste_${event.type}`) || event.type,
+        eventSchedule: getTranslation(options?.translated, `schedule_${event.schedule}`) || event.schedule,
+      }
+      return [event.date, translations.eventType, translations.eventSchedule, event.irregularSchedule, originalData.information.streetname, originalData.information.streetno].join(",")
     })
 
     return csvHeader + csvLines.join("\r\n")
