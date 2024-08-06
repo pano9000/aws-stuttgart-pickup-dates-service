@@ -41,12 +41,17 @@ export class TransformDataService {
       return date
     }
 
-    const createSummary = (eventType: string, eventSchedule: string) => {
+    const createSummary = (eventType: AwsApiServiceEventTypeName, eventSchedule: AwsApiServiceEventScheduleName) => {
+      const translations = {
+        eventType: getTranslation(options?.translated, `waste_${eventType}`) || eventType,
+        eventSchedule: getTranslation(options?.translated, `schedule_${eventSchedule}`) || eventSchedule,
+        pickup: getTranslation(options?.translated, `term_pickup`) || "Pickup"
+      }
       if (options?.customSummary) {
         //@TODO: strip any html? or vcalendar tags
-        return options.customSummary.replaceAll("%1", eventType).replaceAll("%2", eventSchedule )
+        return options.customSummary.replaceAll("%1", translations.eventType).replaceAll("%2", translations.eventSchedule);
       }
-      return `AWS Pickup ${eventType} (${eventSchedule}) ${(options?.offsetEvent) ? 'offset' : ''}`
+      return `${translations.pickup} ${translations.eventType} (${translations.eventSchedule})${(options?.offsetEvent) ? getTranslation(options?.translated, `term_offset`) || "Offset" : ''}`
     }
 
     originalData.data.forEach(event => {
