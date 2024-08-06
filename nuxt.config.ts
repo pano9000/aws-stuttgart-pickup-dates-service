@@ -34,10 +34,10 @@ export default defineNuxtConfig({
   typescript: {
     typeCheck: true
   },
-
+/*
   i18n: {
-    vueI18n: "./i18n/i18n.config.ts"
+    vueI18n: "./plugins/i18n.config.ts"
   }
-
+*/
 
 })
