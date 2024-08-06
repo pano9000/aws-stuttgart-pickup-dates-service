@@ -13,6 +13,7 @@ const i18nConfig = {
       schedule_W3: "tri-weekly",
       term_pickup: "Pickup",
       term_pickups: "Abholungen",
+      term_offset: "Offset",
       csv_header: "Date,Type,Schedule,Irregular Schedule,Streetname,Streetno\r\n"
     },
     de: {
@@ -25,6 +26,7 @@ const i18nConfig = {
       schedule_W3: "3-wöchentlich",
       term_pickup: "Abholung",
       term_pickups: "Abholungen",
+      term_offset: "Offset", //@TODO find translation
       csv_header: "Datum,Art,Turnus,Außerplanmäßiger Turnus,Straßenname,Straßennr\r\n"
     }
   }
