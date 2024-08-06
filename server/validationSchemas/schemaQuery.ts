@@ -12,7 +12,8 @@ export const schemaQuery = z.object({
         ? undefined
         : Array.from(new Set(str.split(",").map(splitVal => splitVal.trim())))
     })
-    .pipe(z.array(SchemaAwsApiServiceEventTypeName).optional()).catch(undefined)
+    .pipe(z.array(SchemaAwsApiServiceEventTypeName).optional()).catch(undefined),
+  translated: z.enum(["de", "en"]).optional().catch(undefined)
 });
 
 export type ApiQueryBase = z.infer<typeof schemaQuery>;
