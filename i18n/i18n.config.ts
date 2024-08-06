@@ -12,7 +12,7 @@ const i18nConfig = {
       schedule_W2: "bi-weekly",
       schedule_W3: "tri-weekly",
       term_pickup: "Pickup",
-      term_pickups: "Abholungen",
+      term_pickups: "Pickups",
       term_offset: "Offset",
       csv_header: "Date,Type,Schedule,Irregular Schedule,Streetname,Streetno\r\n"
     },
