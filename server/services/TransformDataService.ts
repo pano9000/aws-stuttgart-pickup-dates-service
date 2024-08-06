@@ -1,16 +1,22 @@
-import type { AwsApiServiceResponseAll } from "./AwsApiService"
+import type { AwsApiServiceResponseAll, AwsApiServiceEventTypeName, AwsApiServiceEventScheduleName } from "./AwsApiService"
 import ical, { ICalEventTransparency } from 'ical-generator';
 import { DateTime } from "luxon";
-
+import getTranslation from "~/server/utils/getTranslation"
 //@TODO: error handling?
 export class TransformDataService {
 
-  static toCSV(originalData: AwsApiServiceResponseAll): string {
+  static toCSV(originalData: AwsApiServiceResponseAll, options?: CSVOptions): string {
+
     //@TODO investigate if LF/CR could be come an issue?
-    const csvHeader = `date,type,schedule,irregularSchedule,streetname,streetno\r\n`;
+    const csvHeader = getTranslation(options?.translated, "csv_header") || `date,type,schedule,irregularSchedule,streetname,streetno\r\n`;
+
     //@TODO investigate if we need to wrap values in double quotes -> not sure if streetname/number might cause issues, if not
     const csvLines = originalData.data.map((event) => {
-      return [event.date, event.type, event.schedule, event.irregularSchedule, originalData.information.streetname, originalData.information.streetno].join(",")
+      const translations = {
+        eventType: getTranslation(options?.translated, `waste_${event.type}`) || event.type,
+        eventSchedule: getTranslation(options?.translated, `schedule_${event.schedule}`) || event.schedule,
+      }
+      return [event.date, translations.eventType, translations.eventSchedule, event.irregularSchedule, originalData.information.streetname, originalData.information.streetno].join(",")
     })
 
     return csvHeader + csvLines.join("\r\n")
@@ -35,12 +41,17 @@ export class TransformDataService {
       return date
     }
 
-    const createSummary = (eventType: string, eventSchedule: string) => {
+    const createSummary = (eventType: AwsApiServiceEventTypeName, eventSchedule: AwsApiServiceEventScheduleName) => {
+      const translations = {
+        eventType: getTranslation(options?.translated, `waste_${eventType}`) || eventType,
+        eventSchedule: getTranslation(options?.translated, `schedule_${eventSchedule}`) || eventSchedule,
+        pickup: getTranslation(options?.translated, `term_pickup`) || "Pickup"
+      }
       if (options?.customSummary) {
         //@TODO: strip any html? or vcalendar tags
-        return options.customSummary.replaceAll("%1", eventType).replaceAll("%2", eventSchedule )
+        return options.customSummary.replaceAll("%1", translations.eventType).replaceAll("%2", translations.eventSchedule);
       }
-      return `AWS Pickup ${eventType} (${eventSchedule}) ${(options?.offsetEvent) ? 'offset' : ''}`
+      return `${translations.pickup} ${translations.eventType} (${translations.eventSchedule})${(options?.offsetEvent) ? getTranslation(options?.translated, `term_offset`) || "Offset" : ''}`
     }
 
     originalData.data.forEach(event => {
@@ -69,11 +80,17 @@ export class TransformDataService {
 
 
 export type HourMinuteTuple = [hour: number, minute: number];
-export type ICalOptions = {
+export type ICalOptions = TransformDataServiceOptionsBase & {
   startTime?: HourMinuteTuple; // e.g. [6, 30]
   endTime?: HourMinuteTuple; // e.g. [7, 15]
   allDay?: boolean;
   alarm?: number // e.g. 600 -> 10 min before
   offsetEvent?: number // e.g. 1 -> for offsetting event by one day
-  customSummary?: string // e.g. 'Abholung Müll %1 (%2)' - where %1 is the type and %2 is the schedule
+  customSummary?: string // e.g. 'Abholung Müll %1 (%2)' - where %1 is the type and %2 is the schedule,
 }
+
+export type TransformDataServiceOptionsBase = {
+  translated?: "de" | "en" | undefined
+}
+
+export type CSVOptions = TransformDataServiceOptionsBase & {}

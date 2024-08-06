@@ -16,8 +16,18 @@ export default function getValidatedDataAndOptions(query: QueryObject): [validat
       offsetEvent: validatedData.offsetEvent,
       alarm: validatedData.alarm,
       customSummary: validatedData.customSummary,
+      translated: validatedData.translated
     }
     return [validatedData, formatOptions]
   }
+
+  else if (query.format === "csv") {
+    const validatedData = schemaQuery.parse(query); //@TODO replace with CSV, when CSV options are implemented
+    const formatOptions: ICalOptions = {
+      translated: validatedData.translated
+    }
+    return [validatedData, formatOptions]
+  }
+
   return [schemaQuery.parse(query), undefined]
 }

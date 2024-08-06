@@ -11,7 +11,7 @@ import { TransformDataService } from "./TransformDataService";
 import { DateTime } from "luxon";
 import { z } from "zod";
 
-import type { ICalOptions } from "./TransformDataService";
+import type { CSVOptions, ICalOptions } from "./TransformDataService";
 
 export class RetrieveDataFacade {
 
@@ -128,12 +128,12 @@ export class RetrieveDataFacade {
     return `$.data[?${filters.join(" && ")}]`
   }
 
-  #transformData(originalData: AwsApiServiceResponseAll, format: RetrieveDataFacadeFormat, formatOptions?: ICalOptions) {
+  #transformData(originalData: AwsApiServiceResponseAll, format: RetrieveDataFacadeFormat, formatOptions?: ICalOptions | CSVOptions) {
 
     switch (format) {
       case "csv":
         //@ts-ignore - @TODO check why .toCSV is not recognized correctly
-        return this.transformDataService.toCSV(originalData)
+        return this.transformDataService.toCSV(originalData, formatOptions)
 
       case "ical":
         //@ts-ignore - @TODO check why .toICal is not recognized correctly

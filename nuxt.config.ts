@@ -13,6 +13,8 @@ export default defineNuxtConfig({
 
     "@nuxt/test-utils/module",
 
+    "@nuxtjs/i18n",
+
     (_options, nuxt) => {
       nuxt.hooks.hook('vite:extendConfig', (config) => {
         // @ts-expect-error
@@ -31,5 +33,11 @@ export default defineNuxtConfig({
 
   typescript: {
     typeCheck: true
+  },
+/*
+  i18n: {
+    vueI18n: "./plugins/i18n.config.ts"
   }
+*/
+
 })
