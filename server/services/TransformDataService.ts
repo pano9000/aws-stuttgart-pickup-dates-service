@@ -69,11 +69,17 @@ export class TransformDataService {
 
 
 export type HourMinuteTuple = [hour: number, minute: number];
-export type ICalOptions = {
+export type ICalOptions = TransformDataServiceOptionsBase & {
   startTime?: HourMinuteTuple; // e.g. [6, 30]
   endTime?: HourMinuteTuple; // e.g. [7, 15]
   allDay?: boolean;
   alarm?: number // e.g. 600 -> 10 min before
   offsetEvent?: number // e.g. 1 -> for offsetting event by one day
-  customSummary?: string // e.g. 'Abholung Müll %1 (%2)' - where %1 is the type and %2 is the schedule
+  customSummary?: string // e.g. 'Abholung Müll %1 (%2)' - where %1 is the type and %2 is the schedule,
 }
+
+export type TransformDataServiceOptionsBase = {
+  translated?: "de" | "en" | undefined
+}
+
+export type CSVOptions = TransformDataServiceOptionsBase & {}
