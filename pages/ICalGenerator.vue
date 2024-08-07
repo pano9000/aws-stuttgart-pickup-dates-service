@@ -1,0 +1,129 @@
+<template>
+  <LocationPicker></LocationPicker>
+
+  <h1>Generate iCal Calendar</h1>
+
+  <v-container>
+    <v-row>
+      <v-checkbox label="Recycle" value="recycle" v-model="formatOptions.type"></v-checkbox>
+      <v-checkbox label="Paper" value="paper" v-model="formatOptions.type"></v-checkbox>
+      <v-checkbox label="Residual" value="residual" v-model="formatOptions.type"></v-checkbox>
+      <v-checkbox label="Organic" value="organic" v-model="formatOptions.type"></v-checkbox>
+    </v-row>
+  </v-container>
+
+  <v-container>
+    <v-row>
+      <v-col>
+        Select Event start time
+        <v-input>
+          <input type="time" label="Start Time" v-model="formatOptions.startTime">
+        </v-input>
+      </v-col>
+      <v-col>
+        Select Event End time
+        <v-input 
+          label="End Time" 
+        >
+          <input type="time" v-model="formatOptions.endTime">
+        </v-input>
+      </v-col>
+      <v-col>
+        <p>Show Event as All Day Event</p>
+        <v-checkbox label="All Day" v-model="formatOptions.allDay"></v-checkbox>
+      </v-col>
+    </v-row>
+  </v-container>
+
+  <p>Create Alarm?</p>
+  {{ formatOptions.alarm }}
+ 
+  <hr>
+  <v-container>
+    <p>Offset Event by days</p>
+    <v-input 
+          label="Days to Offset by" 
+        >
+          <input type="number" min="0" max="999" v-model="formatOptions.offsetEvent">
+        </v-input>
+
+    <v-alert
+      color="info"
+      icon="$info"
+      title="Info"
+      text="Use this, if you want the event to be displayed e.g. the day before the actual pickup happens. This way you can use the calendar event as reminder to put out the trash, the night before the pickup happens."
+    >
+      <p>slot test</p>
+    </v-alert>
+
+
+  </v-container>
+
+  <p>Custom summary</p>
+  {{ formatOptions.customSummary }}
+  <v-text-field 
+    label="Custom Summary" 
+    v-model="formatOptions.customSummary"
+  >
+  </v-text-field>
+
+  <v-text-field 
+    class="h-25"
+    label="Url" 
+    v-model="icalUrl"
+    :editable="false"
+  >
+  </v-text-field>
+
+</template>
+
+<script setup lang="ts">
+
+  import { useCookieUserConfig } from "~/components/useCookieUserConfig";
+  import type { ICalOptions } from "~/server/services/TransformDataService";
+  const { cookieStreet, cookieLanguage } = useCookieUserConfig();
+
+  type UiICalFormatOptions = Omit<ICalOptions, "startTime" | "endTime" | "translated"> & {
+    startTime?: string;
+    endTime?: string;
+    type?: string[];
+  }
+
+  const formatOptions = ref<UiICalFormatOptions>({
+    type: ["residual","organic","paper","recycle"],
+    startTime: "06:30",
+    endTime: "07:00",
+    alarm: 600,
+    allDay: undefined,
+    offsetEvent: undefined,
+    customSummary: undefined
+  });
+
+  const icalUrl = computed( () => {
+    const urlParams = new URLSearchParams([
+      ["streetname", cookieStreet.value.streetname],
+      ["streetno", cookieStreet.value.streetno],
+      ["format", "ical"],
+      ["translate", cookieLanguage.value],
+    ]);
+
+    const a: [queryParam: string, queryValue: string | boolean | number | undefined][] = [
+      ["startTime", formatOptions.value.startTime],
+      ["endTime", formatOptions.value.endTime],
+      ["allDay", formatOptions.value.allDay],
+      ["alarm", formatOptions.value.alarm],
+      ["offsetEvent", formatOptions.value.offsetEvent],
+      ["customSummary", formatOptions.value.customSummary],
+      ["type", formatOptions.value.type?.join(",")]
+    ]
+    a.forEach(queryParamTuple => {
+      if (queryParamTuple[1]) {
+        urlParams.append(queryParamTuple[0], queryParamTuple[1].toString())
+      }
+    })
+    //urlParams.append("customSummary", formatOptions.value.customSummary as string)
+    return urlParams
+  })
+
+
+</script>
