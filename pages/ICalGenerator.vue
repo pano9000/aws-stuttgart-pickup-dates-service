@@ -86,7 +86,7 @@
   type UiICalFormatOptions = Omit<ICalOptions, "startTime" | "endTime" | "translated"> & {
     startTime?: string;
     endTime?: string;
-    type?: string[];
+    type?: AwsApiServiceEventTypeName[];
   }
 
   const formatOptions = ref<UiICalFormatOptions>({
