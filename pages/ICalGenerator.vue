@@ -102,7 +102,7 @@
 </template>
 
 <script setup lang="ts">
-
+  import CardIcon from "~/components/CardIcon.vue";
   import { useCookieUserConfig } from "~/components/useCookieUserConfig";
   import type { ICalOptions } from "~/server/services/TransformDataService";
   const { cookieStreet, cookieLanguage } = useCookieUserConfig();
