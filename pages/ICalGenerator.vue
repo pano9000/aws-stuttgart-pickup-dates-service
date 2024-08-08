@@ -83,13 +83,16 @@
 
   </v-container>
 
-  <p>Custom summary</p>
-  {{ formatOptions.customSummary }}
-  <v-text-field 
-    label="Custom Summary" 
-    v-model="formatOptions.customSummary"
-  >
-  </v-text-field>
+  <v-container>
+    <h2>Custom Event Title</h2>
+    <p>Set a custom event title, if you want. You can use %1 and %2 as placeholders for the event type and the event schedule frequency.</p>
+
+    <v-text-field 
+      label="Custom Summary" 
+      v-model="formatOptions.customSummary"
+    >
+    </v-text-field>
+  </v-container>
 
   <v-container>
     <h2>Your custom iCal Link</h2>
