@@ -106,6 +106,7 @@
   import { useCookieUserConfig } from "~/components/useCookieUserConfig";
   import type { ICalOptions } from "~/server/services/TransformDataService";
   const { cookieStreet, cookieLanguage } = useCookieUserConfig();
+  import type { AwsApiServiceEventTypeName } from "~/server/services/AwsApiService";
 
   type UiICalFormatOptions = Omit<ICalOptions, "startTime" | "endTime" | "translated"> & {
     startTime?: string;
