@@ -110,9 +110,13 @@
       >
       </v-text-field>
 
-      <v-tooltip text="Copy to Clipboard" location="top">
+      <v-tooltip :text="(!copiedToClipboard) ? 'Copy to Clipboard' : 'Copied'" location="top">
         <template v-slot:activator="{ props }">
-          <v-btn icon="mdi-clipboard-text-outline" v-bind="props"></v-btn> <!-- use clipboard-check-outline for checked state -->
+          <v-btn 
+            :icon="(!copiedToClipboard) ? 'mdi-clipboard-text-outline' : 'mdi-clipboard-check-outline'"
+            v-bind="props" 
+            @click="copyToClipboardHandler">
+          </v-btn>
         </template>
       </v-tooltip>
 
@@ -144,6 +148,9 @@
   });
 
   const disabledAlarm = ref<boolean>(false);
+  const copiedToClipboard = ref<boolean>(false);
+
+
 
   const icalUrl = computed( () => {
     const urlParams = new URLSearchParams([
@@ -170,6 +177,13 @@
     //urlParams.append("customSummary", formatOptions.value.customSummary as string)
     return urlParams
   })
+
+
+  function copyToClipboardHandler() {
+    copiedToClipboard.value = true;
+    navigator.clipboard.writeText(icalUrl.value.toString());
+    setTimeout( () => copiedToClipboard.value = false, 1000)
+  }
 
 
 </script>
