@@ -7,18 +7,16 @@
     <h2>Type of Pickups</h2>
     <p>Select the type of pickups that should appear in your iCal</p>
     <v-row>
-      <v-checkbox label="Recycle" value="recycle" v-model="formatOptions.type"></v-checkbox>
-      <CardIcon :event-type="'recycle'"></CardIcon>
-
-      <v-checkbox label="Paper" value="paper" v-model="formatOptions.type"></v-checkbox>
-      <CardIcon :event-type="'paper'"></CardIcon>
-
-      <v-checkbox label="Residual" value="residual" v-model="formatOptions.type"></v-checkbox>
-      <CardIcon :event-type="'residual'"></CardIcon>
-
-      <v-checkbox label="Organic" value="organic" v-model="formatOptions.type"></v-checkbox>
-      <CardIcon :event-type="'organic'"></CardIcon>
+      <div v-for="eventType in ['recycle', 'paper', 'residual', 'organic'] as AwsApiServiceEventTypeName[]">
+        <v-checkbox :value="eventType" v-model="formatOptions.type">
+          <template #label>
+            <CardIcon :event-type="eventType"></CardIcon>
+            {{ eventType }}
+          </template>
+        </v-checkbox>
+      </div>
     </v-row>
+
   </v-container>
 
   <v-container>
