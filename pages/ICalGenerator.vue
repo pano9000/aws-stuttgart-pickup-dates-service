@@ -44,10 +44,25 @@
     </v-row>
   </v-container>
 
-  <p>Create Alarm?</p>
-  {{ formatOptions.alarm }}
- 
-  <hr>
+  <v-container>
+    <h2>Event Alarm</h2>
+    <p>Set if you want to add a alarm notification for the events in minutes</p>
+    <v-row>
+      <v-input>
+          <input 
+            type="number"
+            min="0"
+            max="999999"
+            step="15"
+            label="Show Alarm Before Event" 
+            v-model.lazy="formatOptions.alarm"
+            :disabled="disabledAlarm"
+          >
+      </v-input>
+
+      <v-checkbox label="Disable Alarm" v-model="disabledAlarm"></v-checkbox>
+    </v-row>
+  </v-container>
   <v-container>
     <p>Offset Event by days</p>
     <v-input 
@@ -102,11 +117,13 @@
     type: ["residual","organic","paper","recycle"],
     startTime: "06:30",
     endTime: "07:00",
-    alarm: 600,
+    alarm: 15,
     allDay: undefined,
     offsetEvent: undefined,
     customSummary: undefined
   });
+
+  const disabledAlarm = ref<boolean>(false);
 
   const icalUrl = computed( () => {
     const urlParams = new URLSearchParams([
@@ -120,7 +137,7 @@
       ["startTime", formatOptions.value.startTime],
       ["endTime", formatOptions.value.endTime],
       ["allDay", formatOptions.value.allDay],
-      ["alarm", formatOptions.value.alarm],
+      ["alarm", (disabledAlarm.value) ? undefined : formatOptions.value.alarm || 0 * 60],
       ["offsetEvent", formatOptions.value.offsetEvent],
       ["customSummary", formatOptions.value.customSummary],
       ["type", formatOptions.value.type?.join(",")]
