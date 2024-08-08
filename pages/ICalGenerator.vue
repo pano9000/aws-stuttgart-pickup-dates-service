@@ -1,7 +1,7 @@
 <template>
   <LocationPicker></LocationPicker>
 
-  <h1>Generate iCal Calendar</h1>
+  <h1>Generate Custom iCal Calendar</h1>
 
   <v-container>
     <h2>Type of Pickups</h2>
@@ -22,15 +22,17 @@
   </v-container>
 
   <v-container>
+    <h2>Event Times</h2>
+    <p>Set the start and end time of the iCal event, and how you want it to display</p>
     <v-row>
       <v-col>
-        Select Event start time
+        Set Event start time
         <v-input>
           <input type="time" label="Start Time" v-model="formatOptions.startTime">
         </v-input>
       </v-col>
       <v-col>
-        Select Event End time
+        Set Event End time
         <v-input 
           label="End Time" 
         >
@@ -38,7 +40,7 @@
         </v-input>
       </v-col>
       <v-col>
-        <p>Show Event as All Day Event</p>
+        <p>Set Event as All Day Event</p>
         <v-checkbox label="All Day" v-model="formatOptions.allDay"></v-checkbox>
       </v-col>
     </v-row>
@@ -63,8 +65,11 @@
       <v-checkbox label="Disable Alarm" v-model="disabledAlarm"></v-checkbox>
     </v-row>
   </v-container>
+
   <v-container>
-    <p>Offset Event by days</p>
+    <h2>Offset Event</h2>
+    <p>Set if you want to show the event before the actual pickup day. This can be useful, if you want to use the event as a reminder to bring out the waste the evening before the pickuo happens in the next morning</p>
+
     <v-input 
           label="Days to Offset by" 
         >
