@@ -130,7 +130,7 @@
       ["streetname", cookieStreet.value.streetname],
       ["streetno", cookieStreet.value.streetno],
       ["format", "ical"],
-      ["translate", cookieLanguage.value],
+      ["translate", cookieLanguage.value || "de"],
     ]);
 
     const a: [queryParam: string, queryValue: string | boolean | number | undefined][] = [
