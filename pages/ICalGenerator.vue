@@ -91,14 +91,25 @@
   >
   </v-text-field>
 
-  <v-text-field 
-    class="h-25"
-    label="Url" 
-    v-model="icalUrl"
-    :editable="false"
-  >
-  </v-text-field>
+  <v-container>
+    <h2>Your custom iCal Link</h2>
+    <v-row>
+      <v-text-field
+        class="h-25"
+        label="Url"
+        v-model="icalUrl"
+        :editable="false"
+      >
+      </v-text-field>
 
+      <v-tooltip text="Copy to Clipboard" location="top">
+        <template v-slot:activator="{ props }">
+          <v-btn icon="mdi-clipboard-text-outline" v-bind="props"></v-btn> <!-- use clipboard-check-outline for checked state -->
+        </template>
+      </v-tooltip>
+
+    </v-row>
+  </v-container>
 </template>
 
 <script setup lang="ts">
