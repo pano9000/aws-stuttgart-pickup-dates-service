@@ -8,16 +8,16 @@
     <p>Select the type of pickups that should appear in your iCal</p>
     <v-row>
       <v-checkbox label="Recycle" value="recycle" v-model="formatOptions.type"></v-checkbox>
-      <CardIcon :event-type="'recycle'" :size="36"></CardIcon>
+      <CardIcon :event-type="'recycle'"></CardIcon>
 
       <v-checkbox label="Paper" value="paper" v-model="formatOptions.type"></v-checkbox>
-      <CardIcon :event-type="'paper'" :size="36"></CardIcon>
+      <CardIcon :event-type="'paper'"></CardIcon>
 
       <v-checkbox label="Residual" value="residual" v-model="formatOptions.type"></v-checkbox>
-      <CardIcon :event-type="'residual'" :size="36"></CardIcon>
+      <CardIcon :event-type="'residual'"></CardIcon>
 
       <v-checkbox label="Organic" value="organic" v-model="formatOptions.type"></v-checkbox>
-      <CardIcon :event-type="'organic'" :size="36"></CardIcon>
+      <CardIcon :event-type="'organic'"></CardIcon>
     </v-row>
   </v-container>
 
