@@ -129,7 +129,7 @@
           <v-btn 
             :icon="(!copiedToClipboard) ? 'mdi-clipboard-text-outline' : 'mdi-clipboard-check-outline'"
             v-bind="props" 
-            @click="copyToClipboardHandler">
+            @click="() => copyToClipboardHandler(icalUrl.toString())">
           </v-btn>
         </template>
       </v-tooltip>
@@ -148,15 +148,18 @@
 <script setup lang="ts">
   import CardIcon from "~/components/CardIcon.vue";
   import { useCookieUserConfig } from "~/components/useCookieUserConfig";
+  import { useCopyToClipboard } from "~/composables/useCopyToClipboard";
   import type { ICalOptions } from "~/server/services/TransformDataService";
-  const { cookieStreet, cookieLanguage } = useCookieUserConfig();
   import type { AwsApiServiceEventTypeName } from "~/server/services/AwsApiService";
-
+  
   type UiICalFormatOptions = Omit<ICalOptions, "startTime" | "endTime" | "translated"> & {
     startTime?: string;
     endTime?: string;
     type?: AwsApiServiceEventTypeName[];
   }
+
+  const { cookieStreet, cookieLanguage } = useCookieUserConfig();
+  const { copiedToClipboard, copyToClipboardHandler } = useCopyToClipboard();
 
   const formatOptions = ref<UiICalFormatOptions>({
     type: [],
@@ -169,9 +172,6 @@
   });
 
   const disabledAlarm = ref<boolean>(false);
-  const copiedToClipboard = ref<boolean>(false);
-
-
 
   const icalUrl = computed( () => {
     const urlParams = new URLSearchParams([
@@ -205,13 +205,6 @@
     ["residual", "black"],
     ["organic", "brown"]
   ];
-
-
-  function copyToClipboardHandler() {
-    copiedToClipboard.value = true;
-    navigator.clipboard.writeText(icalUrl.value.toString());
-    setTimeout( () => copiedToClipboard.value = false, 1000)
-  }
 
   //workaround due to some hydration mismatch issue in vuetify, when setting the values server side already
   onMounted( () => {
