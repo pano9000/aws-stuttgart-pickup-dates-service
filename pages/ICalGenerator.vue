@@ -3,12 +3,38 @@
 
   <h1>Generate Custom iCal Calendar</h1>
 
-  <v-container>
+  <p>Use the options below to generate a custom iCal Calendar for the Pickup Dates</p>
+
+  <v-card class="ma-4 pa-4">
     <h2>Type of Pickups</h2>
-    <p>Select the type of pickups that should appear in your iCal</p>
-    <v-row>
-      <div v-for="eventType in ['recycle', 'paper', 'residual', 'organic'] as AwsApiServiceEventTypeName[]">
-        <v-checkbox :value="eventType" v-model="formatOptions.type">
+    <p>Select the type of pickups that you want to appear as events in the calendar</p>
+
+    <v-btn-toggle
+      v-model="formatOptions.type"
+      multiple
+      mandatory
+    >
+      <v-btn
+        v-for="eventType in eventTypeColorTuple" :key="eventType[0]" 
+        :value="eventType[0]"
+        :color="eventType[1]"
+
+      >
+        <CardIcon :event-type="eventType[0]" class="position-relative"></CardIcon>
+        <!-- @TODO there must be a more performatn way than the one below / bitmask maybe? -->
+        <v-icon
+          v-show="formatOptions.type?.includes(eventType[0])"
+          icon="mdi-check" 
+          class="position-absolute top-0"
+        ></v-icon>
+        {{ eventType[0] }}
+      </v-btn>
+    </v-btn-toggle>
+
+
+    <!--<v-row>
+      <div v-for="eventType in ['paper', 'recycle', 'residual', 'organic'] as AwsApiServiceEventTypeName[]">
+        <v-checkbox :value="eventType" v-model="formatOptions.type" :hide-details="true">
           <template #label>
             <CardIcon :event-type="eventType"></CardIcon>
             {{ eventType }}
@@ -16,6 +42,9 @@
         </v-checkbox>
       </div>
     </v-row>
+    -->
+
+  </v-card>
 
   <v-card class="ma-4 pa-4">
     <h2>Event Times</h2>
@@ -130,7 +159,7 @@
   }
 
   const formatOptions = ref<UiICalFormatOptions>({
-    type: ["residual","organic","paper","recycle"],
+    type: [],
     startTime: "06:30",
     endTime: "07:00",
     alarm: 15,
@@ -170,6 +199,13 @@
     return urlParams
   })
 
+  const eventTypeColorTuple: [eventType: AwsApiServiceEventTypeName, color: string][] = [
+    ["paper", "light-green"],
+    ["recycle", "yellow"],
+    ["residual", "black"],
+    ["organic", "brown"]
+  ];
+
 
   function copyToClipboardHandler() {
     copiedToClipboard.value = true;
@@ -177,5 +213,9 @@
     setTimeout( () => copiedToClipboard.value = false, 1000)
   }
 
+  //workaround due to some hydration mismatch issue in vuetify, when setting the values server side already
+  onMounted( () => {
+    formatOptions.value.type = eventTypeColorTuple.map(eventType => eventType[0])
+  })
 
 </script>
