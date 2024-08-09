@@ -91,16 +91,9 @@
     </v-text-field>
   </v-container>
 
-  <v-container>
+  <v-card class="ma-4 pa-4">
     <h2>Your custom iCal Link</h2>
-    <v-row>
-      <v-text-field
-        class="h-25"
-        label="Url"
-        v-model="icalUrl"
-        :editable="false"
-      >
-      </v-text-field>
+    <div class="d-flex ga-4">
 
       <v-tooltip :text="(!copiedToClipboard) ? 'Copy to Clipboard' : 'Copied'" location="top">
         <template v-slot:activator="{ props }">
@@ -111,9 +104,16 @@
           </v-btn>
         </template>
       </v-tooltip>
-
-    </v-row>
-  </v-container>
+  
+      <v-text-field
+        class="h-25"
+        v-model="icalUrl"
+        :editable="false"
+        :readonly="true"
+      >
+      </v-text-field>
+    </div>
+  </v-card>
 </template>
 
 <script setup lang="ts">
