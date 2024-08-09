@@ -17,32 +17,26 @@
       </div>
     </v-row>
 
-  </v-container>
-
-  <v-container>
+  <v-card class="ma-4 pa-4">
     <h2>Event Times</h2>
     <p>Set the start and end time of the iCal event, and how you want it to display</p>
-    <v-row>
-      <v-col>
-        Set Event start time
-        <v-input>
-          <input type="time" label="Start Time" v-model="formatOptions.startTime">
-        </v-input>
-      </v-col>
-      <v-col>
-        Set Event End time
-        <v-input 
-          label="End Time" 
-        >
-          <input type="time" v-model="formatOptions.endTime">
-        </v-input>
-      </v-col>
-      <v-col>
-        <p>Set Event as All Day Event</p>
-        <v-checkbox label="All Day" v-model="formatOptions.allDay"></v-checkbox>
-      </v-col>
-    </v-row>
-  </v-container>
+    <div class="d-flex">
+      <TimeRangeInput 
+        icon="mdi-clock-outline"
+        v-model:start-time="formatOptions.startTime"
+        v-model:end-time="formatOptions.endTime"
+      ></TimeRangeInput>
+
+      <v-checkbox
+        label="All Day"
+        v-model="formatOptions.allDay"
+        :hide-details="true"
+      >
+      </v-checkbox>
+    </div>
+
+  
+  </v-card>
 
   <v-container>
     <h2>Event Alarm</h2>
