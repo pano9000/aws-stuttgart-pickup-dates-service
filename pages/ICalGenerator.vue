@@ -147,7 +147,7 @@
 
 <script setup lang="ts">
   import CardIcon from "~/components/CardIcon.vue";
-  import { useCookieUserConfig } from "~/components/useCookieUserConfig";
+  import { useCookieUserConfig } from "~/composables/useCookieUserConfig";
   import { useCopyToClipboard } from "~/composables/useCopyToClipboard";
   import type { ICalOptions } from "~/server/services/TransformDataService";
   import type { AwsApiServiceEventTypeName } from "~/server/services/AwsApiService";
