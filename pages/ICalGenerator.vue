@@ -181,7 +181,7 @@
       ["translate", cookieLanguage.value || "de"],
     ]);
 
-    const a: [queryParam: string, queryValue: string | boolean | number | undefined][] = [
+    const optionalParams: [queryParam: string, queryValue: string | boolean | number | undefined][] = [
       ["startTime", formatOptions.value.startTime],
       ["endTime", formatOptions.value.endTime],
       ["allDay", formatOptions.value.allDay],
@@ -189,14 +189,15 @@
       ["offsetEvent", formatOptions.value.offsetEvent],
       ["customSummary", formatOptions.value.customSummary],
       ["type", formatOptions.value.type?.join(",")]
-    ]
-    a.forEach(queryParamTuple => {
+    ];
+
+    optionalParams.forEach(queryParamTuple => {
       if (queryParamTuple[1]) {
         urlParams.append(queryParamTuple[0], queryParamTuple[1].toString())
       }
-    })
-    //urlParams.append("customSummary", formatOptions.value.customSummary as string)
-    return urlParams
+    });
+
+    return urlParams;
   })
 
   const eventTypeColorTuple: [eventType: AwsApiServiceEventTypeName, color: string][] = [
