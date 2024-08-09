@@ -134,9 +134,9 @@
     startTime: "06:30",
     endTime: "07:00",
     alarm: 15,
-    allDay: undefined,
-    offsetEvent: undefined,
-    customSummary: undefined
+    allDay: false,
+    offsetEvent: 0,
+    customSummary: ""
   });
 
   const disabledAlarm = ref<boolean>(false);
