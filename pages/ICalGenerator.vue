@@ -5,9 +5,11 @@
 
   <p>Use the options below to generate a custom iCal Calendar for the Pickup Dates</p>
 
-  <v-card class="ma-4 pa-4">
-    <h2>Type of Pickups</h2>
-    <p>Select the type of pickups that you want to appear as events in the calendar</p>
+  <v-card
+    class="my-4 pa-4"
+    title="Pickup Events"
+    subtitle="Select the type of pickups that you want to appear as events in the calendar"
+  >
 
     <v-btn-toggle
       v-model="formatOptions.type"
@@ -18,7 +20,7 @@
         v-for="eventType in eventTypeColorTuple" :key="eventType[0]" 
         :value="eventType[0]"
         :color="eventType[1]"
-
+        class="custom-transform-class text-none"
       >
         <CardIcon :event-type="eventType[0]" class="position-relative"></CardIcon>
         <!-- @TODO there must be a more performatn way than the one below / bitmask maybe? -->
