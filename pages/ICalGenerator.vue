@@ -46,25 +46,37 @@
 
   </v-card>
 
-  <v-card class="ma-4 pa-4">
-    <h2>Event Times</h2>
-    <p>Set the start and end time of the iCal event, and how you want it to display</p>
-    <div class="d-flex">
-      <TimeRangeInput 
-        icon="mdi-clock-outline"
-        v-model:start-time="formatOptions.startTime"
-        v-model:end-time="formatOptions.endTime"
-      ></TimeRangeInput>
+  <v-card
+    class="my-4 pa-4"
+    title="Event Times"
+    subtitle="Set the start and end time of the iCal events"
+  >
+    <v-card-text class="my-2">
+      <v-row align="stretch">
+        <v-input
+          :hide-details="true"
+          class="flex-0-1"
+        >
+          <TimeRangeInput 
+            icon="mdi-clock-outline"
+            v-model:start-time="formatOptions.startTime"
+            v-model:end-time="formatOptions.endTime"
+          ></TimeRangeInput>
+        </v-input>
+        <v-divider vertical class="ms-4" opacity="25"</v-divider>
+        <v-checkbox
+          label="All Day"
+          v-model="formatOptions.allDay"
+          :hide-details="true"
+        >
+          <template v-slot:label>
+            <span>All Day</span>
+            <v-icon icon="mdi-hours-24"></v-icon>
+          </template>
+        </v-checkbox>
+      </v-row>
+    </v-card-text>
 
-      <v-checkbox
-        label="All Day"
-        v-model="formatOptions.allDay"
-        :hide-details="true"
-      >
-      </v-checkbox>
-    </div>
-
-  
   </v-card>
 
   <v-container>

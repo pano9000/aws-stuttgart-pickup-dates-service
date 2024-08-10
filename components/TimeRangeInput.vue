@@ -1,6 +1,6 @@
 <template>
   <div class="timerangeinput__wrap">
-    <v-icon v-if="props.icon" :icon="props.icon"></v-icon>
+    <v-icon v-if="props.icon" :icon="props.icon" class="mr-2"></v-icon>
     <input
       v-model="modelStartTime"
       type="time"
@@ -27,6 +27,12 @@
 </script>
 
 <style scoped>
+
+.timerangeinput__wrap {
+  min-height: var(--v-input-control-height);
+  align-content: center;
+}
+
 .timerangeinput__wrap input {
   border: 1px solid black; 
   border-radius: 5px; /*@TODO: check how to use same style as vuetify here*/
