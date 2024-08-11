@@ -162,16 +162,35 @@
     </v-card-text>
   </v-card>
 
-  <v-container>
-    <h2>Custom Event Title</h2>
-    <p>Set a custom event title, if you want. You can use %1 and %2 as placeholders for the event type and the event schedule frequency.</p>
+  <v-card
+    class="my-4 pa-4"
+    title="Event Title"
+    subtitle="Set the event title"
+  >
+    <v-card-text>
+      <v-text-field
+        label="Event Title"
+        v-model="formatOptions.customSummary"
+      >
+      </v-text-field>
 
-    <v-text-field 
-      label="Custom Summary" 
-      v-model="formatOptions.customSummary"
-    >
-    </v-text-field>
-  </v-container>
+      <v-text-field
+        label="Event Title Preview"
+        v-model="eventSummaryPreview"
+        :readonly="true"
+      >
+      </v-text-field>
+  
+      <v-alert
+        color="info"
+        icon="$info"
+        title="Info"
+      >
+        <p>You can use %1 and %2 as placeholders for the event type and the event schedule frequency.</p>
+      </v-alert>
+
+    </v-card-text>
+  </v-card>
 
   <v-card
     class="my-4 pa-4"
@@ -270,6 +289,11 @@
 
     apiUrl.search = urlParams.toString();
     return apiUrl.toString();
+  })
+
+
+  const eventSummaryPreview = computed( () => {
+    return formatOptions.value.customSummary?.replaceAll("%1", "Recycleable Waste").replaceAll("%2", "bi-weekly");
   })
 
   const eventTypeColorTuple: [eventType: AwsApiServiceEventTypeName, color: string][] = [
