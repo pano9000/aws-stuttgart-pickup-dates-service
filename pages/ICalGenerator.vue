@@ -215,10 +215,10 @@
   })
 
   const eventTypeColorTuple: [eventType: AwsApiServiceEventTypeName, color: string][] = [
-    ["paper", "light-green"],
-    ["recycle", "yellow"],
-    ["residual", "black"],
-    ["organic", "brown"]
+    ["paper", "#6B975E"], //
+    ["recycle", "#F3C200"],
+    ["residual", "black"], // AWS uses #3C4146
+    ["organic", "brown"] // AWS used #8D6146
   ];
 
   //workaround due to some hydration mismatch issue in vuetify, when setting the values server side already
