@@ -182,7 +182,7 @@
     alarm: 15,
     allDay: false,
     offsetEvent: 0,
-    customSummary: ""
+    customSummary: "Pickup %1 (%2)"
   });
 
   const disabledAlarm = ref<boolean>(false);
