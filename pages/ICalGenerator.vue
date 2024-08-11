@@ -1,7 +1,8 @@
 <template>
   <LocationPicker></LocationPicker>
 
-  <h1>Generate Custom iCal Calendar</h1>
+  <v-container>
+  <h1 class="text-h3 text-center">Generate Custom iCal Calendar</h1>
 
   <p>Use the options below to generate a custom iCal Calendar for the Pickup Dates</p>
 
@@ -157,6 +158,7 @@
       </v-text-field>
     </div>
   </v-card>
+</v-container>
 </template>
 
 <script setup lang="ts">
