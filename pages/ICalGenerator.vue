@@ -11,41 +11,33 @@
     title="Pickup Events"
     subtitle="Select the type of pickups that you want to appear as events in the calendar"
   >
-
-    <v-btn-toggle
-      v-model="formatOptions.type"
-      multiple
-      mandatory
-    >
-      <v-btn
-        v-for="eventType in eventTypeColorTuple" :key="eventType[0]" 
-        :value="eventType[0]"
-        :color="eventType[1]"
-        class="custom-transform-class text-none"
-      >
-        <CardIcon :event-type="eventType[0]" class="position-relative"></CardIcon>
-        <!-- @TODO there must be a more performatn way than the one below / bitmask maybe? -->
-        <v-icon
-          v-show="formatOptions.type?.includes(eventType[0])"
-          icon="mdi-check" 
-          class="position-absolute top-0"
-        ></v-icon>
-        {{ eventType[0] }}
-      </v-btn>
-    </v-btn-toggle>
-
-
-    <!--<v-row>
-      <div v-for="eventType in ['paper', 'recycle', 'residual', 'organic'] as AwsApiServiceEventTypeName[]">
-        <v-checkbox :value="eventType" v-model="formatOptions.type" :hide-details="true">
-          <template #label>
-            <CardIcon :event-type="eventType"></CardIcon>
-            {{ eventType }}
-          </template>
-        </v-checkbox>
-      </div>
-    </v-row>
-    -->
+    <v-card-text>
+      <v-row>
+        <v-col cols="auto">
+          <v-btn-toggle
+            v-model="formatOptions.type"
+            multiple
+            mandatory
+          >
+            <v-btn
+              v-for="eventType in eventTypeColorTuple" :key="eventType[0]" 
+              :value="eventType[0]"
+              :color="eventType[1]"
+              class="custom-transform-class text-none"
+            >
+              <CardIcon :event-type="eventType[0]" class="position-relative"></CardIcon>
+              <!-- @TODO there must be a more performatn way than the one below / bitmask maybe? -->
+              <v-icon
+                v-show="formatOptions.type?.includes(eventType[0])"
+                icon="mdi-check" 
+                class="position-absolute top-0"
+              ></v-icon>
+              {{ eventType[0] }}
+            </v-btn>
+          </v-btn-toggle>
+        </v-col>
+      </v-row>
+    </v-card-text>
 
   </v-card>
 
