@@ -74,25 +74,52 @@
 
   </v-card>
 
-  <v-container>
-    <h2>Event Alarm</h2>
-    <p>Set if you want to add a alarm notification for the events in minutes</p>
-    <v-row>
-      <v-input>
-          <input 
-            type="number"
-            min="0"
-            max="999999"
-            step="15"
-            label="Show Alarm Before Event" 
-            v-model.lazy="formatOptions.alarm"
-            :disabled="disabledAlarm"
+  <v-card
+    class="my-4 pa-4"
+    title="Event Alarm"
+    subtitle="Set an alarm notification before for the event"
+  >
+    <v-card-text>
+      <v-row>
+        <v-col cols="auto">
+          <v-input 
+            class="flex-0-1"
+            :hide-details="true"
           >
-      </v-input>
+            <NumberInput
+              icon="mdi-bell-outline"
+              id="numberinput__alarm"
+              label="minute(s) before"
+              :min=0
+              :max=720
+              :step=5
+              :disabled="disabledAlarm"
+              v-model:input-number="formatOptions.alarm"
+            >
+            </NumberInput>
+          </v-input>
+        </v-col>
 
-      <v-checkbox label="Disable Alarm" v-model="disabledAlarm"></v-checkbox>
-    </v-row>
-  </v-container>
+        <v-col cols="auto" align-self="center">
+          <v-divider vertical length="2em" opacity="50"></v-divider>
+        </v-col>
+
+        <v-col cols="auto">
+          <v-checkbox
+            label="Disable Alarm"
+            v-model="disabledAlarm"
+            :hide-details="true"
+          >
+          <template v-slot:label>
+            <v-icon icon="mdi-bell-off-outline"></v-icon>
+            <span>Disable Alarm</span>
+          </template>
+
+          </v-checkbox>
+        </v-col>
+      </v-row>
+    </v-card-text>
+  </v-card>
 
   <v-container>
     <h2>Offset Event</h2>
