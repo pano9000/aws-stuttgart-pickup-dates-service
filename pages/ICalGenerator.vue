@@ -121,27 +121,38 @@
     </v-card-text>
   </v-card>
 
-  <v-container>
-    <h2>Offset Event</h2>
-    <p>Set if you want to show the event before the actual pickup day. This can be useful, if you want to use the event as a reminder to bring out the waste the evening before the pickuo happens in the next morning</p>
+  <v-card 
+    class="my-4 pa-4"
+    title="Offset Event"
+    subtitle="Set if you want to show the event before the actual pickup day"
+  >
 
-    <v-input 
-          label="Days to Offset by" 
-        >
-          <input type="number" min="0" max="999" v-model="formatOptions.offsetEvent">
-        </v-input>
+    <v-card-text>
+      <v-row>
+        <v-col>
+          <v-input class="flex-0-1">
+            <NumberInput
+              icon="mdi-rewind-outline"
+              :id="'numberinput__offset'"
+              :label="'day(s) earlier'"
+              :min=0
+              :max=7
+              v-model:input-number="formatOptions.offsetEvent"
+            >
+            </NumberInput>
+          </v-input>
+        </v-col>
+      </v-row>
 
-    <v-alert
-      color="info"
-      icon="$info"
-      title="Info"
-      text="Use this, if you want the event to be displayed e.g. the day before the actual pickup happens. This way you can use the calendar event as reminder to put out the trash, the night before the pickup happens."
-    >
-      <p>slot test</p>
-    </v-alert>
-
-
-  </v-container>
+      <v-alert
+        color="info"
+        icon="$info"
+        title="Info"
+        text="Use this, if you want the event to appear in your calendar before the actual pickup happens. This way you can use the calendar event as reminder to put out the trash, e.g. the night before the pickup happens."
+      >
+      </v-alert>
+    </v-card-text>
+  </v-card>
 
   <v-container>
     <h2>Custom Event Title</h2>
