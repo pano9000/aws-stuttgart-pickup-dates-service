@@ -1,3 +1,4 @@
+//@ts-expect-error
 import { createServer } from "@mocks-server/main";
 import awsAPIPickup from "./routes/awsAPIpickup.js"
 import collections from "./collections.js";
