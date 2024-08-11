@@ -163,6 +163,7 @@
 
 <script setup lang="ts">
   import CardIcon from "~/components/CardIcon.vue";
+  import TimeRangeInput from "~/components/TimeRangeInput.vue";
   import { useCookieUserConfig } from "~/composables/useCookieUserConfig";
   import { useCopyToClipboard } from "~/composables/useCopyToClipboard";
   import type { ICalOptions } from "~/server/services/TransformDataService";
