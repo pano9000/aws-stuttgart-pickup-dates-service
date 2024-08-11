@@ -47,31 +47,39 @@
     subtitle="Set the start and end time of the iCal events"
   >
     <v-card-text class="my-2">
-      <v-row align="stretch">
-        <v-input
-          :hide-details="true"
-          class="flex-0-1"
-        >
-          <TimeRangeInput 
-            icon="mdi-clock-outline"
-            v-model:start-time="formatOptions.startTime"
-            v-model:end-time="formatOptions.endTime"
-          ></TimeRangeInput>
-        </v-input>
-        <v-divider vertical class="ms-4" opacity="25"</v-divider>
-        <v-checkbox
-          label="All Day"
-          v-model="formatOptions.allDay"
-          :hide-details="true"
-        >
-          <template v-slot:label>
-            <span>All Day</span>
-            <v-icon icon="mdi-hours-24"></v-icon>
-          </template>
-        </v-checkbox>
+      <v-row>
+        <v-col cols="auto">
+          <v-input
+            :hide-details="true"
+            class="flex-0-1"
+          >
+            <TimeRangeInput 
+              icon="mdi-clock-outline"
+              v-model:start-time="formatOptions.startTime"
+              v-model:end-time="formatOptions.endTime"
+            ></TimeRangeInput>
+          </v-input>
+        </v-col>
+
+        <v-col cols="auto" align-self="center">
+          <v-divider vertical length="2em" opacity="50"></v-divider>
+        </v-col>
+
+        <v-col cols="auto">
+          <v-checkbox
+            label="All Day"
+            v-model="formatOptions.allDay"
+            :hide-details="true"
+          >
+            <template v-slot:label>
+              <v-icon icon="mdi-hours-24"></v-icon>
+              <span>All Day</span>
+            </template>
+          </v-checkbox>
+        </v-col>
+
       </v-row>
     </v-card-text>
-
   </v-card>
 
   <v-card
