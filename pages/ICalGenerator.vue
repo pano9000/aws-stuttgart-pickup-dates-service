@@ -173,29 +173,39 @@
     </v-text-field>
   </v-container>
 
-  <v-card class="ma-4 pa-4">
-    <h2>Your custom iCal Link</h2>
-    <div class="d-flex ga-4">
+  <v-card
+    class="my-4 pa-4"
+    title="Your custom iCal Link"
+  >
+    <v-card-text>
+      <v-row wrap="nowrap">
+        <v-col cols="auto">
+          <v-tooltip :text="(!copiedToClipboard) ? 'Copy to Clipboard' : 'Copied'" location="top">
+            <template v-slot:activator="{ props }">
+              <v-btn 
+                :icon="(!copiedToClipboard) ? 'mdi-clipboard-text-outline' : 'mdi-clipboard-check-outline'"
+                v-bind="props" 
+                @click="() => copyToClipboardHandler(icalUrl.toString())">
+              </v-btn>
+            </template>
+          </v-tooltip>
+        </v-col>
+        <v-col>
+          <v-text-field
+            class="h-25"
+            v-model="icalUrl"
+            :editable="false"
+            :readonly="true"
+            :hide-details="true"
+          >
+          </v-text-field>
+        </v-col>
 
-      <v-tooltip :text="(!copiedToClipboard) ? 'Copy to Clipboard' : 'Copied'" location="top">
-        <template v-slot:activator="{ props }">
-          <v-btn 
-            :icon="(!copiedToClipboard) ? 'mdi-clipboard-text-outline' : 'mdi-clipboard-check-outline'"
-            v-bind="props" 
-            @click="() => copyToClipboardHandler(icalUrl.toString())">
-          </v-btn>
-        </template>
-      </v-tooltip>
-  
-      <v-text-field
-        class="h-25"
-        v-model="icalUrl"
-        :editable="false"
-        :readonly="true"
-      >
-      </v-text-field>
-    </div>
+      </v-row>
+
+    </v-card-text>
   </v-card>
+
 </v-container>
 </template>
 
