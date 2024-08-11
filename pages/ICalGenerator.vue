@@ -293,8 +293,10 @@
 
 
   const eventSummaryPreview = computed( () => {
-    return formatOptions.value.customSummary?.replaceAll("%1", "Recycleable Waste").replaceAll("%2", "bi-weekly");
-  })
+    return (formatOptions.value.customSummary && formatOptions.value.customSummary?.length > 0) 
+      ? formatOptions.value.customSummary?.replaceAll("%1", "Recycleable Waste").replaceAll("%2", "bi-weekly")
+      : "Pickup Recycleable Waste (bi-weekly)"
+  });
 
   const eventTypeColorTuple: [eventType: AwsApiServiceEventTypeName, color: string][] = [
     ["paper", "#6B975E"], //
