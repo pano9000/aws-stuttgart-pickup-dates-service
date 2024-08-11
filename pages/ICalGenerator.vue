@@ -187,6 +187,12 @@
 
   const disabledAlarm = ref<boolean>(false);
 
+  const apiUrl = (() => {
+    const url = useRequestURL();
+    url.pathname = "/api/v1/all";
+    return url;
+  })();
+
   const icalUrl = computed( () => {
     const urlParams = new URLSearchParams([
       ["streetname", cookieStreet.value.streetname],
@@ -211,7 +217,8 @@
       }
     });
 
-    return urlParams;
+    apiUrl.search = urlParams.toString();
+    return apiUrl.toString();
   })
 
   const eventTypeColorTuple: [eventType: AwsApiServiceEventTypeName, color: string][] = [
