@@ -17,6 +17,8 @@ export default defineNuxtConfig({
 
     "@nuxt/eslint",
 
+    "@vueuse/nuxt",
+
     (_options, nuxt) => {
       nuxt.hooks.hook('vite:extendConfig', (config) => {
         // @ts-expect-error - as per vuetify docs
