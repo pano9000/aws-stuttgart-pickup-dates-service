@@ -1,5 +1,5 @@
 import { envInitCheck, EnvInitError } from "./envInitCheck";
-import { assert, assertType, describe, test } from "vitest"
+import { assert, test } from "vitest"
 
 
 test("should throw an error, when a required variable is not existing", () => {

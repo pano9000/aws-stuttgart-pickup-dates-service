@@ -1,17 +1,18 @@
 import {
-  AwsApiService,
   awsApiService as defaultAwsApiService,
   SchemaAwsApiServiceResponseAll,
   SchemaAwsApiServiceEventTypeName,
   SchemaAwsApiServiceEventScheduleName,
 } from "./AwsApiService";
-import type { AwsApiServiceResponseAll, AwsApiServiceEvent, AwsApiServiceEventTypeName } from "./AwsApiService"
-import { RedisService, redisService as defaultRedisService } from "./RedisService";
+import { redisService as defaultRedisService } from "./RedisService";
 import { TransformDataService } from "./TransformDataService";
 import { DateTime } from "luxon";
 import { z } from "zod";
 
+import type { AwsApiService, AwsApiServiceResponseAll, AwsApiServiceEvent, AwsApiServiceEventTypeName } from "./AwsApiService"
+import type { RedisService } from "./RedisService";
 import type { CSVOptions, ICalOptions } from "./TransformDataService";
+
 
 export class RetrieveDataFacade {
 
@@ -132,11 +133,11 @@ export class RetrieveDataFacade {
 
     switch (format) {
       case "csv":
-        //@ts-ignore - @TODO check why .toCSV is not recognized correctly
+        //@ts-expect-error - @TODO check why .toCSV is not recognized correctly
         return this.transformDataService.toCSV(originalData, formatOptions)
 
       case "ical":
-        //@ts-ignore - @TODO check why .toICal is not recognized correctly
+        //@ts-expect-error - @TODO check why .toICal is not recognized correctly
         return this.transformDataService.toICal(originalData, formatOptions)
 
       // no transformation needed for json

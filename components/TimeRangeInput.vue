@@ -1,6 +1,6 @@
 <template>
   <div class="timerangeinput__wrap">
-    <v-icon v-if="props.icon" :icon="props.icon" class="mr-2"></v-icon>
+    <v-icon v-if="props.icon" :icon="props.icon" class="mr-2"/>
     <input
       v-model="modelStartTime"
       type="time"

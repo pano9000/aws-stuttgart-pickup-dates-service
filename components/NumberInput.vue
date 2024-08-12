@@ -1,15 +1,15 @@
 <template>
   <div class="numberinput__wrap">
-    <v-icon v-if="props.icon" :icon="props.icon" class="mr-2"></v-icon>
+    <v-icon v-if="props.icon" :icon="props.icon" class="mr-2"/>
     <input
+      :id=id
+      v-model.lazy="modelInputNumber"
       type="number"
       class="mr-2"
-      :id=id
       :min=min
       :max=max
       :step=step
       :disabled="disabled"
-      v-model.lazy="modelInputNumber"
     >
     <label :for="id">{{ label }}</label>
 

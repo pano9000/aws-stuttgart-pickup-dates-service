@@ -1,6 +1,6 @@
 <template>
-  <LocationPicker></LocationPicker>
-
+  <div>
+  <LocationPicker/>
   <v-container>
   <h1 class="text-h3 text-center">Generate Custom iCal Calendar</h1>
 
@@ -25,13 +25,13 @@
               :color="eventType[1]"
               class="custom-transform-class text-none"
             >
-              <CardIcon :event-type="eventType[0]" class="position-relative"></CardIcon>
+              <CardIcon :event-type="eventType[0]" class="position-relative"/>
               <!-- @TODO there must be a more performatn way than the one below / bitmask maybe? -->
               <v-icon
                 v-show="formatOptions.type?.includes(eventType[0])"
                 icon="mdi-check" 
                 class="position-absolute top-0"
-              ></v-icon>
+              />
               {{ eventType[0] }}
             </v-btn>
           </v-btn-toggle>
@@ -54,25 +54,25 @@
             class="flex-0-1"
           >
             <TimeRangeInput 
-              icon="mdi-clock-outline"
               v-model:start-time="formatOptions.startTime"
               v-model:end-time="formatOptions.endTime"
-            ></TimeRangeInput>
+              icon="mdi-clock-outline"
+            />
           </v-input>
         </v-col>
 
         <v-col cols="auto" align-self="center">
-          <v-divider vertical length="2em" opacity="50"></v-divider>
+          <v-divider vertical length="2em" opacity="50"/>
         </v-col>
 
         <v-col cols="auto">
           <v-checkbox
-            label="All Day"
             v-model="formatOptions.allDay"
+            label="All Day"
             :hide-details="true"
           >
-            <template v-slot:label>
-              <v-icon icon="mdi-hours-24"></v-icon>
+            <template #label>
+              <v-icon icon="mdi-hours-24"/>
               <span>All Day</span>
             </template>
           </v-checkbox>
@@ -95,31 +95,30 @@
             :hide-details="true"
           >
             <NumberInput
-              icon="mdi-bell-outline"
               id="numberinput__alarm"
+              v-model:input-number="formatOptions.alarm"
+              icon="mdi-bell-outline"
               label="minute(s) before"
               :min=0
               :max=720
               :step=5
               :disabled="disabledAlarm"
-              v-model:input-number="formatOptions.alarm"
-            >
-            </NumberInput>
+            />
           </v-input>
         </v-col>
 
         <v-col cols="auto" align-self="center">
-          <v-divider vertical length="2em" opacity="50"></v-divider>
+          <v-divider vertical length="2em" opacity="50"/>
         </v-col>
 
         <v-col cols="auto">
           <v-checkbox
-            label="Disable Alarm"
             v-model="disabledAlarm"
+            label="Disable Alarm"
             :hide-details="true"
           >
-          <template v-slot:label>
-            <v-icon icon="mdi-bell-off-outline"></v-icon>
+          <template #label>
+            <v-icon icon="mdi-bell-off-outline"/>
             <span>Disable Alarm</span>
           </template>
 
@@ -140,14 +139,13 @@
         <v-col>
           <v-input class="flex-0-1">
             <NumberInput
-              icon="mdi-rewind-outline"
               :id="'numberinput__offset'"
+              v-model:input-number="formatOptions.offsetEvent"
+              icon="mdi-rewind-outline"
               :label="'day(s) earlier'"
               :min=0
               :max=7
-              v-model:input-number="formatOptions.offsetEvent"
-            >
-            </NumberInput>
+            />
           </v-input>
         </v-col>
       </v-row>
@@ -157,8 +155,7 @@
         icon="$info"
         title="Info"
         text="Use this, if you want the event to appear in your calendar before the actual pickup happens. This way you can use the calendar event as reminder to put out the trash, e.g. the night before the pickup happens."
-      >
-      </v-alert>
+      />
     </v-card-text>
   </v-card>
 
@@ -169,17 +166,15 @@
   >
     <v-card-text>
       <v-text-field
-        label="Event Title"
         v-model="formatOptions.customSummary"
-      >
-      </v-text-field>
+        label="Event Title"
+      />
 
       <v-text-field
-        label="Event Title Preview"
         v-model="eventSummaryPreview"
+        label="Event Title Preview"
         :readonly="true"
-      >
-      </v-text-field>
+      />
   
       <v-alert
         color="info"
@@ -200,24 +195,23 @@
       <v-row wrap="nowrap">
         <v-col cols="auto">
           <v-tooltip :text="(!copiedToClipboard) ? 'Copy to Clipboard' : 'Copied'" location="top">
-            <template v-slot:activator="{ props }">
+            <template #activator="{ props }">
               <v-btn 
                 :icon="(!copiedToClipboard) ? 'mdi-clipboard-text-outline' : 'mdi-clipboard-check-outline'"
                 v-bind="props" 
-                @click="() => copyToClipboardHandler(icalUrl.toString())">
-              </v-btn>
+                @click="() => copyToClipboardHandler(icalUrl.toString())"
+              />
             </template>
           </v-tooltip>
         </v-col>
         <v-col>
           <v-text-field
-            class="h-25"
             v-model="icalUrl"
+            class="h-25"
             :editable="false"
             :readonly="true"
             :hide-details="true"
-          >
-          </v-text-field>
+          />
         </v-col>
 
       </v-row>
@@ -226,6 +220,8 @@
   </v-card>
 
 </v-container>
+</div>
+
 </template>
 
 <script setup lang="ts">
@@ -287,8 +283,10 @@
       }
     });
 
-    apiUrl.search = urlParams.toString();
-    return apiUrl.toString();
+    const localApiUrl = apiUrl;
+
+    localApiUrl.search = urlParams.toString();
+    return localApiUrl.toString();
   })
 
 

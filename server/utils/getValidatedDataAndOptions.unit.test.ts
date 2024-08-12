@@ -1,4 +1,4 @@
-import { afterEach, assert, assertType, beforeAll, beforeEach, describe, test, vi } from "vitest"
+import { afterEach, assert, beforeAll, describe, test, vi } from "vitest"
 import getValidatedQueryAndOptions from "~/server/utils/getValidatedDataAndOptions"
 import * as defaultSchemaQueryICal from "~/server/validationSchemas/schemaQueryICal";
 import { schemaQuery } from "~/server/validationSchemas/schemaQuery";
@@ -39,9 +39,9 @@ describe("getValidatedDataAndOptions Unit Test", async () => {
     const result = getValidatedQueryAndOptions({streetname: "abc", streetno: "123", format: "json"})
     assert.isArray(result);
     assert.isUndefined(result[1]);
-    //@ts-expect-error
+    //@ts-expect-error - Property 'mock' does not exist on type
     assert.lengthOf(schemaQuery.parse.mock.calls, 1);
-    //@ts-expect-error
+    //@ts-expect-error - Property 'mock' does not exist on type
     assert.lengthOf(defaultSchemaQueryICal.schemaQueryICal.parse.mock.calls, 0);
   })
 
@@ -49,9 +49,9 @@ describe("getValidatedDataAndOptions Unit Test", async () => {
     const result = getValidatedQueryAndOptions({streetname: "abc", streetno: "123"})
     assert.isArray(result);
     assert.isUndefined(result[1]);
-    //@ts-expect-error
+    //@ts-expect-error - Property 'mock' does not exist on type
     assert.lengthOf(schemaQuery.parse.mock.calls, 1)
-    //@ts-expect-error
+    //@ts-expect-error - Property 'mock' does not exist on type
     assert.lengthOf(defaultSchemaQueryICal.schemaQueryICal.parse.mock.calls, 0)
   })
 
@@ -59,9 +59,9 @@ describe("getValidatedDataAndOptions Unit Test", async () => {
     const result = getValidatedQueryAndOptions({streetname: "abc", streetno: "123", format: "csv"})
     assert.isArray(result);
     assert.isUndefined(result[1]);
-    //@ts-expect-error
+    //@ts-expect-error - Property 'mock' does not exist on type
     assert.lengthOf(schemaQuery.parse.mock.calls, 1)
-    //@ts-expect-error
+    //@ts-expect-error - Property 'mock' does not exist on type
     assert.lengthOf(defaultSchemaQueryICal.schemaQueryICal.parse.mock.calls, 0)
   })
 
@@ -69,9 +69,9 @@ describe("getValidatedDataAndOptions Unit Test", async () => {
     const result = getValidatedQueryAndOptions({streetname: "abc", streetno: "123", format: "ical", customSummary: "test"})
     assert.isArray(result);
     assert.equal(result[1]?.customSummary, "test");
-    //@ts-expect-error
+    //@ts-expect-error - Property 'mock' does not exist on type
     assert.lengthOf(schemaQuery.parse.mock.calls, 0);
-    //@ts-expect-error
+    //@ts-expect-error - Property 'mock' does not exist on type
     assert.lengthOf(defaultSchemaQueryICal.schemaQueryICal.parse.mock.calls, 1)
   })
 /*

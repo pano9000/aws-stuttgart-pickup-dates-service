@@ -1,7 +1,7 @@
 import errorHandler from "./errorHandler";
-import { assert, describe, test } from "vitest"
+import { assert, test } from "vitest"
 import { H3Error } from "h3"
-import { date, ZodError } from "zod";
+import { ZodError } from "zod";
 
 test("should throw an H3Error with 500 status code, when a generic Error happens", () => {
 

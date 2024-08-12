@@ -1,4 +1,4 @@
-import { assert, describe, it, test, vi } from "vitest"
+import { assert, describe, it } from "vitest"
 import { schemaQuery } from "./schemaQuery"
 
 describe("schemaQuery Unit Tests", () => {

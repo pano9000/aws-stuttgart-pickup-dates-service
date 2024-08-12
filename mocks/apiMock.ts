@@ -1,4 +1,4 @@
-//@ts-expect-error
+//@ts-expect-error -- package does not provide types
 import { createServer } from "@mocks-server/main";
 import awsAPIPickup from "./routes/awsAPIpickup.js"
 import collections from "./collections.js";
