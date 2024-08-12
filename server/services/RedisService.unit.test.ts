@@ -56,7 +56,7 @@ describe("RedisService Unit Tests", async () => {
         return mockCall
       })
 
-      //@ts-expect-error
+      //@ts-expect-error - due to mocked instance
       const redisServiceInstance = new RedisService({host: "host", password: "password", port: 9999}, mockIoredis);
       const testDate = "2024-12-18";
       const testKey = "address_teststr.|1";
@@ -81,7 +81,7 @@ describe("RedisService Unit Tests", async () => {
       });
 
       const testKey = "address_teststr.|1";
-      //@ts-expect-error
+      //@ts-expect-error - due to mocked instance
       const redisServiceInstance = new RedisService({host: "host", password: "password", port: 9999}, mockIoredis)
       const redisData = await redisServiceInstance.jsonGET(testKey);
 
@@ -102,7 +102,7 @@ describe("RedisService Unit Tests", async () => {
       const testDate = "2024-12-18";
       const testKey = "address_teststr.|1";
 
-      //@ts-expect-error
+      //@ts-expect-error - due to mocked instance
       const redisServiceInstance = new RedisService({host: "host", password: "password", port: 9999}, mockIoredis)
       const redisData = await redisServiceInstance.jsonGET(testKey, `$.data[?(@.date >= '${testDate}')]`);
 

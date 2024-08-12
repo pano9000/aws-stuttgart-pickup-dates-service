@@ -63,6 +63,7 @@ describe("RetrieveDataFacade Unit Tests", async () => {
 
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const createMockRedisService = (fakeDataGetRedis: string, fakeDataJsonGet: any, fakeDataJsonSet: any) => {
     return {
       getRedisKey: vi.fn().mockReturnValue(fakeDataGetRedis),
@@ -71,12 +72,14 @@ describe("RetrieveDataFacade Unit Tests", async () => {
     }
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const createMockAwsApiService = (fakeDataToReturn: any) => {
     return {
       getAll: vi.fn().mockResolvedValue(fakeDataToReturn),
     }
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const createMockTransformDataService = (fakeDataToReturn: any) => {
     return {
       toCSV: vi.fn().mockReturnValue(fakeDataToReturn),
@@ -112,7 +115,7 @@ describe("RetrieveDataFacade Unit Tests", async () => {
 
       const mockAwsApiServiceInstance = createMockAwsApiService("whatever");
 
-      //@ts-expect-error
+      //@ts-expect-error - due to mocked instances
       const retrieveDataFacadeInstance = new RetrieveDataFacade(mockAwsApiServiceInstance, mockRedisServiceInstance);
 
       const returnedData = await retrieveDataFacadeInstance.getAll(testOptions.validWOFilter);
@@ -134,7 +137,7 @@ describe("RetrieveDataFacade Unit Tests", async () => {
       mockRedisServiceInstance.jsonSET.mockImplementationOnce(() => { throw new Error("FakeRedisError during JSON.SET")});
       const mockAwsApiServiceInstance = createMockAwsApiService("whatever");
 
-      //@ts-expect-error
+      //@ts-expect-error - due to mocked instances
       const retrieveDataFacadeInstance = new RetrieveDataFacade(mockAwsApiServiceInstance, mockRedisServiceInstance);
 
       const errorResult = await (async () => {
@@ -158,7 +161,7 @@ describe("RetrieveDataFacade Unit Tests", async () => {
       const mockRedisServiceInstance = createMockRedisService("address_königstr.|10", fakeDataSuccess, "OK");
       const mockAwsApiServiceInstance = createMockAwsApiService("whatever")
 
-      //@ts-expect-error
+      //@ts-expect-error - due to mocked instances
       const retrieveDataFacadeInstance = new RetrieveDataFacade(mockAwsApiServiceInstance, mockRedisServiceInstance);
 
       await retrieveDataFacadeInstance.getAll(testOptions.validWOneTypeFilter);
@@ -172,7 +175,7 @@ describe("RetrieveDataFacade Unit Tests", async () => {
       const mockRedisServiceInstance = createMockRedisService("address_königstr.|10", fakeDataSuccess, "OK");
       const mockAwsApiServiceInstance = createMockAwsApiService("whatever")
 
-      //@ts-expect-error
+      //@ts-expect-error - due to mocked instances
       const retrieveDataFacadeInstance = new RetrieveDataFacade(mockAwsApiServiceInstance, mockRedisServiceInstance);
 
       await retrieveDataFacadeInstance.getAll(testOptions.validWTwoTypeFilter);
