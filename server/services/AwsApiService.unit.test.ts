@@ -1,7 +1,7 @@
 import { AwsApiService, SchemaAwsApiServiceResponseAll } from "./AwsApiService";
 import { assert, describe, test, vi } from "vitest"
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { awsPickupDataSuccess, awsPickupDataNonExisting, awsPickupDataWrongUrlParam } from "~/mocks/routes/awsAPIpickup"
+import { awsPickupDataSuccess, awsPickupDataNonExisting, awsPickupDataWrongUrlParam } from "~/mocks/mockResponses"
 import { AwsApiServiceError } from "./AwsApiServiceError";
 import { HTTPError } from "got";
 
