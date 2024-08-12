@@ -3,9 +3,9 @@
 <div class="pa-4 bg-orange">
 
   <v-form 
-    @submit.prevent="() => storeStreetInCookie(streetname, streetno)" 
-    :disabled="!locationPickerActive"
     class="d-flex align-baseline ga-4"
+    :disabled="!locationPickerActive"
+    @submit.prevent="() => storeStreetInCookie(streetname, streetno)" 
   >
     <span class="font-weight-bold">Current Address:</span>
 
@@ -14,27 +14,27 @@
       label="Street Name"
       clearable
       prepend-icon="mdi-home-city"
-    >
-    </v-text-field>
+    />
 
     <v-text-field 
       v-model="streetno"
       label="Street Number"
       clearable
       prepend-icon="mdi-numeric"
-    >
-    </v-text-field>
+    />
 
-    <v-btn v-if="locationPickerActive"
+    <v-btn
+      v-if="locationPickerActive"
       type="submit"
       class="text-capitalize"
     >
       Save
     </v-btn>
-    <v-btn v-else 
+    <v-btn
+      v-else 
       type="button"
-      @click="locationPickerActive = !locationPickerActive"
       class="text-capitalize"
+      @click="locationPickerActive = !locationPickerActive"
     >
       Change
     </v-btn>
