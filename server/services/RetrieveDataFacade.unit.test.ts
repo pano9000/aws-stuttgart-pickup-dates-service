@@ -56,7 +56,7 @@ describe("RetrieveDataFacade Unit Tests", async () => {
       streetname: "Königstr.",
       streetno: "10",
       typeFilter: undefined,
-      //@ts-expect-error
+      //@ts-expect-error - deliberate using wrong format
       format: "abc"
     },
 
@@ -95,10 +95,10 @@ describe("RetrieveDataFacade Unit Tests", async () => {
       const mockRedisServiceInstance = createMockRedisService("address_königstr.|10", fakeDataSuccess, "OK");
       const mockAwsApiServiceInstance = createMockAwsApiService("whatever")
 
-      //@ts-expect-error
+      //@ts-expect-error - using mocked instances
       const retrieveDataFacadeInstance = new RetrieveDataFacade(mockAwsApiServiceInstance, mockRedisServiceInstance);
 
-      const data = await retrieveDataFacadeInstance.getAll(testOptions.validWOFilter);
+      await retrieveDataFacadeInstance.getAll(testOptions.validWOFilter);
 
       assert.lengthOf(mockAwsApiServiceInstance.getAll.mock.calls, 0);
       assert.lengthOf(mockRedisServiceInstance.jsonGET.mock.calls, 1);
@@ -161,7 +161,7 @@ describe("RetrieveDataFacade Unit Tests", async () => {
       //@ts-expect-error
       const retrieveDataFacadeInstance = new RetrieveDataFacade(mockAwsApiServiceInstance, mockRedisServiceInstance);
 
-      const data = await retrieveDataFacadeInstance.getAll(testOptions.validWOneTypeFilter);
+      await retrieveDataFacadeInstance.getAll(testOptions.validWOneTypeFilter);
 
       assert.deepEqual(mockRedisServiceInstance.jsonGET.mock.calls, [ [ 'address_königstr.|10', `$.data[?(@.type == "${testOptions.validWOneTypeFilter.typeFilter}")]` ] ]);
 
@@ -175,7 +175,7 @@ describe("RetrieveDataFacade Unit Tests", async () => {
       //@ts-expect-error
       const retrieveDataFacadeInstance = new RetrieveDataFacade(mockAwsApiServiceInstance, mockRedisServiceInstance);
 
-      const data = await retrieveDataFacadeInstance.getAll(testOptions.validWTwoTypeFilter);
+      await retrieveDataFacadeInstance.getAll(testOptions.validWTwoTypeFilter);
       //@ts-expect-error ignore that it could be undefined -> here it should not be
       const expectedCall = [ [ 'address_königstr.|10', `$.data[?(@.type == "${testOptions.validWTwoTypeFilter.typeFilter[0]}") || (@.type == "${testOptions.validWTwoTypeFilter.typeFilter[1]}")]` ] ]
       assert.deepEqual(mockRedisServiceInstance.jsonGET.mock.calls, expectedCall);
@@ -188,10 +188,10 @@ describe("RetrieveDataFacade Unit Tests", async () => {
       const mockRedisServiceInstance = createMockRedisService("address_königstr.|10", fakeDataSuccess, "OK");
       const mockAwsApiServiceInstance = createMockAwsApiService("whatever")
 
-      //@ts-expect-error
+      //@ts-expect-error - using mocked instances
       const retrieveDataFacadeInstance = new RetrieveDataFacade(mockAwsApiServiceInstance, mockRedisServiceInstance);
 
-      const data = await retrieveDataFacadeInstance.getRemaining(testOptions.validWOFilter);
+      await retrieveDataFacadeInstance.getRemaining(testOptions.validWOFilter);
 
       assert.lengthOf(mockAwsApiServiceInstance.getAll.mock.calls, 0);
       assert.lengthOf(mockRedisServiceInstance.jsonGET.mock.calls, 1);
@@ -205,7 +205,7 @@ describe("RetrieveDataFacade Unit Tests", async () => {
 
       const mockAwsApiServiceInstance = createMockAwsApiService("whatever");
 
-      //@ts-expect-error
+      //@ts-expect-error - using mocked instances
       const retrieveDataFacadeInstance = new RetrieveDataFacade(mockAwsApiServiceInstance, mockRedisServiceInstance);
 
       const returnedData = await retrieveDataFacadeInstance.getRemaining(testOptions.validWOFilter);
@@ -227,7 +227,7 @@ describe("RetrieveDataFacade Unit Tests", async () => {
       mockRedisServiceInstance.jsonSET.mockImplementationOnce(() => { throw new Error("FakeRedisError during JSON.SET")});
       const mockAwsApiServiceInstance = createMockAwsApiService("whatever");
 
-      //@ts-expect-error
+      //@ts-expect-error - using mocked instances
       const retrieveDataFacadeInstance = new RetrieveDataFacade(mockAwsApiServiceInstance, mockRedisServiceInstance);
 
       const errorResult = await (async () => {
@@ -256,7 +256,7 @@ describe("RetrieveDataFacade Unit Tests", async () => {
       const mockRedisServiceInstance = createMockRedisService("address_königstr.|10", fakeDataSuccess, "OK");
       const mockAwsApiServiceInstance = createMockAwsApiService("whatever")
 
-      //@ts-expect-error
+      //@ts-expect-error - using mocked instances
       const retrieveDataFacadeInstance = new RetrieveDataFacade(mockAwsApiServiceInstance, mockRedisServiceInstance);
 
       const upcoming = await retrieveDataFacadeInstance.getUpcoming(testOptions.validWOFilter);
@@ -273,10 +273,10 @@ describe("RetrieveDataFacade Unit Tests", async () => {
       const mockAwsApiServiceInstance = createMockAwsApiService("whatever");
       const mockTransformDataService = createMockTransformDataService("whatever");
 
-      //@ts-expect-error
+      //@ts-expect-error - using mocked instances
       const retrieveDataFacadeInstance = new RetrieveDataFacade(mockAwsApiServiceInstance, mockRedisServiceInstance, mockTransformDataService);
 
-      const data = await retrieveDataFacadeInstance.getAll(testOptions.validWOFilterFormatCSV);
+      await retrieveDataFacadeInstance.getAll(testOptions.validWOFilterFormatCSV);
 
       assert.lengthOf(mockTransformDataService.toCSV.mock.calls, 1)
 
@@ -287,10 +287,10 @@ describe("RetrieveDataFacade Unit Tests", async () => {
       const mockAwsApiServiceInstance = createMockAwsApiService("whatever");
       const mockTransformDataService = createMockTransformDataService("whatever");
 
-      //@ts-expect-error
+      //@ts-expect-error - using mocked instances
       const retrieveDataFacadeInstance = new RetrieveDataFacade(mockAwsApiServiceInstance, mockRedisServiceInstance, mockTransformDataService);
 
-      const data = await retrieveDataFacadeInstance.getAll(testOptions.validWOFilterFormatIcal);
+      await retrieveDataFacadeInstance.getAll(testOptions.validWOFilterFormatIcal);
 
       assert.lengthOf(mockTransformDataService.toICal.mock.calls, 1)
 
@@ -301,10 +301,10 @@ describe("RetrieveDataFacade Unit Tests", async () => {
       const mockAwsApiServiceInstance = createMockAwsApiService("whatever");
       const mockTransformDataService = createMockTransformDataService("whatever");
 
-      //@ts-expect-error
+      //@ts-expect-error - using mocked instances
       const retrieveDataFacadeInstance = new RetrieveDataFacade(mockAwsApiServiceInstance, mockRedisServiceInstance, mockTransformDataService);
 
-      const data = await retrieveDataFacadeInstance.getAll(testOptions.validWOFilterFormatIcalWOptions);
+      await retrieveDataFacadeInstance.getAll(testOptions.validWOFilterFormatIcalWOptions);
       assert.lengthOf(mockTransformDataService.toICal.mock.calls, 1)
       assert.deepEqual(mockTransformDataService.toICal.mock.calls[0][1], testOptions.validWOFilterFormatIcalWOptions.formatOptions)
 
@@ -315,11 +315,11 @@ describe("RetrieveDataFacade Unit Tests", async () => {
       const mockAwsApiServiceInstance = createMockAwsApiService("whatever");
       const mockTransformDataService = createMockTransformDataService("whatever");
 
-       //@ts-expect-error - due to mocks
-       const retrieveDataFacadeInstance = new RetrieveDataFacade(mockAwsApiServiceInstance, mockRedisServiceInstance, mockTransformDataService);
-       const data = await retrieveDataFacadeInstance.getAll(testOptions.validWOFilter);
-       assert.lengthOf(mockTransformDataService.toCSV.mock.calls, 0)
-       assert.lengthOf(mockTransformDataService.toICal.mock.calls, 0)
+      //@ts-expect-error - using mocked instances
+      const retrieveDataFacadeInstance = new RetrieveDataFacade(mockAwsApiServiceInstance, mockRedisServiceInstance, mockTransformDataService);
+      await retrieveDataFacadeInstance.getAll(testOptions.validWOFilter);
+      assert.lengthOf(mockTransformDataService.toCSV.mock.calls, 0)
+      assert.lengthOf(mockTransformDataService.toICal.mock.calls, 0)
 
     })
 
@@ -328,11 +328,11 @@ describe("RetrieveDataFacade Unit Tests", async () => {
       const mockAwsApiServiceInstance = createMockAwsApiService("whatever");
       const mockTransformDataService = createMockTransformDataService("whatever");
 
-       //@ts-expect-error - due to mocks
-       const retrieveDataFacadeInstance = new RetrieveDataFacade(mockAwsApiServiceInstance, mockRedisServiceInstance, mockTransformDataService);
-       const data = await retrieveDataFacadeInstance.getAll(testOptions.validWOFilterFormatUnsupported);
-       assert.lengthOf(mockTransformDataService.toCSV.mock.calls, 0)
-       assert.lengthOf(mockTransformDataService.toICal.mock.calls, 0)
+      //@ts-expect-error - using mocked instances
+      const retrieveDataFacadeInstance = new RetrieveDataFacade(mockAwsApiServiceInstance, mockRedisServiceInstance, mockTransformDataService);
+      await retrieveDataFacadeInstance.getAll(testOptions.validWOFilterFormatUnsupported);
+      assert.lengthOf(mockTransformDataService.toCSV.mock.calls, 0)
+      assert.lengthOf(mockTransformDataService.toICal.mock.calls, 0)
     })
   })
 

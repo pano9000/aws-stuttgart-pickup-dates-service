@@ -17,7 +17,7 @@ describe("getValidatedDataAndOptions Unit Test", async () => {
     // for schemaQueryICal need to mock the schemaQueryICal AND the parse method,
     // because it kinda gets overwritten by the mocm of 'schemaQuery', because
     // schemaQueryICal itself import 'schemaQuery' to .extend() it
-    //@ts-expect-error
+    //@ts-expect-error - see comment above
     defaultSchemaQueryICal.schemaQueryICal = vi.fn().mockReturnValue(z.object())
     defaultSchemaQueryICal.schemaQueryICal.parse = vi.fn().mockReturnValue({
       startTime: [6,0],

@@ -1,5 +1,5 @@
 
-export default defineNitroPlugin((nitroApp) => {
+export default defineNitroPlugin((_nitroApp) => {
   envInitCheck([
     "AWSAPPENV_REDIS_SERVER_PORT",
     "AWSAPPENV_REDIS_SERVER_HOST",
