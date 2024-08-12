@@ -5,5 +5,7 @@ export default defineNitroPlugin((_nitroApp) => {
     "AWSAPPENV_REDIS_SERVER_HOST",
     "AWSAPPENV_REDIS_SERVER_PASSWORD",
     "AWSAPPENV_AWS_API_URL",
+    "AWSAPPENV_AWS_API_STREETNAME_URL",
+    "AWSAPPENV_AWS_API_STREETNO_URL"
   ]);
 })
