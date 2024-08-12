@@ -46,7 +46,7 @@
 </template>
 
 <script setup lang="ts">
-import { useCookieUserConfig } from './useCookieUserConfig';
+import { useCookieUserConfig } from '~/composables/useCookieUserConfig';
 
 
 const { cookieStreet } = useCookieUserConfig();

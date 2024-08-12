@@ -34,7 +34,7 @@
 <script setup lang="ts">
 
   import type { AwsApiServiceResponseAll } from "~/server/services/AwsApiService.js"
-  import { useCookieUserConfig } from "~/components/useCookieUserConfig";
+  import { useCookieUserConfig } from "~/composables/useCookieUserConfig";
 
   const { cookieStreet, cookieLanguage } = useCookieUserConfig();
   const streetname = toRef(() => cookieStreet.value.streetname);
