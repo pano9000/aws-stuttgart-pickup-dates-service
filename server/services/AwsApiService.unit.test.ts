@@ -122,11 +122,11 @@ describe("getAll Method", async () => {
 
 describe("getRaw Method", async () => {
   test("should return the same, unaltered object as the AWS Stuttgart API", async () => {
-    //@ts-expect-error- due to mocked instance
+    //@ts-expect-error - due to mocked instance
     const awsApiService = new AwsApiService("https://test.com/api", getMockGot(awsPickupDataSuccess))
 
     const rawData = await awsApiService.getRaw("Test Str.", "2");
-    //@ts-ignore
+    //@ts-expect-error - @TODO Fix typing here
     assert.deepEqual(rawData, awsPickupDataSuccess)
   })
 

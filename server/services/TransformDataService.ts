@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-extraneous-class */
 import type { AwsApiServiceResponseAll, AwsApiServiceEventTypeName, AwsApiServiceEventScheduleName } from "./AwsApiService"
 import ical, { ICalEventTransparency } from 'ical-generator';
 import { DateTime } from "luxon";
