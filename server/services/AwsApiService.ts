@@ -10,6 +10,7 @@ import { AwsApiServiceError } from "./AwsApiServiceError";
 export class AwsApiService {
   #apiUrl: URL;
   #got: Got;
+  // eslint-disable-next-line no-unused-private-class-members
   #logger: Console;
   #typeNames = new Map<AwsApiRawResponseEventTypeName,AwsApiServiceEventTypeName>([
     ["Restmüll", "residual"],
@@ -29,7 +30,7 @@ export class AwsApiService {
     this.#logger = logger;
   }
 
-  async #executeRequest(streetname: string, streetno: string, operationId: string = ""): Promise<AwsApiRawResponse> {
+  async #executeRequest(streetname: string, streetno: string, _operationId: string = ""): Promise<AwsApiRawResponse> {
     const requestUrl = new URL(this.#apiUrl);
     requestUrl.searchParams.append("street", streetname);
     requestUrl.searchParams.append("streetnr", streetno);
@@ -117,7 +118,7 @@ export class AwsApiService {
     return transformedData;
   }
 */
-  async getRaw(streetname: string, streetno: string, operationId: string = ""): Promise<AwsApiRawResponse> {
+  async getRaw(streetname: string, streetno: string, _operationId: string = ""): Promise<AwsApiRawResponse> {
     try {
       const apiData = await this.#executeRequest(streetname, streetno);
       return apiData
@@ -126,7 +127,7 @@ export class AwsApiService {
     }
   }
 
-  async getAll(streetname: string, streetno: string, operationId: string = ""): Promise<AwsApiServiceResponseAll> {
+  async getAll(streetname: string, streetno: string, _operationId: string = ""): Promise<AwsApiServiceResponseAll> {
 
     try {
       const apiData = await this.#executeRequest(streetname, streetno);
@@ -168,10 +169,11 @@ export type AwsApiServiceResponseInformation = {
 
 interface AwsApiServiceResponse {
   information: AwsApiServiceResponseInformation;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   data: any;
 }
 
-interface AwsApiServiceResponseUpcoming extends AwsApiServiceResponse {
+interface _AwsApiServiceResponseUpcoming extends AwsApiServiceResponse {
   data: AwsApiServiceResponseUpcomingData
 }
 
