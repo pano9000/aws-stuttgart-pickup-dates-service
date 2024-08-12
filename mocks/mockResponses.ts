@@ -1,7 +1,3 @@
-// Use this file only as a guide for first steps using routes. Delete it when you have added your own route files.
-// For a detailed explanation regarding each routes property, visit:
-// https://mocks-server.org/docs/usage/routes
-
 //w 200 status
 export const awsPickupDataSuccess = {
   "SERVLET": {
@@ -2014,42 +2010,118 @@ export const awsPickupDataNonExisting = {
     }
   ]
 };
-
 export const awsPickupDataWrongUrlParam = {"message":"Fehlende Pflichtangaben!","success":false,"errors":[{"code":3130,"message":"Fehlende Pflichtangaben!"}]}
 
-//https://service.stuttgart.de/lhs-services/aws/api/
-export default [
-  {
-    id: "get-pickup", // route id
-    //?street=Königstr.&streetnr=10
-    url: "/lhs-services/aws/api/", // url in express format
-    method: "GET", // HTTP method
-    variants: [
-      {
-        id: "ok",
-        type: "json",
-        options: {
-          status: 200,
-          body: awsPickupDataSuccess,
-        },
-      },
-      {
-        id: "non-existing-street",
-        type: "json",
-        options: {
-          status: 404,
-          body: awsPickupDataNonExisting,
-        },
-      },
-      {
-        id: "wrongly-formatted-urlparam",
-        type: "json",
-        options: {
-          status: 404,
-          // body to send
-          body: awsPickupDataWrongUrlParam,
-        },
-      },
-    ],
-  },
-];
+
+//w 200 status
+export const awsAPIStreetnameSuccess = {
+  "suggestions": [
+    {
+      "value": "Bachgerstenstr.",
+      "data": "Bachgerstenstr."
+    },
+    {
+      "value": "Bachhalde",
+      "data": "Bachhalde"
+    },
+    {
+      "value": "Bachstelzenstr.",
+      "data": "Bachstelzenstr."
+    },
+    {
+      "value": "Bachstr.",
+      "data": "Bachstr."
+    },
+    {
+      "value": "Bachwiesenstr.",
+      "data": "Bachwiesenstr."
+    },
+    {
+      "value": "Backnanger Str.",
+      "data": "Backnanger Str."
+    },
+    {
+      "value": "Badbrunnenstr.",
+      "data": "Badbrunnenstr."
+    },
+    {
+      "value": "Badergasse",
+      "data": "Badergasse"
+    },
+    {
+      "value": "Badstr.",
+      "data": "Badstr."
+    },
+    {
+      "value": "Bahnhof Feuerbach",
+      "data": "Bahnhof Feuerbach"
+    },
+    {
+      "value": "Bahnhof Obert\u00fcrkheim",
+      "data": "Bahnhof Obert\u00fcrkheim"
+    },
+    {
+      "value": "Bahnhof Vaihingen",
+      "data": "Bahnhof Vaihingen"
+    }
+  ]
+}
+
+export const awsAPIStreetnameNoMatch = {
+  suggestions: []
+}
+
+
+//w 200 status
+export const awsAPIStreetnumberSuccess = {
+  "suggestions": [
+    {
+      "value": "2",
+      "data": "2"
+    },
+    {
+      "value": "20",
+      "data": "20"
+    },
+    {
+      "value": "21",
+      "data": "21"
+    },
+    {
+      "value": "22",
+      "data": "22"
+    },
+    {
+      "value": "24",
+      "data": "24"
+    },
+    {
+      "value": "26",
+      "data": "26"
+    },
+    {
+      "value": "26A",
+      "data": "26A"
+    },
+    {
+      "value": "26B",
+      "data": "26B"
+    },
+    {
+      "value": "26C",
+      "data": "26C"
+    },
+    {
+      "value": "26D",
+      "data": "26D"
+    },
+    {
+      "value": "26E",
+      "data": "26E"
+    }
+  ]
+}
+
+export const awsAPIStreetnumberNoMatch = {
+  suggestions: []
+}
