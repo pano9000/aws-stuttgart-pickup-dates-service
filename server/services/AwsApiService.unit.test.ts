@@ -1,7 +1,6 @@
 import { AwsApiService, SchemaAwsApiServiceResponseAll } from "./AwsApiService";
 import { assert, describe, test, vi } from "vitest"
 import { awsPickupDataSuccess, awsPickupDataNonExisting, awsPickupDataWrongUrlParam } from "~/mocks/routes/awsAPIpickup"
-import { z } from "zod"
 import { AwsApiServiceError } from "./AwsApiServiceError";
 import { HTTPError } from "got";
 
