@@ -84,6 +84,8 @@ function storeStreetInCookie(streetname: string, streetno: string) {
   locationPickerActive.value = false
 }
 
+const debounceConfig = { debounce: 700, maxWait: 2000 };
+
 watchDebounced(
   streetname, 
   async (newStreetname, _oldStreetname) => {
@@ -100,7 +102,7 @@ watchDebounced(
     console.log(response);
   streetnameSuggestions.value = response || []
   },
-  { debounce: 1000, maxWait: 2000 },
+  debounceConfig
 )
 
 watchDebounced(
@@ -118,9 +120,8 @@ watchDebounced(
     })
     console.log(response);
     streetnoSuggestions.value = response || []
-
   },
-  { debounce: 500, maxWait: 1000 },
+  debounceConfig
 )
 
 </script>
