@@ -1,68 +1,58 @@
 <template>
-
 <div class="pa-4 bg-orange">
-
   <v-form 
     class="d-flex align-baseline ga-4"
     :disabled="!locationPickerActive"
     @submit.prevent="() => storeStreetInCookie(streetname, streetno)" 
   >
-    <span class="font-weight-bold">Current Address:</span>
-
-    <!-- <v-text-field 
-      v-model="streetname"
-      label="Street Name"
-      clearable
-      prepend-icon="mdi-home-city"
-    />
-
-    <v-text-field 
-      v-model="streetno"
-      label="Street Number"
-      clearable
-      prepend-icon="mdi-numeric"
-    />
-    
-    -->
-
-    <v-combobox
-      v-model="streetname"
-      label="Street Name "
-      :items="streetnameSuggestions"
-      prepend-icon="mdi-home-city"
-      clearable
-    />
-
-    <v-combobox
-      v-model="streetno"
-      label="Street Number"
-      :items="streetnoSuggestions"
-      prepend-icon="mdi-numeric"
-      clearable
-    />
-
-
-
-    <v-btn
-      v-if="locationPickerActive"
-      type="submit"
-      class="text-capitalize"
+    <v-row
+      align="center"
     >
-      Save
-    </v-btn>
-    <v-btn
-      v-else 
-      type="button"
-      class="text-capitalize"
-      @click="locationPickerActive = !locationPickerActive"
-    >
-      Change
-    </v-btn>
+      <v-col cols="5">
+        <v-combobox
+          v-model="streetname"
+          label="Street Name "
+          :items="streetnameSuggestions"
+          prepend-icon="mdi-home-city"
+          hide-details
+          clearable
+          required
+        />
+      </v-col>
 
+      <v-col cols="5">
+        <v-combobox
+          v-model="streetno"
+          label="Street Number"
+          :items="streetnoSuggestions"
+          prepend-icon="mdi-numeric"
+          hide-details
+          clearable
+          required
+        />
+      </v-col>
+
+      <v-col cols="auto">
+        <v-btn
+          v-if="locationPickerActive"
+          type="submit"
+          class="text-capitalize"
+        >
+          Save
+        </v-btn>
+
+        <v-btn
+          v-else 
+          type="button"
+          class="text-capitalize"
+          @click="locationPickerActive = !locationPickerActive"
+        >
+          Change
+        </v-btn>
+      </v-col>
+    </v-row>
   </v-form>
-
 </div>
-
 </template>
 
 <script setup lang="ts">
@@ -100,7 +90,7 @@ watchDebounced(
       }
     })
     console.log(response);
-  streetnameSuggestions.value = response || []
+    streetnameSuggestions.value = response || []
   },
   debounceConfig
 )
