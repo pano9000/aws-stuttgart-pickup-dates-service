@@ -9,26 +9,24 @@
       align="center"
     >
       <v-col cols="5">
-        <v-combobox
-          v-model="streetname"
-          label="Street Name "
+        <LocationPickerComboBox
+          v-model:input-combo-box="streetname"
           :items="streetnameSuggestions"
-          prepend-icon="mdi-home-city"
-          hide-details
-          clearable
-          required
+          :loading="streetnameSuggestionsLoading"
+          :no-data-text="noDataComboText"
+          icon="mdi-home-city"
+          label="Street Name"
         />
       </v-col>
 
       <v-col cols="5">
-        <v-combobox
-          v-model="streetno"
+        <LocationPickerComboBox
+          v-model:input-combo-box="streetname"
+          :items="streetnameSuggestions"
+          :loading="streetnameSuggestionsLoading"
+          :no-data-text="noDataComboText"
+          icon="mdi-numeric"
           label="Street Number"
-          :items="streetnoSuggestions"
-          prepend-icon="mdi-numeric"
-          hide-details
-          clearable
-          required
         />
       </v-col>
 
@@ -67,12 +65,23 @@ const locationPickerActive = ref(false);
 const streetnameSuggestions = ref<string[]>([]);
 const streetnoSuggestions = ref<string[]>([]);
 
+const streetnameSuggestionsLoading = ref<boolean>(false);
+
 //@TODO: how to get cookieStreet as argument? it fails due to type, beacuse in template it is "unpacked"
 function storeStreetInCookie(streetname: string, streetno: string) {
   cookieStreet.value.streetname = streetname;
   cookieStreet.value.streetno = streetno;
   locationPickerActive.value = false
 }
+
+const noDataComboText = computed( () => {
+  if (!streetname.value || streetname.value.length < 1) {
+    return "Please enter a value"
+  } else {
+    return "Unknown Value"
+  }
+
+})
 
 const debounceConfig = { debounce: 700, maxWait: 2000 };
 
@@ -84,6 +93,8 @@ watchDebounced(
       streetnameSuggestions.value = []
       return;
     }
+    streetnameSuggestionsLoading.value = true;
+
     const response = await $fetch("/api/v1/addresssuggestion", {
       query: {
         streetname: newStreetname
@@ -91,6 +102,8 @@ watchDebounced(
     })
     console.log(response);
     streetnameSuggestions.value = response || []
+    streetnameSuggestionsLoading.value = false;
+
   },
   debounceConfig
 )
