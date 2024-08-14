@@ -11,8 +11,9 @@
       <v-col cols="5">
         <LocationPickerComboBox
           v-model:input-combo-box="streetname"
-          :items="streetnameSuggestions"
-          :loading="streetnameSuggestionsLoading"
+          v-model:streetname="streetname"
+          v-model:streetno="streetno"
+          mode="streetname"
           no-data-text="Street Name"
           icon="mdi-home-city"
           label="Street Name"
@@ -22,8 +23,9 @@
       <v-col cols="5">
         <LocationPickerComboBox
           v-model:input-combo-box="streetno"
-          :items="streetnameSuggestions"
-          :loading="streetnameSuggestionsLoading"
+          v-model:streetname="streetname"
+          v-model:streetno="streetno"
+          mode="streetno"
           no-data-text="Street Number"
           icon="mdi-numeric"
           label="Street Number"
@@ -55,17 +57,11 @@
 
 <script setup lang="ts">
 import { useCookieUserConfig } from '~/composables/useCookieUserConfig';
-import { watchDebounced } from '@vueuse/core'
 
 const { cookieStreet } = useCookieUserConfig();
 const streetname = ref(cookieStreet.value.streetname);
 const streetno = ref(cookieStreet.value.streetno);
 const locationPickerActive = ref(false);
-
-const streetnameSuggestions = ref<string[]>([]);
-const streetnoSuggestions = ref<string[]>([]);
-
-const streetnameSuggestionsLoading = ref<boolean>(false);
 
 //@TODO: how to get cookieStreet as argument? it fails due to type, beacuse in template it is "unpacked"
 function storeStreetInCookie(streetname: string, streetno: string) {
@@ -73,51 +69,6 @@ function storeStreetInCookie(streetname: string, streetno: string) {
   cookieStreet.value.streetno = streetno;
   locationPickerActive.value = false
 }
-
-const debounceConfig = { debounce: 700, maxWait: 2000 };
-
-watchDebounced(
-  streetname, 
-  async (newStreetname, _oldStreetname) => {
-    streetno.value = ""
-    if (!newStreetname || newStreetname.length < 1) {
-      streetnameSuggestions.value = []
-      return;
-    }
-    streetnameSuggestionsLoading.value = true;
-
-    const response = await $fetch("/api/v1/addresssuggestion", {
-      query: {
-        streetname: newStreetname
-      }
-    })
-    console.log(response);
-    streetnameSuggestions.value = response || []
-    streetnameSuggestionsLoading.value = false;
-
-  },
-  debounceConfig
-)
-
-watchDebounced(
-  streetno, 
-  async (newStreetno, _oldStreetno) => {
-    if (!newStreetno || newStreetno.length < 1) {
-      streetnoSuggestions.value = []
-      return;
-    }
-    const response = await $fetch("/api/v1/addresssuggestion", {
-      query: {
-        streetname: streetname.value,
-        streetno: newStreetno
-      }
-    })
-    console.log(response);
-    streetnoSuggestions.value = response || []
-  },
-  debounceConfig
-)
-
 </script>
 
 <style>
