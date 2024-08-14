@@ -21,7 +21,7 @@
 
       <v-col cols="5">
         <LocationPickerComboBox
-          v-model:input-combo-box="streetname"
+          v-model:input-combo-box="streetno"
           :items="streetnameSuggestions"
           :loading="streetnameSuggestionsLoading"
           :no-data-text="noDataComboText"
