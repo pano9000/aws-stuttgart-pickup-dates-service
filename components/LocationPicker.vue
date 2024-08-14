@@ -2,7 +2,7 @@
 <div class="pa-4 bg-orange">
   <v-form 
     class="d-flex align-baseline ga-4"
-    :disabled="!locationPickerActive"
+    :readonly="!locationPickerActive"
     @submit.prevent="() => storeStreetInCookie(streetname, streetno)" 
   >
     <v-row
