@@ -2,7 +2,7 @@
 <div class="pa-4 bg-orange">
   <v-form 
     class="d-flex align-baseline ga-4"
-    :readonly="!locationPickerActive"
+    :readonly="!isLocationPickerActive"
     @submit.prevent="() => storeStreetInCookie(streetname, streetno)" 
   >
     <v-row
@@ -34,7 +34,7 @@
 
       <v-col cols="auto">
         <v-btn
-          v-if="locationPickerActive"
+          v-if="isLocationPickerActive"
           type="submit"
           class="text-capitalize"
         >
@@ -45,7 +45,7 @@
           v-else 
           type="button"
           class="text-capitalize"
-          @click="locationPickerActive = !locationPickerActive"
+          @click="isLocationPickerActive = !isLocationPickerActive"
         >
           Change
         </v-btn>
@@ -61,13 +61,13 @@ import { useCookieUserConfig } from '~/composables/useCookieUserConfig';
 const { cookieStreet } = useCookieUserConfig();
 const streetname = ref(cookieStreet.value.streetname);
 const streetno = ref(cookieStreet.value.streetno);
-const locationPickerActive = ref(false);
+const isLocationPickerActive = ref(false);
 
 //@TODO: how to get cookieStreet as argument? it fails due to type, beacuse in template it is "unpacked"
 function storeStreetInCookie(streetname: string, streetno: string) {
   cookieStreet.value.streetname = streetname;
   cookieStreet.value.streetno = streetno;
-  locationPickerActive.value = false
+  isLocationPickerActive.value = false
 }
 </script>
 
