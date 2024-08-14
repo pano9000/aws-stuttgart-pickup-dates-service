@@ -55,6 +55,7 @@
       }
 
       isSuggestionsLoading.value = true;
+      suggestions.value = ["Loading..."];
 
       //@TODO - do not trigger fetch again, if change in model is due to people selecting value from combobox
       const response = await $fetch("/api/v1/addresssuggestion", {
