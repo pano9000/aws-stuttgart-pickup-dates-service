@@ -7,9 +7,10 @@
     :hide-no-data="false"
     :no-data-text="noDataComboText"
     :loading="isSuggestionsLoading"
-    hide-details="auto"
     :clearable="isEnabled"
     :no-filter="true"
+    :rules="validationRule"
+    validate-on="input"
     required
   />
 </template>
@@ -39,6 +40,9 @@
     return `Unknown ${props.noDataText}`
   })
 
+  const validationRule = [
+    (value: string) => suggestions.value.includes(value) || "Please select a valid entry from the suggestions"
+  ];
 
   const debounceConfig = { debounce: 700, maxWait: 2000 };
 
