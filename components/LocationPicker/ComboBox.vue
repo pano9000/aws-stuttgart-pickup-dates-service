@@ -8,7 +8,7 @@
     :no-data-text="noDataComboText"
     :loading="isSuggestionsLoading"
     hide-details="auto"
-    clearable
+    :clearable="isEnabled"
     required
   />
 </template>
@@ -21,6 +21,7 @@
     icon: string;
     noDataText: string;
     mode: "streetname" | "streetno";
+    isEnabled: boolean;
   }>()
 
   const modelComboBox = defineModel<string>("inputComboBox");
