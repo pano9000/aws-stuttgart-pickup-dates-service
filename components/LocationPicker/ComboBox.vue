@@ -9,6 +9,7 @@
     :loading="isSuggestionsLoading"
     hide-details="auto"
     :clearable="isEnabled"
+    :no-filter="true"
     required
   />
 </template>
