@@ -5,7 +5,7 @@
     :items="items"
     :prepend-icon="icon"
     :hide-no-data="false"
-    :no-data-text="noDataText"
+    :no-data-text="noDataComboText"
     :loading="loading"
     hide-details="auto"
     clearable
@@ -24,6 +24,13 @@
   }>()
 
   const modelComboBox = defineModel<string>("inputComboBox");
+
+  const noDataComboText = computed( () => {
+  if (!modelComboBox.value || modelComboBox.value.length < 1) {
+    return `Please enter a ${props.noDataText}`
+    }
+    return `Unknown ${props.noDataText}`
+  })
 
 </script>
 

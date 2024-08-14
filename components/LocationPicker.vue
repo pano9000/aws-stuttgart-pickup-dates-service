@@ -13,7 +13,7 @@
           v-model:input-combo-box="streetname"
           :items="streetnameSuggestions"
           :loading="streetnameSuggestionsLoading"
-          :no-data-text="noDataComboText"
+          no-data-text="Street Name"
           icon="mdi-home-city"
           label="Street Name"
         />
@@ -24,7 +24,7 @@
           v-model:input-combo-box="streetno"
           :items="streetnameSuggestions"
           :loading="streetnameSuggestionsLoading"
-          :no-data-text="noDataComboText"
+          no-data-text="Street Number"
           icon="mdi-numeric"
           label="Street Number"
         />
@@ -73,15 +73,6 @@ function storeStreetInCookie(streetname: string, streetno: string) {
   cookieStreet.value.streetno = streetno;
   locationPickerActive.value = false
 }
-
-const noDataComboText = computed( () => {
-  if (!streetname.value || streetname.value.length < 1) {
-    return "Please enter a value"
-  } else {
-    return "Unknown Value"
-  }
-
-})
 
 const debounceConfig = { debounce: 700, maxWait: 2000 };
 
