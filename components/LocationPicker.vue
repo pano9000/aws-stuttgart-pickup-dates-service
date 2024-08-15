@@ -1,9 +1,10 @@
 <template>
 <div class="pa-4 bg-orange">
   <v-form 
+    ref="form"
     class="d-flex align-baseline ga-4"
     :readonly="!isLocationPickerActive"
-    @submit.prevent="() => storeStreetInCookie(streetname, streetno)" 
+    @submit.prevent="() => storeStreetInCookieHandler(streetname, streetno, form)"
   >
     <v-row
       align="center"
@@ -37,6 +38,7 @@
       <v-col cols="auto">
         <v-btn
           v-if="isLocationPickerActive"
+          :disabled="!form?.isValid"
           type="submit"
           class="text-capitalize"
         >
@@ -58,18 +60,22 @@
 </template>
 
 <script setup lang="ts">
+import { VForm } from 'vuetify/components';
 import { useCookieUserConfig } from '~/composables/useCookieUserConfig';
 
 const { cookieStreet } = useCookieUserConfig();
+
 const streetname = ref(cookieStreet.value.streetname);
 const streetno = ref(cookieStreet.value.streetno);
 const isLocationPickerActive = ref(false);
+const form = ref<VForm>();
 
-//@TODO: how to get cookieStreet as argument? it fails due to type, beacuse in template it is "unpacked"
-function storeStreetInCookie(streetname: string, streetno: string) {
-  cookieStreet.value.streetname = streetname;
-  cookieStreet.value.streetno = streetno;
-  isLocationPickerActive.value = false
+function storeStreetInCookieHandler(streetname: string, streetno: string, form: VForm ) {
+  if (form.isValid) {
+    cookieStreet.value.streetname = streetname;
+    cookieStreet.value.streetno = streetno;
+    isLocationPickerActive.value = false
+  }
 }
 </script>
 
