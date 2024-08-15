@@ -1,6 +1,8 @@
 <template>
+  <div>
+  <LocationPicker/>
+  <v-container>
 
-  <LocationPicker></LocationPicker>
   has Street: {{ hasStreet }} // {{ cookieStreet }}
   language: {{ cookieLanguage }}
   fetchCount: {{ fetchCount }}
@@ -12,14 +14,15 @@
 
     <h1>Upcoming Pickups</h1>
     <details>
-      {{ apiData }}
+      {{ apiUpcoming?.data }}
     </details>
 
-    <div v-if="apiData?.data" class="eventcards">
+    <div v-if="apiUpcoming?.data" class="eventcards">
       <Card
-        v-for="event in apiData?.data"
-        :event-data=event>
-      </Card>
+        v-for="event in apiUpcoming?.data?.value?.data"
+        :key="`${event.date}_${event.type}_${event.schedule}`"
+        :event-data=event
+      />
     </div>
     <div v-else>
 
@@ -28,7 +31,8 @@
     </div>
 
   </div>
-
+</v-container>
+</div>
 </template>
 
 <script setup lang="ts">
