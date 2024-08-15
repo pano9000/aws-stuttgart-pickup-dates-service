@@ -40,8 +40,15 @@
     return `Unknown ${props.noDataText}`
   })
 
+  let hasFetched: true | undefined = undefined;
+  const hasInitialStoredData = computed( () => modelComboBox.value && !hasFetched)
+
   const validationRule = [
-    (value: string) => suggestions.value.includes(value) || "Please select a valid entry from the suggestions"
+    (value: string) => {
+      return (hasInitialStoredData.value)
+        ? true
+        : suggestions.value.includes(value) || "Please select a valid entry from the suggestions"
+    }
   ];
 
   const debounceConfig = { debounce: 700, maxWait: 2000 };
@@ -69,8 +76,8 @@
         }
       })
 
-      console.log(props.mode, response);
-      suggestions.value = response || []
+      hasFetched = true;
+      suggestions.value = response || [];
       isSuggestionsLoading.value = false;
 
     },
