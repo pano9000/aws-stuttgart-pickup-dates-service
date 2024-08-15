@@ -1,67 +1,84 @@
 <template>
-
 <div class="pa-4 bg-orange">
-
   <v-form 
+    ref="form"
     class="d-flex align-baseline ga-4"
-    :disabled="!locationPickerActive"
-    @submit.prevent="() => storeStreetInCookie(streetname, streetno)" 
+    :readonly="!isLocationPickerActive"
+    @submit.prevent="storeStreetInCookieHandler"
   >
-    <span class="font-weight-bold">Current Address:</span>
-
-    <v-text-field 
-      v-model="streetname"
-      label="Street Name"
-      clearable
-      prepend-icon="mdi-home-city"
-    />
-
-    <v-text-field 
-      v-model="streetno"
-      label="Street Number"
-      clearable
-      prepend-icon="mdi-numeric"
-    />
-
-    <v-btn
-      v-if="locationPickerActive"
-      type="submit"
-      class="text-capitalize"
+    <v-row
+      align="center"
     >
-      Save
-    </v-btn>
-    <v-btn
-      v-else 
-      type="button"
-      class="text-capitalize"
-      @click="locationPickerActive = !locationPickerActive"
-    >
-      Change
-    </v-btn>
+      <v-col cols="5">
+        <LocationPickerComboBox
+          v-model:input-combo-box="streetname"
+          v-model:streetname="streetname"
+          v-model:streetno="streetno"
+          :is-enabled="isLocationPickerActive"
+          mode="streetname"
+          no-data-text="Street Name"
+          icon="mdi-home-city"
+          label="Street Name"
+        />
+      </v-col>
 
+      <v-col cols="5">
+        <LocationPickerComboBox
+          v-model:input-combo-box="streetno"
+          v-model:streetname="streetname"
+          v-model:streetno="streetno"
+          :is-enabled="isLocationPickerActive"
+          mode="streetno"
+          no-data-text="Street Number"
+          icon="mdi-numeric"
+          label="Street Number"
+        />
+      </v-col>
+
+      <v-col cols="auto">
+        <v-btn
+          v-if="isLocationPickerActive"
+          :disabled="!form?.isValid"
+          type="submit"
+          class="text-capitalize"
+        >
+          Save
+        </v-btn>
+
+        <v-btn
+          v-else 
+          type="button"
+          class="text-capitalize"
+          @click="isLocationPickerActive = !isLocationPickerActive"
+        >
+          Change
+        </v-btn>
+      </v-col>
+    </v-row>
   </v-form>
-
 </div>
-
 </template>
 
 <script setup lang="ts">
+import { VForm } from 'vuetify/components';
 import { useCookieUserConfig } from '~/composables/useCookieUserConfig';
 
-
 const { cookieStreet } = useCookieUserConfig();
+
 const streetname = ref(cookieStreet.value.streetname);
 const streetno = ref(cookieStreet.value.streetno);
-const locationPickerActive = ref(false);
+const isLocationPickerActive = ref(false);
+const form = ref<InstanceType<typeof VForm>|null>();
 
 
-//@TODO: how to get cookieStreet as argument? it fails due to type, beacuse in template it is "unpacked"
-function storeStreetInCookie(streetname: string, streetno: string) {
-  cookieStreet.value.streetname = streetname;
-  cookieStreet.value.streetno = streetno;
-  locationPickerActive.value = false
+
+function storeStreetInCookieHandler() {
+  if (form?.value?.isValid) {
+    cookieStreet.value.streetname = streetname.value;
+    cookieStreet.value.streetno = streetno.value;
+    isLocationPickerActive.value = false
+  }
 }
-
 </script>
 
 <style>
