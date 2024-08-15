@@ -4,7 +4,7 @@
     ref="form"
     class="d-flex align-baseline ga-4"
     :readonly="!isLocationPickerActive"
-    @submit.prevent="() => storeStreetInCookieHandler(streetname, streetno, form)"
+    @submit.prevent="storeStreetInCookieHandler"
   >
     <v-row
       align="center"
@@ -68,12 +68,14 @@ const { cookieStreet } = useCookieUserConfig();
 const streetname = ref(cookieStreet.value.streetname);
 const streetno = ref(cookieStreet.value.streetno);
 const isLocationPickerActive = ref(false);
-const form = ref<VForm>();
+const form = ref<InstanceType<typeof VForm>|null>();
 
-function storeStreetInCookieHandler(streetname: string, streetno: string, form: VForm ) {
-  if (form.isValid) {
-    cookieStreet.value.streetname = streetname;
-    cookieStreet.value.streetno = streetno;
+
+
+function storeStreetInCookieHandler() {
+  if (form?.value?.isValid) {
+    cookieStreet.value.streetname = streetname.value;
+    cookieStreet.value.streetno = streetno.value;
     isLocationPickerActive.value = false
   }
 }
