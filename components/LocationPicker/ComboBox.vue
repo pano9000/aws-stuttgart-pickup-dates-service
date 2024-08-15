@@ -54,21 +54,22 @@
   const debounceConfig = { debounce: 700, maxWait: 2000 };
 
   watchDebounced(
-    modelComboBox, 
+    modelComboBox,
     async (curr, _prev) => {
 
-      if (props.mode === "streetname") {
-        modelStreetno.value = ""
-      }
-      if (!curr || curr.length < 1) {
-        suggestions.value = []
-        return;
-      }
+      // reset streetno, when streetname changes
+      if (props.mode === "streetname") modelStreetno.value = "";
+
+      // avoid fetch attempt for empty values
+      if (!curr || curr.length < 1) return suggestions.value = [];
 
       isSuggestionsLoading.value = true;
+
+      //@TODO - find a better way - this is hacky, people can select "Loading..." as value from the list in certain situations
       suggestions.value = ["Loading..."];
 
       //@TODO - do not trigger fetch again, if change in model is due to people selecting value from combobox
+      //@TODO - fetch error handling?
       const response = await $fetch("/api/v1/addresssuggestion", {
         query: {
           streetname: modelStreetname.value,
@@ -79,8 +80,8 @@
       hasFetched = true;
       suggestions.value = response || [];
       isSuggestionsLoading.value = false;
-
     },
+
     debounceConfig
   )
 
