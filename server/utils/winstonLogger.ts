@@ -16,9 +16,17 @@ const reorderLogProps = winston.format((logData) => {
   return logData;
 });
 
+const serializeDataObject = winston.format((logData) => {
+  if (logData?.data) {
+    logData.data = serializeError(logData.data)
+  }
+  return logData
+})
+
 const defaultFormat = winston.format.combine(
   winston.format.timestamp(),
   reorderLogProps(),
+  serializeDataObject(),
   winston.format.json({deterministic: false})
 );
 
