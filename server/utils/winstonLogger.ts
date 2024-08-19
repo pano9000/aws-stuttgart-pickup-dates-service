@@ -50,3 +50,10 @@ export const httpLogger = winston.createLogger({
       new winston.transports.Console({level: "http"})
     ],
 });
+
+export const createLoggerMeta = (service: string, operationId?: string) => {
+  return {
+    service: service,
+    operationId: operationId || ""
+  }
+}
