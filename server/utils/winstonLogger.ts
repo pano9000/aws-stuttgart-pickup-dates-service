@@ -1,13 +1,13 @@
 import { serializeError } from "serialize-error";
 import winston from "winston";
 
-
+//@TODO does not seem to be working
 const reorderLogProps = winston.format((logData) => {
   // set the exact order of the props here
-  const propKeys = ["operationId", "level", "service", "message", "timestamp"];
-  const { level, message, timestamp, service, operationId } = logData;
+  const propKeys = ["operationId", "level", "service", "message", "data", "timestamp"];
+  const { level, message, data, timestamp, service, operationId } = logData;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const logCopy: { [key: string]: any }= { level, message, timestamp, service, operationId };
+  const logCopy: { [key: string]: any }= { level, message, data, timestamp, service, operationId };
 
   for (const propKey of propKeys) {
     // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
