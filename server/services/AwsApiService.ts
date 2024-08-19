@@ -24,7 +24,7 @@ export class AwsApiService {
     ["03-wöchentl.", "W3"]
   ]);
 
-  constructor(apiUrl: string = process.env.AWSAPPENV_AWS_API_URL as string, gotClient: Got = defaultGot, logger: Console = console) {
+  constructor(apiUrl: string = process.env.AWSAPPENV_AWS_API_URL as string, gotClient: Got = defaultGot, logger: Console | Logger = console) {
     this.#got = gotClient;
     this.#apiUrl = new URL(apiUrl);
     this.#logger = logger;
@@ -35,6 +35,7 @@ export class AwsApiService {
     requestUrl.searchParams.append("street", streetname);
     requestUrl.searchParams.append("streetnr", streetno);
     const response = await this.#got(requestUrl).json();
+
     const validatedData = SchemaAwsApiRawResponse.parse(response);
     return validatedData;
   }
