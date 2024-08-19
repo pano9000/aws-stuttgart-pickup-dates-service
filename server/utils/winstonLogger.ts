@@ -1,3 +1,4 @@
+import { serializeError } from "serialize-error";
 import winston from "winston";
 
 
