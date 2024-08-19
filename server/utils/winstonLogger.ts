@@ -52,9 +52,23 @@ export const httpLogger = winston.createLogger({
     ],
 });
 
-export const createLoggerMeta = (service: string, operationId?: string) => {
-  return {
-    service: service,
-    operationId: operationId || ""
+export class LoggerMeta {
+  service: string;
+  operationId: string;
+
+  constructor(service: string, operationId: string) {
+    this.service = service;
+    this.operationId = operationId;
   }
+
+  withData<T>(data: T) {
+
+    return {
+      service: this.service,
+      operationId: this.operationId,
+      data: data
+    }
+
+  }
+
 }
