@@ -69,7 +69,7 @@ export class AwsApiService {
     }
   }
 
-  #transformDataAll(apiData: AwsApiRawResponse) {
+  #transformDataAll(apiData: AwsApiRawResponse, streetname: string, streetno: string) {
     const apiEventData = apiData.SERVLET.DIALOG.TERMINELIST.TERMIN;
     const transformedEvents = apiEventData.map(event => this.#transformEvent(event));
 
@@ -82,8 +82,8 @@ export class AwsApiService {
 
     return {
       information: {
-        streetname: apiData.SERVLET.DIALOG.LOCATION.STRASSENNAME,
-        streetno: apiData.SERVLET.DIALOG.LOCATION.HAUSNUMMER
+        streetname: apiData.SERVLET.DIALOG.LOCATION.STRASSENNAME || streetname,
+        streetno: apiData.SERVLET.DIALOG.LOCATION.HAUSNUMMER || streetno
       },
       data: transformedEvents
     }
@@ -136,7 +136,7 @@ export class AwsApiService {
       const apiData = await this.#executeRequest(streetname, streetno);
       this.#logger.debug("Received data from API", loggerMeta.withData({eventExample: apiData.SERVLET.DIALOG.TERMINELIST.TERMIN[0]}))
 
-      const transformedData = this.#transformDataAll(apiData);
+      const transformedData = this.#transformDataAll(apiData, streetname, streetno);
       this.#logger.debug("Transformed Data", loggerMeta.withData({transformedDataExample: transformedData.data[0]}));
 
       return transformedData;
