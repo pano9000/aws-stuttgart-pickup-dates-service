@@ -24,6 +24,7 @@
     "luxon": "^3.4.4",
     "nuxt": "^3.12.3",
     "serialize-error": "^11.0.3",
+    "uid": "^2.0.2",
     "vue": "latest",
     "vue-tsc": "^2.0.26",
     "winston": "^3.14.2",
