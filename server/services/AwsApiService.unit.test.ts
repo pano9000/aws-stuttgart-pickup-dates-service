@@ -43,7 +43,7 @@ describe("getAll Method", async () => {
     assert.isTrue(validatedData.success)
   })
 
-  test("should throw an AwsApiServiceError with reason 'validation' and errorData of ZodError, if the API returns data in an unexpected format", async () => {
+  test("should throw an AwsApiServiceError with reason 'VALIDATION' and errorData of ZodError, if the API returns data in an unexpected format", async () => {
     const fakeApiResponse = { unexpected: "format", fail: "this should" }
     //@ts-expect-error - due to mocked instance
     const awsApiService = new AwsApiService("https://test.com/api", getMockGot(fakeApiResponse))
@@ -55,13 +55,13 @@ describe("getAll Method", async () => {
       assert.isDefined(error)
       assert.instanceOf(error, AwsApiServiceError)
       //@ts-expect-error - confirmed instanceOf AwsApiServiceError, but TS inference is not picking it up
-      assert.equal(error.reason, "validation")
+      assert.equal(error.reason, "VALIDATION")
       //@ts-expect-error - confirmed instanceOf AwsApiServiceError, but TS inference is not picking it up
       assert.exists(error.errorData.issues);
     }
   })
 
-  test("should throw an AwsApiServiceError with reason 'http', if the API fetch call fails due to some HTTP error", async () => {
+  test("should throw an AwsApiServiceError with reason 'HTTP', if the API fetch call fails due to some HTTP error", async () => {
     const response = {statusCode: 404, statusMessage: "Not Found"};
     //@ts-expect-error - due to mocked response
     const fakeHTTPError = new HTTPError(response);
@@ -75,13 +75,13 @@ describe("getAll Method", async () => {
       assert.isDefined(error)
       assert.instanceOf(error, AwsApiServiceError)
       //@ts-expect-error - confirmed instanceOf AwsApiServiceError, but TS inference is not picking it up
-      assert.equal(error.reason, "http");
+      assert.equal(error.reason, "HTTP");
       //@ts-expect-error - confirmed instanceOf AwsApiServiceError, but TS inference is not picking it up
       assert.exists(error.errorData.code);
     }
   })
 
-  test("should throw an AwsApiServiceError with reason 'generic', if there is an other generic error", async () => {
+  test("should throw an AwsApiServiceError with reason 'GENERIC', if there is an other generic error", async () => {
     const errMessage = "Some Strange Error happened";
     //@ts-expect-error - due to mocked instance
     const awsApiService = new AwsApiService("https://test.com/api", getMockGotThrowing(new Error(errMessage)))
@@ -93,7 +93,7 @@ describe("getAll Method", async () => {
       assert.isDefined(error)
       assert.instanceOf(error, AwsApiServiceError)
       //@ts-expect-error - confirmed instanceOf AwsApiServiceError, but TS inference is not picking it up
-      assert.equal(error.reason, "generic");
+      assert.equal(error.reason, "GENERIC");
       //@ts-expect-error - confirmed instanceOf AwsApiServiceError, but TS inference is not picking it up
       assert.exists(error.errorData.message);
       //@ts-expect-error - confirmed instanceOf AwsApiServiceError, but TS inference is not picking it up
@@ -103,7 +103,7 @@ describe("getAll Method", async () => {
     }
   })
 
-  test("should throw an AwsApiServiceError with reason 'generic', if there is an error that is not an instanceof Error", async () => {
+  test("should throw an AwsApiServiceError with reason 'UNKNOWN', if there is an error that is not an instanceof Error", async () => {
     //@ts-expect-error - due to mocked instance
     const awsApiService = new AwsApiService("https://test.com/api", getMockGotThrowing(2))
 
@@ -114,7 +114,7 @@ describe("getAll Method", async () => {
       assert.isDefined(error)
       assert.instanceOf(error, AwsApiServiceError)
       //@ts-expect-error - confirmed instanceOf AwsApiServiceError, but TS inference is not picking it up
-      assert.equal(error.reason, "generic")
+      assert.equal(error.reason, "UNKNOWN")
     }
   })
 
@@ -130,7 +130,7 @@ describe("getRaw Method", async () => {
     assert.deepEqual(rawData, awsPickupDataSuccess)
   })
 
-  test("should throw an AwsApiServiceError with reason 'http', if the API fetch call fails due to some HTTP error", async () => {
+  test("should throw an AwsApiServiceError with reason 'HTTP', if the API fetch call fails due to some HTTP error", async () => {
     const response = {statusCode: 404, statusMessage: "Not Found"};
     //@ts-expect-error - due to mocked response
     const fakeHTTPError = new HTTPError(response);
@@ -144,7 +144,7 @@ describe("getRaw Method", async () => {
       assert.isDefined(error)
       assert.instanceOf(error, AwsApiServiceError)
       //@ts-expect-error - confirmed instanceOf AwsApiServiceError, but TS inference is not picking it up
-      assert.equal(error.reason, "http")
+      assert.equal(error.reason, "HTTP")
     }
   })
 

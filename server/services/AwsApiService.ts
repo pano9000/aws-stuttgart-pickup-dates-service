@@ -41,21 +41,12 @@ export class AwsApiService {
 
   #getHandledError(error: unknown): AwsApiServiceError {
 
-    if (error instanceof ZodError) {
-      return new AwsApiServiceError("validation", error);
-    }
-
-    else if(error instanceof HTTPError) {
-      return new AwsApiServiceError("http", error);
-    }
-
-    else if(error instanceof Error) {
-      return new AwsApiServiceError("generic", error);
-    }
-
-    else {
+    switch (true) {
+      case error instanceof ZodError:   return new AwsApiServiceError("VALIDATION", error);
+      case error instanceof HTTPError:  return new AwsApiServiceError("HTTP", error);
+      case error instanceof Error:      return new AwsApiServiceError("GENERIC", error);
+      default:                          return new AwsApiServiceError("UNKNOWN", error);
       // error that is not an instance of Error -> that shouldn't be possible, but handle anyways
-      return new AwsApiServiceError("generic", error);
     }
   }
 
