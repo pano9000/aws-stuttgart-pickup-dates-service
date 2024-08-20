@@ -31,13 +31,13 @@ export class AwsAddressSuggestionService {
 
   async getStreetNameSuggestions(streetName: string) {
     this.#apiUrlStreetName.searchParams.set("street", streetName);
-    return this.#executeRequest(this.#apiUrlStreetName)
+    return await this.#executeRequest(this.#apiUrlStreetName)
   }
 
   async getStreetNoSuggestions(streetName: string, streetNo: string) {
     this.#apiUrlStreetNo.searchParams.set("street", streetName);
     this.#apiUrlStreetNo.searchParams.set("streetnr", streetNo);
-    return this.#executeRequest(this.#apiUrlStreetNo)
+    return await this.#executeRequest(this.#apiUrlStreetNo)
   }
 
 
