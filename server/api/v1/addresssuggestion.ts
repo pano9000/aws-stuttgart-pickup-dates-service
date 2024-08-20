@@ -11,8 +11,8 @@ export default defineEventHandler(async (event) => {
     const { streetname, streetno } = schemaQueryAddressSuggestion.parse(query);
 
     const suggestion = (streetno) 
-      ? await awsAddressSuggestionService.getStreetNoSuggestions(streetname, streetno)
-      : await awsAddressSuggestionService.getStreetNameSuggestions(streetname);
+      ? await awsAddressSuggestionService.getStreetNoSuggestions(streetname, streetno, event.context.operationId)
+      : await awsAddressSuggestionService.getStreetNameSuggestions(streetname, event.context.operationId);
 
     generalLogger.info(`Operation successful`, loggerMeta.withData({suggestion}));
     return suggestion;

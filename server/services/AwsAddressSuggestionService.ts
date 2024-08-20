@@ -29,12 +29,12 @@ export class AwsAddressSuggestionService {
     return this.#transformToSuggestion(validatedData)
   }
 
-  async getStreetNameSuggestions(streetName: string) {
+  async getStreetNameSuggestions(streetName: string, operationId: string = "") {
     this.#apiUrlStreetName.searchParams.set("street", streetName);
     return await this.#executeRequest(this.#apiUrlStreetName)
   }
 
-  async getStreetNoSuggestions(streetName: string, streetNo: string) {
+  async getStreetNoSuggestions(streetName: string, streetNo: string, operationId: string = "") {
     this.#apiUrlStreetNo.searchParams.set("street", streetName);
     this.#apiUrlStreetNo.searchParams.set("streetnr", streetNo);
     return await this.#executeRequest(this.#apiUrlStreetNo)
