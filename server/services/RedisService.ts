@@ -1,15 +1,24 @@
 import { Redis, ReplyError } from "ioredis";
 import type { RedisOptions } from "ioredis";
+import type { Logger } from "winston";
+import { generalLogger, LoggerMeta } from "../utils/winstonLogger";
 
 export class RedisService {
 
   #client: Redis;
-  constructor(connectionOptions: Pick<RedisOptions, "port" | "host" | "password">, ioredis: typeof Redis = Redis) {
+  #logger: Console | Logger
+  constructor(
+    connectionOptions: Pick<RedisOptions, "port" | "host" | "password">, 
+    ioredis: typeof Redis = Redis,
+    logger: Console | Logger = generalLogger
+  ) {
     this.#client = new ioredis({
       port: connectionOptions.port,
       host: connectionOptions.host,
       password: connectionOptions.password
     })
+
+    this.#logger = logger;
 
     //@TODO -> fail if ECONNREFUSED at startup, otherwise we end up in an endless loop
 
@@ -19,8 +28,10 @@ export class RedisService {
     return `address_${streetname}|${streetno}`.toLowerCase();
   }
 
-  async jsonGET(key: string, filter?: string) {
+  async jsonGET(key: string, filter?: string, operationId: string = "") {
     try {
+      const loggerMeta = new LoggerMeta("RedisService.jsonGET", operationId);
+      this.#logger.debug("Operation started", loggerMeta.withData({key, filter}));
 
       if (filter) {
         // two calls, because otherwise redis behaves weird and makes us do extra work to transform the data back to its original state
@@ -43,6 +54,8 @@ export class RedisService {
 
       const result = await this.#client.call("JSON.GET", key);
       if (typeof result !== "string" && result !== null) throw new Error(`Received back an unexpected type of data. Expected string or null, but got ${typeof result}`)
+
+      this.#logger.debug("Operation successful", loggerMeta);
 
       //@ts-expect-error -> null is a valid JSON value, that can be parsed (into null) but JSON.parse complains about it
       return JSON.parse(result)
@@ -68,10 +81,16 @@ export class RedisService {
   }
 
   //@TODO: check if there is a type for "JSON parseable thing"?
-  async jsonSET(key: string, value: any) {
+  async jsonSET(key: string, value: any, operationId = "") {
     try {
+      const loggerMeta = new LoggerMeta("RedisService.jsonSET", operationId);
+      this.#logger.debug("Operation started", loggerMeta.withData({key, value}));
+
       const result = await this.#client.call("JSON.SET", key, "$", JSON.stringify(value))
       //@TODO validate and error handle
+
+      this.#logger.debug("Operation successful", loggerMeta);
+
       return result
     }
     catch(error) {
