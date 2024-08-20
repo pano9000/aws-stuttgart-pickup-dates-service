@@ -8,7 +8,7 @@ export default defineEventHandler(async (event) => {
     const query = getQuery(event);
     generalLogger.info(`Operation started`, loggerMeta.withData({query}));
     const validatedQuery = schemaQuery.parse(query);
-    const data = await awsApiService.getRaw(validatedQuery.streetname, validatedQuery.streetno);
+    const data = await awsApiService.getRaw(validatedQuery.streetname, validatedQuery.streetno, event.context.operationId);
     generalLogger.info("Operation successfull", loggerMeta.withData({data}));
 
     return data;

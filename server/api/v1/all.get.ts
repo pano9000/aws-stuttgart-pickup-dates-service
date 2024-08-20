@@ -12,13 +12,16 @@ export default defineEventHandler(async (event) => {
 
     const [validatedQuery, formatOptions] = getValidatedDataAndOptions(query)
 
-    const apiData = await retrieveDataFacade.getAll({
-      streetname: validatedQuery.streetname,
-      streetno: validatedQuery.streetno,
-      typeFilter: validatedQuery.type,
-      format: validatedQuery.format,
-      formatOptions: formatOptions
-    });
+    const apiData = await retrieveDataFacade.getAll(
+      {
+        streetname: validatedQuery.streetname,
+        streetno: validatedQuery.streetno,
+        typeFilter: validatedQuery.type,
+        format: validatedQuery.format,
+        formatOptions: formatOptions
+      },
+      event.context.operationId
+    );
 
     setResponseHeaders(event, {
       "content-type": getMIMEType(validatedQuery.format)
