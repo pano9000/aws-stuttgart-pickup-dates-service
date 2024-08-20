@@ -84,7 +84,7 @@ export class RedisService {
   async jsonSET(key: string, value: any, operationId = "") {
     try {
       const loggerMeta = new LoggerMeta("RedisService.jsonSET", operationId);
-      this.#logger.debug("Operation started", loggerMeta.withData({key, value}));
+      this.#logger.debug("Operation started", loggerMeta.withData({key}));
 
       const result = await this.#client.call("JSON.SET", key, "$", JSON.stringify(value))
       //@TODO validate and error handle
