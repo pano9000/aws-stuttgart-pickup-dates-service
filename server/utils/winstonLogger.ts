@@ -1,5 +1,6 @@
 import { serializeError } from "serialize-error";
 import winston from "winston";
+import morgan from "morgan";
 
 //@TODO does not seem to be working
 const reorderLogProps = winston.format((logData) => {
@@ -42,7 +43,8 @@ export const generalLogger = winston.createLogger({
     //rejectionHandlers: [ new winston.transports.File({ filename: "./logs/rejections.log"}) ],
 });
 
-export const httpLogger = winston.createLogger({
+
+const winstonHttpLogger = winston.createLogger({
     level: "http",
     defaultMeta: { service: "server.http" },
     format: defaultFormat,
@@ -51,6 +53,10 @@ export const httpLogger = winston.createLogger({
       new winston.transports.Console({level: "http"})
     ],
 });
+
+//@TODO: integrate operationId here as well
+export const httpLogger = morgan(("combined"), { stream: { write: (message: string) => winstonHttpLogger.http(message)}});
+
 
 export class LoggerMeta {
   service: string;
