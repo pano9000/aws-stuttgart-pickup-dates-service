@@ -26,7 +26,7 @@ export class RetrieveDataFacade {
     this.transformDataService = transformDataService;
   }
 
-  async getAll(options: RetrieveDataFacadeOptions): Promise<AwsApiServiceResponseAll> {
+  async getAll(options: RetrieveDataFacadeOptions, operationId: string = ""): Promise<AwsApiServiceResponseAll> {
 
     const validatedRedisResult = await this.#fetchDataFromRedis(
       options, 
@@ -34,13 +34,14 @@ export class RetrieveDataFacade {
         return (options.typeFilter) 
           ? this.#createFilterString([this.#createTypeFilter(options.typeFilter)])
           : undefined;
-      })()
+      })(),
+      operationId
     )
 
     return this.#transformData(validatedRedisResult, options.format, options.formatOptions);
   }
 
-  async getRemaining(options: RetrieveDataFacadeOptions): Promise<AwsApiServiceResponseAll> {
+  async getRemaining(options: RetrieveDataFacadeOptions, operationId: string = ""): Promise<AwsApiServiceResponseAll> {
     const validatedRedisResult = await this.#fetchDataFromRedis(
       options, 
       (() => {
@@ -48,13 +49,14 @@ export class RetrieveDataFacade {
         const typeFilter = (options.typeFilter) ? this.#createTypeFilter(options.typeFilter) : undefined;
         const filters = (typeFilter) ? [dateFilter, typeFilter] : [dateFilter];
         return this.#createFilterString(filters);
-      })()
+      })(),
+      operationId
     );
 
     return this.#transformData(validatedRedisResult, options.format, options.formatOptions);
   }
 
-  async getUpcoming(options: RetrieveDataFacadeOptions): Promise<AwsApiServiceResponseAll> {
+  async getUpcoming(options: RetrieveDataFacadeOptions, operationId: string = ""): Promise<AwsApiServiceResponseAll> {
   
     const validatedRedisResult = await this.#fetchDataFromRedis(
       options, 
@@ -63,7 +65,8 @@ export class RetrieveDataFacade {
         const typeFilter = (options.typeFilter) ? this.#createTypeFilter(options.typeFilter) : undefined;
         const filters = (typeFilter) ? [dateFilter, typeFilter] : [dateFilter];
         return this.#createFilterString(filters);
-      })()
+      })(),
+      operationId
     );
 
     /*
@@ -86,13 +89,13 @@ export class RetrieveDataFacade {
 
   }
   
-  async #fetchDataFromRedis(options: RetrieveDataFacadeOptions, filterString: string | undefined): Promise<AwsApiServiceResponseAll> {
+  async #fetchDataFromRedis(options: RetrieveDataFacadeOptions, filterString: string | undefined, operationId: string = ""): Promise<AwsApiServiceResponseAll> {
     const redisKey = this.redisService.getRedisKey(options.streetname, options.streetno);
-    const redisResult = await this.redisService.jsonGET(redisKey, filterString);
+    const redisResult = await this.redisService.jsonGET(redisKey, filterString, operationId);
 
     if (!redisResult) {
-      await this.#refetchFromAwsApi(options);
-      return await this.#fetchDataFromRedis(options, filterString)
+      await this.#refetchFromAwsApi(options, operationId);
+      return await this.#fetchDataFromRedis(options, filterString, operationId)
     }
 
     const validatedRedisResult = SchemaAwsApiServiceResponseAll.parse(redisResult);
@@ -100,11 +103,11 @@ export class RetrieveDataFacade {
   }
 
   // Fetch Full Data from AWS Stuttgart API and store in our redis DB, throws an error if anything goes wrong in any step
-  async #refetchFromAwsApi(options: RetrieveDataFacadeOptions): Promise<void> {
+  async #refetchFromAwsApi(options: RetrieveDataFacadeOptions, operationId: string = ""): Promise<void> {
     try {
       const redisKey = this.redisService.getRedisKey(options.streetname, options.streetno);
-      const awsApiData = await this.awsApiService.getAll(options.streetname, options.streetno);
-      const redisSave = await this.redisService.jsonSET(redisKey, awsApiData); // this throws, if saving was not succesful
+      const awsApiData = await this.awsApiService.getAll(options.streetname, options.streetno, operationId);
+      const redisSave = await this.redisService.jsonSET(redisKey, awsApiData, operationId); // this throws, if saving was not succesful
       //@TODO set expiration date - so that refetch is forced 
       if (redisSave !== "OK") throw new Error("saving to redis failed, aborting!")
     }

@@ -1,9 +1,11 @@
 import { ZodError } from "zod";
+import { LoggerMeta, generalLogger } from "./winstonLogger";
 
 /** Handle server errors */
-export default function(error: unknown) {
+export default function(error: unknown, operationId: string = "") {
+  const loggerMeta = new LoggerMeta("server.utils.errorHandler", operationId);
+  generalLogger.error(`Unhandled Error`, loggerMeta.withData({error}));
 
-  console.error(error)
   if (error instanceof ZodError) {
     throw createError({
       status: 400,

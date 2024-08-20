@@ -3,6 +3,8 @@ import type {Got} from "got";
 import { DateTime } from "luxon";
 import { z, ZodError } from "zod";
 import { AwsApiServiceError } from "./AwsApiServiceError";
+import type { Logger } from "winston";
+import { generalLogger, LoggerMeta } from "../utils/winstonLogger";
 
 /**
  * Service to fetch, validate and transform data from the AWS Stuttgart API
@@ -10,8 +12,7 @@ import { AwsApiServiceError } from "./AwsApiServiceError";
 export class AwsApiService {
   #apiUrl: URL;
   #got: Got;
-  // eslint-disable-next-line no-unused-private-class-members
-  #logger: Console;
+  #logger: Console | Logger;
   #typeNames = new Map<AwsApiRawResponseEventTypeName,AwsApiServiceEventTypeName>([
     ["Restmüll", "residual"],
     ["Biomüll", "organic"],
@@ -24,7 +25,7 @@ export class AwsApiService {
     ["03-wöchentl.", "W3"]
   ]);
 
-  constructor(apiUrl: string = process.env.AWSAPPENV_AWS_API_URL as string, gotClient: Got = defaultGot, logger: Console = console) {
+  constructor(apiUrl: string = process.env.AWSAPPENV_AWS_API_URL as string, gotClient: Got = defaultGot, logger: Console | Logger = generalLogger) {
     this.#got = gotClient;
     this.#apiUrl = new URL(apiUrl);
     this.#logger = logger;
@@ -35,11 +36,14 @@ export class AwsApiService {
     requestUrl.searchParams.append("street", streetname);
     requestUrl.searchParams.append("streetnr", streetno);
     const response = await this.#got(requestUrl).json();
+
     const validatedData = SchemaAwsApiRawResponse.parse(response);
     return validatedData;
   }
 
-  #getHandledError(error: unknown): AwsApiServiceError {
+  #getHandledError(error: unknown, operationId: string = ""): AwsApiServiceError {
+    const loggerMeta = new LoggerMeta("AwsApiService.getHandledError", operationId);
+    this.#logger.error("AwsApiService Error", loggerMeta.withData({error}));
 
     switch (true) {
       case error instanceof ZodError:   return new AwsApiServiceError("VALIDATION", error);
@@ -109,22 +113,35 @@ export class AwsApiService {
     return transformedData;
   }
 */
-  async getRaw(streetname: string, streetno: string, _operationId: string = ""): Promise<AwsApiRawResponse> {
+  async getRaw(streetname: string, streetno: string, operationId: string = ""): Promise<AwsApiRawResponse> {
     try {
+      const loggerMeta = new LoggerMeta("AwsApiService.getRaw", operationId);
+      this.#logger.debug("Operation started", loggerMeta.withData({streetname, streetno}));
+
       const apiData = await this.#executeRequest(streetname, streetno);
+      this.#logger.debug("Received data from API", loggerMeta.withData({eventExample: apiData.SERVLET.DIALOG.TERMINELIST.TERMIN[0]}))
+
       return apiData
     } catch(error) {
-      throw this.#getHandledError(error)
+      throw this.#getHandledError(error, operationId);
     }
   }
 
-  async getAll(streetname: string, streetno: string, _operationId: string = ""): Promise<AwsApiServiceResponseAll> {
+  async getAll(streetname: string, streetno: string, operationId: string = ""): Promise<AwsApiServiceResponseAll> {
 
     try {
+      const loggerMeta = new LoggerMeta("AwsApiService.getAll", operationId);
+      this.#logger.debug("Operation started", loggerMeta.withData({streetname, streetno}));
+
       const apiData = await this.#executeRequest(streetname, streetno);
-      return this.#transformDataAll(apiData);
+      this.#logger.debug("Received data from API", loggerMeta.withData({eventExample: apiData.SERVLET.DIALOG.TERMINELIST.TERMIN[0]}))
+
+      const transformedData = this.#transformDataAll(apiData);
+      this.#logger.debug("Transformed Data", loggerMeta.withData({transformedDataExample: transformedData.data[0]}));
+
+      return transformedData;
     } catch(error) {
-      throw this.#getHandledError(error)
+      throw this.#getHandledError(error, operationId)
     }
   }
 
@@ -144,9 +161,12 @@ export class AwsApiService {
 */
 }
 
-export const awsApiService = new AwsApiService();
-
-
+/** Default instance */
+export const awsApiService = new AwsApiService(
+  process.env.AWSAPPENV_AWS_API_URL,
+  defaultGot,
+  generalLogger
+);
 
 
 type AwsApiServiceResponseUpcomingData = {
