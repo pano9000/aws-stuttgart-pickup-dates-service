@@ -116,10 +116,10 @@ export class AwsApiService {
   async getRaw(streetname: string, streetno: string, operationId: string = ""): Promise<AwsApiRawResponse> {
     try {
       const loggerMeta = new LoggerMeta("AwsApiService.getRaw", operationId);
-      this.#logger.info("Operation started", loggerMeta.withData({streetname, streetno}));
+      this.#logger.debug("Operation started", loggerMeta.withData({streetname, streetno}));
 
       const apiData = await this.#executeRequest(streetname, streetno);
-      this.#logger.debug("Received data from API", loggerMeta.withData({apiData}))
+      this.#logger.debug("Received data from API", loggerMeta.withData({eventExample: apiData.SERVLET.DIALOG.TERMINELIST.TERMIN[0]}))
 
       return apiData
     } catch(error) {
@@ -131,13 +131,13 @@ export class AwsApiService {
 
     try {
       const loggerMeta = new LoggerMeta("AwsApiService.getAll", operationId);
-      this.#logger.info("Operation started", loggerMeta.withData({streetname, streetno}));
+      this.#logger.debug("Operation started", loggerMeta.withData({streetname, streetno}));
 
       const apiData = await this.#executeRequest(streetname, streetno);
-      this.#logger.debug("Received data from API", loggerMeta.withData({apiData}));
+      this.#logger.debug("Received data from API", loggerMeta.withData({eventExample: apiData.SERVLET.DIALOG.TERMINELIST.TERMIN[0]}))
 
       const transformedData = this.#transformDataAll(apiData);
-      this.#logger.debug("Transformed Data", loggerMeta.withData({transformedData}));
+      this.#logger.debug("Transformed Data", loggerMeta.withData({transformedDataExample: transformedData.data[0]}));
 
       return transformedData;
     } catch(error) {
