@@ -27,7 +27,7 @@ export default defineEventHandler(async (event) => {
       "content-type": getMIMEType(validatedQuery.format)
     });
 
-    generalLogger.info("Operation successfull", loggerMeta.withData({apiData}));
+    generalLogger.info("Operation successful", loggerMeta.withData({apiData}));
 
     return apiData
   }
