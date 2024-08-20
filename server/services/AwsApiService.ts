@@ -4,6 +4,7 @@ import { DateTime } from "luxon";
 import { z, ZodError } from "zod";
 import { AwsApiServiceError } from "./AwsApiServiceError";
 import type { Logger } from "winston";
+import { generalLogger, LoggerMeta } from "../utils/winstonLogger";
 
 /**
  * Service to fetch, validate and transform data from the AWS Stuttgart API
@@ -24,7 +25,7 @@ export class AwsApiService {
     ["03-wöchentl.", "W3"]
   ]);
 
-  constructor(apiUrl: string = process.env.AWSAPPENV_AWS_API_URL as string, gotClient: Got = defaultGot, logger: Console | Logger = console) {
+  constructor(apiUrl: string = process.env.AWSAPPENV_AWS_API_URL as string, gotClient: Got = defaultGot, logger: Console | Logger = generalLogger) {
     this.#got = gotClient;
     this.#apiUrl = new URL(apiUrl);
     this.#logger = logger;
