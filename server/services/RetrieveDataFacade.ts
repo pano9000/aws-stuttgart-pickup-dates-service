@@ -26,7 +26,7 @@ export class RetrieveDataFacade {
     this.transformDataService = transformDataService;
   }
 
-  async getAll(options: RetrieveDataFacadeOptions): Promise<AwsApiServiceResponseAll> {
+  async getAll(options: RetrieveDataFacadeOptions, operationId: string = ""): Promise<AwsApiServiceResponseAll> {
 
     const validatedRedisResult = await this.#fetchDataFromRedis(
       options, 
@@ -40,7 +40,7 @@ export class RetrieveDataFacade {
     return this.#transformData(validatedRedisResult, options.format, options.formatOptions);
   }
 
-  async getRemaining(options: RetrieveDataFacadeOptions): Promise<AwsApiServiceResponseAll> {
+  async getRemaining(options: RetrieveDataFacadeOptions, operationId: string = ""): Promise<AwsApiServiceResponseAll> {
     const validatedRedisResult = await this.#fetchDataFromRedis(
       options, 
       (() => {
@@ -54,7 +54,7 @@ export class RetrieveDataFacade {
     return this.#transformData(validatedRedisResult, options.format, options.formatOptions);
   }
 
-  async getUpcoming(options: RetrieveDataFacadeOptions): Promise<AwsApiServiceResponseAll> {
+  async getUpcoming(options: RetrieveDataFacadeOptions, operationId: string = ""): Promise<AwsApiServiceResponseAll> {
   
     const validatedRedisResult = await this.#fetchDataFromRedis(
       options, 
@@ -86,7 +86,7 @@ export class RetrieveDataFacade {
 
   }
   
-  async #fetchDataFromRedis(options: RetrieveDataFacadeOptions, filterString: string | undefined): Promise<AwsApiServiceResponseAll> {
+  async #fetchDataFromRedis(options: RetrieveDataFacadeOptions, filterString: string | undefined, operationId: string = ""): Promise<AwsApiServiceResponseAll> {
     const redisKey = this.redisService.getRedisKey(options.streetname, options.streetno);
     const redisResult = await this.redisService.jsonGET(redisKey, filterString);
 
@@ -100,7 +100,7 @@ export class RetrieveDataFacade {
   }
 
   // Fetch Full Data from AWS Stuttgart API and store in our redis DB, throws an error if anything goes wrong in any step
-  async #refetchFromAwsApi(options: RetrieveDataFacadeOptions): Promise<void> {
+  async #refetchFromAwsApi(options: RetrieveDataFacadeOptions, operationId: string = ""): Promise<void> {
     try {
       const redisKey = this.redisService.getRedisKey(options.streetname, options.streetno);
       const awsApiData = await this.awsApiService.getAll(options.streetname, options.streetno);
