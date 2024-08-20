@@ -1,5 +1,5 @@
 import { ZodError } from "zod";
-import { LoggerMeta } from "./winstonLogger";
+import { LoggerMeta, generalLogger } from "./winstonLogger";
 
 /** Handle server errors */
 export default function(error: unknown, operationId: string = "") {
