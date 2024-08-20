@@ -1,6 +1,8 @@
 import { got as defaultGot, HTTPError } from "got";
 import { z, ZodError } from "zod";
 import type {Got} from "got";
+import type { Logger } from "winston";
+import { generalLogger } from "../utils/winstonLogger";
 
 export class AwsAddressSuggestionService {
 
@@ -9,13 +11,13 @@ export class AwsAddressSuggestionService {
   #got: Got;
 
   // eslint-disable-next-line no-unused-private-class-members
-  #logger: Console;
+  #logger: Console | Logger;
 
   constructor(
     apiUrlStreetName: string = process.env.AWSAPPENV_AWS_API_STREETNAME_URL as string, 
     apiUrlStreetNo: string = process.env.AWSAPPENV_AWS_API_STREETNO_URL as string, 
     gotClient: Got = defaultGot, 
-    logger: Console = console
+    logger: Console | Logger = generalLogger
   ) {
     this.#got = gotClient;
     this.#apiUrlStreetName = new URL(apiUrlStreetName);
@@ -30,14 +32,27 @@ export class AwsAddressSuggestionService {
   }
 
   async getStreetNameSuggestions(streetName: string, operationId: string = "") {
+    const loggerMeta = new LoggerMeta("AwsAddressSuggestionService.getStreetNameSuggestions", operationId);
+    this.#logger.debug("Operation started", loggerMeta.withData({streetName}));
     this.#apiUrlStreetName.searchParams.set("street", streetName);
-    return await this.#executeRequest(this.#apiUrlStreetName)
+
+
+    const suggestions = await this.#executeRequest(this.#apiUrlStreetName);
+    this.#logger.debug("Operation successful", loggerMeta.withData({suggestions}));
+    return suggestions
   }
 
   async getStreetNoSuggestions(streetName: string, streetNo: string, operationId: string = "") {
+    const loggerMeta = new LoggerMeta("AwsAddressSuggestionService.getStreetNoSuggestions", operationId);
+    this.#logger.debug("Operation started", loggerMeta.withData({streetName, streetNo}));
+
     this.#apiUrlStreetNo.searchParams.set("street", streetName);
     this.#apiUrlStreetNo.searchParams.set("streetnr", streetNo);
-    return await this.#executeRequest(this.#apiUrlStreetNo)
+
+
+    const suggestions = await this.#executeRequest(this.#apiUrlStreetNo);
+    this.#logger.debug("Operation successful", loggerMeta.withData({suggestions}));
+    return suggestions
   }
 
 
