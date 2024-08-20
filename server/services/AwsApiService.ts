@@ -69,7 +69,7 @@ export class AwsApiService {
     }
   }
 
-  #transformDataAll(apiData: AwsApiRawResponse) {
+  #transformDataAll(apiData: AwsApiRawResponse, streetname: string, streetno: string) {
     const apiEventData = apiData.SERVLET.DIALOG.TERMINELIST.TERMIN;
     const transformedEvents = apiEventData.map(event => this.#transformEvent(event));
 
@@ -82,8 +82,8 @@ export class AwsApiService {
 
     return {
       information: {
-        streetname: apiData.SERVLET.DIALOG.LOCATION.STRASSENNAME,
-        streetno: apiData.SERVLET.DIALOG.LOCATION.HAUSNUMMER
+        streetname: apiData.SERVLET.DIALOG.LOCATION.STRASSENNAME || streetname,
+        streetno: apiData.SERVLET.DIALOG.LOCATION.HAUSNUMMER || streetno
       },
       data: transformedEvents
     }
@@ -136,7 +136,7 @@ export class AwsApiService {
       const apiData = await this.#executeRequest(streetname, streetno);
       this.#logger.debug("Received data from API", loggerMeta.withData({eventExample: apiData.SERVLET.DIALOG.TERMINELIST.TERMIN[0]}))
 
-      const transformedData = this.#transformDataAll(apiData);
+      const transformedData = this.#transformDataAll(apiData, streetname, streetno);
       this.#logger.debug("Transformed Data", loggerMeta.withData({transformedDataExample: transformedData.data[0]}));
 
       return transformedData;
@@ -261,44 +261,44 @@ const SchemaAwsApiRawResponse = z.object({
       TERMINELIST: z.object({
         TERMIN: z.array(SchemaAwsApiRawResponseEvent),
         SERVICETYPES: z.object({
-          "Restmüll": z.array(SchemaAwsApiRawResponseEvent),
-          "Biomüll": z.array(SchemaAwsApiRawResponseEvent),
-          "Altpapier": z.array(SchemaAwsApiRawResponseEvent),
-          "Gelber Sack": z.array(SchemaAwsApiRawResponseEvent)
+          "Restmüll": z.array(SchemaAwsApiRawResponseEvent).optional(),
+          "Biomüll": z.array(SchemaAwsApiRawResponseEvent).optional(),
+          "Altpapier": z.array(SchemaAwsApiRawResponseEvent).optional(),
+          "Gelber Sack": z.array(SchemaAwsApiRawResponseEvent).optional()
         })
       }),
       LOCATION: z.object({
         "IDSTANDORT": z.string(),
         "STANDORT": z.string(),
-        "ID": z.number(),
-        "TYPE": z.union([z.literal("Adresse"), z.string()]),
-        "NAME": z.string(),
-        "CX": z.number(),
-        "CY": z.number(),
-        "XMIN": z.number(),
-        "YMIN": z.number(),
-        "XMAX": z.number(),
-        "YMAX": z.number(),
-        "STRASSENSCHLUESSEL": z.string(),
-        "STRASSENNAME": z.string(),
-        "HAUSNUMMER": z.string(),
-        "MRID": z.string(),
-        "UUID": z.string(),
-        "GBE_POLIZEIR_NAME": z.string(),
-        "GBE_POLIZEIR_REV_ID": z.string(),
-        "DIESEL_VVZ_KLEIN": z.enum(["JA", "NEIN"]),
-        "N": z.string(),
-        "Q": z.string(),
-        "S": z.string(),
-        "ADRESSE_STADTTEIL": z.string(),
-        "ADRESSE_STADTTEILNR": z.string(),
-        "ADRESSE_STADTBEZIRK": z.string(),
-        "ADRESSE_STADTBEZIRKNR": z.string(),
-        "ADRESSE_POSTLEITZAHL": z.string(),
-        "ADRESSE_GEMEINDENAME": z.string(),
-        "ADRESSE_STADTVIERTELNR": z.string(),
-        "ADRESSE_BAUBLOCKNR": z.string(),
-        "ADRESSE_BAUBLOCKSEITENR": z.string(),
+        "ID": z.number().optional(),
+        "TYPE": z.union([z.literal("Adresse"), z.string()]).optional(),
+        "NAME": z.string().optional(),
+        "CX": z.number().optional(),
+        "CY": z.number().optional(),
+        "XMIN": z.number().optional(),
+        "YMIN": z.number().optional(),
+        "XMAX": z.number().optional(),
+        "YMAX": z.number().optional(),
+        "STRASSENSCHLUESSEL": z.string().optional(),
+        "STRASSENNAME": z.string().optional(),
+        "HAUSNUMMER": z.string().optional(),
+        "MRID": z.string().optional(),
+        "UUID": z.string().optional(),
+        "GBE_POLIZEIR_NAME": z.string().optional(),
+        "GBE_POLIZEIR_REV_ID": z.string().optional(),
+        "DIESEL_VVZ_KLEIN": z.enum(["JA", "NEIN"]).optional(),
+        "N": z.string().optional(),
+        "Q": z.string().optional(),
+        "S": z.string().optional(),
+        "ADRESSE_STADTTEIL": z.string().optional(),
+        "ADRESSE_STADTTEILNR": z.string().optional(),
+        "ADRESSE_STADTBEZIRK": z.string().optional(),
+        "ADRESSE_STADTBEZIRKNR": z.string().optional(),
+        "ADRESSE_POSTLEITZAHL": z.string().optional(),
+        "ADRESSE_GEMEINDENAME": z.string().optional(),
+        "ADRESSE_STADTVIERTELNR": z.string().optional(),
+        "ADRESSE_BAUBLOCKNR": z.string().optional(),
+        "ADRESSE_BAUBLOCKSEITENR": z.string().optional(),
       })
 
     })
