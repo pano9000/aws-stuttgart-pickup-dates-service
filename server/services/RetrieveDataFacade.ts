@@ -94,8 +94,8 @@ export class RetrieveDataFacade {
     const redisResult = await this.redisService.jsonGET(redisKey, filterString, operationId);
 
     if (!redisResult) {
-      await this.#refetchFromAwsApi(options);
-      return await this.#fetchDataFromRedis(options, filterString)
+      await this.#refetchFromAwsApi(options, operationId);
+      return await this.#fetchDataFromRedis(options, filterString, operationId)
     }
 
     const validatedRedisResult = SchemaAwsApiServiceResponseAll.parse(redisResult);
