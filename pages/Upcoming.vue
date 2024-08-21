@@ -3,12 +3,12 @@
   <LocationPicker/>
   <v-container>
 
-  has Street: {{ hasSetStreet }} // {{ cookieStreet }}
-  language: {{ cookieLanguage }}
-  fetchCount: {{ fetchCount }}
-  <div v-if="!hasSetStreet">
-    Please select your street and street no first.
-  </div>
+    <v-alert 
+      v-if="!hasSetStreet"
+      type="info"
+    >
+      Please select your street name and street number first.
+    </v-alert>
 
   <div v-else>
 
@@ -24,11 +24,12 @@
         :event-data=event
       />
     </div>
-    <div v-else>
-
+    <v-alert 
+      v-else
+      type="error"
+    >
       Uh oh! An Unexpected Error Ocurred!
-
-    </div>
+    </v-alert>
 
   </div>
 </v-container>
