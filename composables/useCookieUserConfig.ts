@@ -12,9 +12,11 @@ export function useCookieUserConfig() {
   });
 
   const cookieLanguage = useCookie<string>("lang");
+  const hasSetStreet = computed<boolean>( () => !!cookieStreet.value.streetname && !!cookieStreet.value.streetno);
 
   return {
     cookieStreet: cookieStreet,
-    cookieLanguage: cookieLanguage
+    cookieLanguage: cookieLanguage,
+    hasSetStreet: hasSetStreet
   }
 }
