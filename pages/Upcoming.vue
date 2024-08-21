@@ -3,10 +3,10 @@
   <LocationPicker/>
   <v-container>
 
-  has Street: {{ hasStreet }} // {{ cookieStreet }}
+  has Street: {{ hasSetStreet }} // {{ cookieStreet }}
   language: {{ cookieLanguage }}
   fetchCount: {{ fetchCount }}
-  <div v-if="!hasStreet">
+  <div v-if="!hasSetStreet">
     Please select your street and street no first.
   </div>
 
@@ -40,10 +40,9 @@
   import type { AwsApiServiceResponseAll } from "~/server/services/AwsApiService.js"
   import { useCookieUserConfig } from "~/composables/useCookieUserConfig";
 
-  const { cookieStreet, cookieLanguage } = useCookieUserConfig();
+  const { cookieStreet, cookieLanguage, hasSetStreet } = useCookieUserConfig();
   const streetname = toRef(() => cookieStreet.value.streetname);
   const streetno = toRef(() => cookieStreet.value.streetno);
-  const hasStreet = computed( () => !!cookieStreet.value.streetname && !!cookieStreet.value.streetno);
 
   const fetchCount = ref(0);
 
