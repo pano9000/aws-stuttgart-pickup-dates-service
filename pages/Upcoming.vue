@@ -13,9 +13,6 @@
   <div v-else>
 
     <h1>Upcoming Pickups</h1>
-    <details>
-      {{ apiUpcoming?.data }}
-    </details>
 
     <div v-if="apiUpcoming?.data" class="eventcards">
       <Card
@@ -45,20 +42,13 @@
   const streetname = toRef(() => cookieStreet.value.streetname);
   const streetno = toRef(() => cookieStreet.value.streetno);
 
-  const fetchCount = ref(0);
-
-  const apiData = ref<AwsApiServiceResponseAll|null>(null)
-
+  //@TODO - fix empty api call, when no streetname/streetno is set
   const apiUpcoming = await useFetch<AwsApiServiceResponseAll>("/api/v1/upcoming", {
     query: {
       streetname: streetname,
       streetno: streetno
     },
-    onRequest: (e) => {
-      console.log(e); fetchCount.value++
-    },
   });
-
 
 </script>
 
