@@ -36,24 +36,29 @@
       </v-col>
 
       <v-col cols="auto">
-        <v-btn
-          v-if="isLocationPickerActive"
-          :disabled="!form?.isValid"
-          type="submit"
-          class="text-capitalize"
-        >
-          Save
-        </v-btn>
+            <v-tooltip
+              :text="(isLocationPickerActive) ? `Save` : `Edit`"
+              location="top"
+            >
+              <template #activator="{ props }">
+                <v-btn
+                  v-if="isLocationPickerActive"
+                  :disabled="!form?.isValid"
+                  type="submit"
+                  icon="mdi-check-bold"
+                  v-bind="props"
+                />
 
-        <v-btn
-          v-else 
-          type="button"
-          class="text-capitalize"
-          @click="isLocationPickerActive = !isLocationPickerActive"
-        >
-          Change
-        </v-btn>
-      </v-col>
+                <v-btn
+                  v-else 
+                  type="button"
+                  icon="mdi-pencil"
+                  v-bind="props" 
+                  @click="isLocationPickerActive = !isLocationPickerActive"
+                />
+              </template>
+            </v-tooltip>
+          </v-col>
     </v-row>
   </v-form>
 </div>
