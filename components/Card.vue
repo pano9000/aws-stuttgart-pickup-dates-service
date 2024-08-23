@@ -1,5 +1,4 @@
 <template>
-  <!-- :class="['eventcard', `eventcard_${props.eventData.type}`]" -->
 
   <v-card
     class="text-center"
