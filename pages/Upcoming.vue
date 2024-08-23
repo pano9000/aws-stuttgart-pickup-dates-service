@@ -1,6 +1,5 @@
 <template>
   <div>
-  <LocationPicker/>
   <v-container>
 
     <v-alert 

@@ -1,6 +1,4 @@
 <template>
-  <div>
-  <LocationPicker/>
   <v-container>
   <h1 class="text-h3 text-center">Generate Custom iCal Calendar</h1>
 
@@ -220,7 +218,6 @@
   </v-card>
 
 </v-container>
-</div>
 
 </template>
 
