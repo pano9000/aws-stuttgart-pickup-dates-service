@@ -20,7 +20,7 @@
       <v-form 
         ref="form"
         class="d-flex align-baseline ga-4"
-        :disabled="!isLocationPickerActive"
+        :disabled="!isLocationPickerActive && hasSetStreet"
         @submit.prevent="storeStreetInCookieHandler"
       >
         <v-row align="center">
@@ -52,12 +52,12 @@
 
           <v-col cols="auto">
             <v-tooltip
-              :text="(isLocationPickerActive) ? `Save` : `Edit`"
+              :text="(isLocationPickerActive || !hasSetStreet) ? `Save` : `Edit`"
               location="top"
             >
               <template #activator="{ props }">
                 <v-btn
-                  v-if="isLocationPickerActive"
+                  v-if="isLocationPickerActive || !hasSetStreet"
                   :disabled="!form?.isValid"
                   type="submit"
                   icon="mdi-check-bold"
