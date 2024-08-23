@@ -1,5 +1,5 @@
 <template>
-  <AppBar v-model:active-drawer="drawerVisible"/> -->
+  <AppBar v-model:active-drawer="drawerVisible"/>
   <Drawer v-model:active="drawerVisible"/>
 </template>
 
@@ -7,5 +7,4 @@
   import Drawer from './Drawer.vue';
   import AppBar from './AppBar.vue';
   const drawerVisible = ref(false);
-
 </script>
