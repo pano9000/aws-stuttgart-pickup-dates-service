@@ -14,7 +14,7 @@
     </v-app-bar-title>
 
     <template #append>
-      <v-btn icon="mdi-office-building-marker"/>
+      <LocationPicker/>
       <TranslateMenu/>
       <v-btn icon="mdi-dots-vertical"/>
     </template>
@@ -23,7 +23,7 @@
 </template>
 
 <script setup lang="ts">
-import TranslateMenu from './TranslateMenu.vue';
-
-  const activeDrawer = defineModel<boolean>("activeDrawer")
+  import TranslateMenu from './TranslateMenu.vue';
+  import LocationPicker from '../LocationPicker.vue';
+  const activeDrawer = defineModel<boolean>("activeDrawer", {default: false})
 </script>
