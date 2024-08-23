@@ -3,13 +3,13 @@
 
   <v-card
     class="text-center"
-    :color="cardColor.get(props.eventData.type)"
+    :color="eventTypeMap.get(props.eventData.type)?.color"
   >
     <v-card-title>
       <h3>{{ props.eventData.type }}</h3>
     </v-card-title>
     <v-card-text>
-      <CardIcon :event-type="props.eventData.type" :size="48" />
+      <v-icon :icon="eventTypeMap.get(props.eventData.type)?.icon" size="3rem"/>
       <div>{{ props.eventData.date }}</div>
       <div>{{ props.eventData.schedule }}</div>
     </v-card-text>
@@ -20,6 +20,7 @@
 
 <script setup lang="ts">
   import type { AwsApiServiceEventTypeName, AwsApiServiceEventScheduleName } from "~/server/services/AwsApiService";
+  import eventTypeMap from "~/utils/eventTypeMap"
 
   const props = defineProps<{ 
     eventData: { 
@@ -28,13 +29,6 @@
       schedule: AwsApiServiceEventScheduleName
     }
   }>();
-
-  const cardColor = new Map<AwsApiServiceEventTypeName, string>([
-    ["residual", "grey-darken-4"],
-    ["organic", "brown"],
-    ["recycle", "yellow-accent-2"],
-    ["paper", "green-accent-4"]
-  ])
 
 </script>
 
