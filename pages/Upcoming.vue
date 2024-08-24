@@ -1,54 +1,31 @@
 <template>
-  <div>
   <v-container>
-
-    <v-alert 
-      v-if="!hasSetStreet"
-      type="info"
-    >
-      Please select your street name and street number first.
-    </v-alert>
-
-  <div v-else>
-
     <h1>Upcoming Pickups</h1>
+    <p>The next upcoming pickups for {{ `${streetname} ${streetno}` }}</p>
 
-    <div v-if="apiUpcoming?.data" class="eventcards">
-      <EventCard
-        v-for="event in apiUpcoming?.data?.value?.data"
-        :key="`${event.date}_${event.type}_${event.schedule}`"
-        :event-data=event
-      />
-    </div>
-    <v-alert 
-      v-else
-      type="error"
-    >
-      Uh oh! An Unexpected Error Ocurred!
-    </v-alert>
-
-  </div>
+    <BaseEventDisplay :event-data="apiData"/>
 </v-container>
-</div>
 </template>
 
 <script setup lang="ts">
 
   import type { AwsApiServiceResponseAll } from "~/server/services/AwsApiService.js"
   import { useCookieUserConfig } from "~/composables/useCookieUserConfig";
-import EventCard from "~/components/EventCard.vue";
+import BaseEventDisplay from "~/components/EventDisplay/BaseEventDisplay.vue";
 
   const { cookieStreet, cookieLanguage, hasSetStreet } = useCookieUserConfig();
   const streetname = toRef(() => cookieStreet.value.streetname);
   const streetno = toRef(() => cookieStreet.value.streetno);
 
+  //@TODO https://nuxt.com/docs/guide/recipes/custom-usefetch#custom-usefetch
   //@TODO - fix empty api call, when no streetname/streetno is set
-  const apiUpcoming = await useFetch<AwsApiServiceResponseAll>("/api/v1/upcoming", {
+  const { data: apiData, status, error, refresh, clear } = await useFetch<AwsApiServiceResponseAll>("/api/v1/all", {
     query: {
       streetname: streetname,
       streetno: streetno
     },
   });
+
 
 </script>
 
