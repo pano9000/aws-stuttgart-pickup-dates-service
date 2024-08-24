@@ -1,8 +1,8 @@
-export class AwsApiServiceError extends Error {
+export class AwsApiServiceError<ErrorType> extends Error {
 
   reason: AwsApiServiceErrorReason;
-  errorData?: any;
-  constructor(reason: AwsApiServiceErrorReason, errorData?: any) {
+  errorData?: ErrorType;
+  constructor(reason: AwsApiServiceErrorReason, errorData?: ErrorType) {
     const message = `Fetching Data from AWS Stuttgart API failed.`
     super(message);
 

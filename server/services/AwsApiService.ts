@@ -41,7 +41,7 @@ export class AwsApiService {
     return validatedData;
   }
 
-  #getHandledError(error: unknown, operationId: string = ""): AwsApiServiceError {
+  #getHandledError(error: unknown, operationId: string = "") {
     const loggerMeta = new LoggerMeta("AwsApiService.getHandledError", operationId);
     this.#logger.error("AwsApiService Error", loggerMeta.withData({error}));
 
