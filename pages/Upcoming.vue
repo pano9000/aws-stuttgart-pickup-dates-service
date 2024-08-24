@@ -19,7 +19,7 @@ import BaseEventDisplay from "~/components/EventDisplay/BaseEventDisplay.vue";
 
   //@TODO https://nuxt.com/docs/guide/recipes/custom-usefetch#custom-usefetch
   //@TODO - fix empty api call, when no streetname/streetno is set
-  const { data: apiData, status, error, refresh, clear } = await useFetch<AwsApiServiceResponseAll>("/api/v1/all", {
+  const { data: apiData, status, error, refresh, clear } = await useFetch<AwsApiServiceResponseAll>("/api/v1/upcoming", {
     query: {
       streetname: streetname,
       streetno: streetno
