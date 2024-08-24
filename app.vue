@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <NavigationBase/>
+    <BaseNavigation/>
     <!-- max-width="1280px" -->
     <v-main
     >
