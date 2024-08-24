@@ -1,5 +1,5 @@
-import { got as defaultGot, HTTPError } from "got";
-import { z, ZodError } from "zod";
+import { got as defaultGot } from "got";
+import { z } from "zod";
 import type {Got} from "got";
 import type { Logger } from "winston";
 import { generalLogger } from "../utils/winstonLogger";
@@ -10,7 +10,6 @@ export class AwsAddressSuggestionService {
   #apiUrlStreetNo: URL;
   #got: Got;
 
-  // eslint-disable-next-line no-unused-private-class-members
   #logger: Console | Logger;
 
   constructor(
