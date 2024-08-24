@@ -18,6 +18,7 @@
 </template>
 
 <script setup lang="ts">
+  import BaseLocationPicker from '../LocationPicker/BaseLocationPicker.vue';
   const { hasSetStreet } = useCookieUserConfig();
 
 </script>
