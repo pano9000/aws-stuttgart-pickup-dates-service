@@ -1,83 +1,67 @@
 <template>
-  <v-menu
-    id="menu-locationpicker"
-    width="100vw"
-    :close-on-content-click="false"
-    open-on-hover
-    eager
+  <v-card 
+    class="pa-8"
   >
-    <template #activator="{ props }">
-      <v-btn 
-        icon="mdi-office-building-marker"
-        v-bind="props"
-        :color="(!hasSetStreet) ? 'red' : undefined"
-      />
-    </template>
-
-    <v-card 
-      class="pa-8"
+    <v-form 
+      ref="form"
+      class="d-flex align-baseline ga-4"
+      :disabled="!isLocationPickerActive && hasSetStreet"
+      @submit.prevent="storeStreetInCookieHandler"
     >
-      <v-form 
-        ref="form"
-        class="d-flex align-baseline ga-4"
-        :disabled="!isLocationPickerActive && hasSetStreet"
-        @submit.prevent="storeStreetInCookieHandler"
-      >
-        <v-row align="center">
-          <v-col cols="5">
-            <LocationPickerComboBox
-              v-model:input-combo-box="streetname"
-              v-model:streetname="streetname"
-              v-model:streetno="streetno"
-              :is-enabled="isLocationPickerActive"
-              mode="streetname"
-              no-data-text="Street Name"
-              icon="mdi-home-city"
-              label="Street Name"
-            />
-          </v-col>
+      <v-row align="center">
+        <v-col cols="5">
+          <LocationPickerComboBox
+            v-model:input-combo-box="streetname"
+            v-model:streetname="streetname"
+            v-model:streetno="streetno"
+            :is-enabled="isLocationPickerActive"
+            mode="streetname"
+            no-data-text="Street Name"
+            icon="mdi-home-city"
+            label="Street Name"
+          />
+        </v-col>
 
-          <v-col cols="5">
-            <LocationPickerComboBox
-              v-model:input-combo-box="streetno"
-              v-model:streetname="streetname"
-              v-model:streetno="streetno"
-              :is-enabled="isLocationPickerActive"
-              mode="streetno"
-              no-data-text="Street Number"
-              icon="mdi-numeric"
-              label="Street Number"
-            />
-          </v-col>
+        <v-col cols="5">
+          <LocationPickerComboBox
+            v-model:input-combo-box="streetno"
+            v-model:streetname="streetname"
+            v-model:streetno="streetno"
+            :is-enabled="isLocationPickerActive"
+            mode="streetno"
+            no-data-text="Street Number"
+            icon="mdi-numeric"
+            label="Street Number"
+          />
+        </v-col>
 
-          <v-col cols="auto">
-            <v-tooltip
-              :text="(isLocationPickerActive || !hasSetStreet) ? `Save` : `Edit`"
-              location="top"
-            >
-              <template #activator="{ props }">
-                <v-btn
-                  v-if="isLocationPickerActive || !hasSetStreet"
-                  :disabled="!form?.isValid"
-                  type="submit"
-                  icon="mdi-check-bold"
-                  v-bind="props"
-                />
+        <v-col cols="auto">
+          <v-tooltip
+            :text="(isLocationPickerActive || !hasSetStreet) ? `Save` : `Edit`"
+            location="top"
+          >
+            <template #activator="{ props }">
+              <v-btn
+                v-if="isLocationPickerActive || !hasSetStreet"
+                :disabled="!form?.isValid"
+                type="submit"
+                icon="mdi-check-bold"
+                v-bind="props"
+              />
 
-                <v-btn
-                  v-else 
-                  type="button"
-                  icon="mdi-pencil"
-                  v-bind="props" 
-                  @click="isLocationPickerActive = !isLocationPickerActive"
-                />
-              </template>
-            </v-tooltip>
-          </v-col>
-        </v-row>
-      </v-form>
-    </v-card>
-  </v-menu>
+              <v-btn
+                v-else 
+                type="button"
+                icon="mdi-pencil"
+                v-bind="props" 
+                @click="isLocationPickerActive = !isLocationPickerActive"
+              />
+            </template>
+          </v-tooltip>
+        </v-col>
+      </v-row>
+    </v-form>
+  </v-card>
 </template>
 
 <script setup lang="ts">
