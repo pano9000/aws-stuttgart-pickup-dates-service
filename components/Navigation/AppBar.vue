@@ -15,7 +15,7 @@
 
     <template #append>
       <NavigationAppBarMenuLocationPicker/>
-      <TranslateMenu/>
+      <NavigationAppBarMenuLanguage/>
       <v-btn icon="mdi-dots-vertical"/>
     </template>
 
@@ -23,7 +23,7 @@
 </template>
 
 <script setup lang="ts">
-  import TranslateMenu from './TranslateMenu.vue';
+  import NavigationAppBarMenuLanguage from './NavigationAppBarMenuLanguage.vue';
   import NavigationAppBarMenuLocationPicker from "./NavigationAppBarMenuLocationPicker.vue"
   const activeDrawer = defineModel<boolean>("activeDrawer", {default: false})
 </script>
