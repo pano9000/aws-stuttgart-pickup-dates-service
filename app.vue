@@ -9,3 +9,8 @@
     <Footer/>
   </v-app>
 </template>
+
+<script setup lang="ts">
+  import BaseNavigation from './components/Navigation/BaseNavigation.vue';
+  import Footer from './components/Footer.vue';
+</script>
