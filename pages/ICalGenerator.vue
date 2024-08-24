@@ -1,5 +1,7 @@
 <template>
   <v-container>
+    <WarnNoSetStreet/>
+
   <h1 class="text-h3 text-center">Generate Custom iCal Calendar</h1>
 
   <p>Use the options below to generate a custom iCal Calendar for the Pickup Dates</p>
