@@ -28,11 +28,3 @@ import BaseEventDisplay from "~/components/EventDisplay/BaseEventDisplay.vue";
 
 
 </script>
-
-<style>
-  .eventcards {
-    display: grid;
-    gap: 1rem;
-    grid-template-columns: 1fr 1fr 1fr 1fr;
-  }
-</style>
