@@ -20,6 +20,7 @@
   const items = ref<[path: string, name: string][]>([
     ["/","Home"],
     ["upcoming","Upcoming Pickups"],
+    ["all", "All Pickups"],
     ["icalgenerator","iCal Generator"]
   ])
 
