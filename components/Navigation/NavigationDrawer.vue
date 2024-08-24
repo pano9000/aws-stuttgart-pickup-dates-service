@@ -3,14 +3,13 @@
     v-model="model"
     temporary
   >
-    <!-- <v-list-item title="My Application" subtitle="Vuetify"/>
-    <v-divider/> -->
-
-    <template v-for="item in items" :key="item[0]">
-      <NuxtLink :to="item[0]">
-        <v-list-item link :title="item[1]"/>
-      </NuxtLink>
-    </template>
+    <v-list>
+      <template v-for="item in items" :key="item[0]">
+        <NuxtLink :to="item[0]">
+          <v-list-item link :title="item[1]"/>
+        </NuxtLink>
+      </template>
+    </v-list>
 
   </v-navigation-drawer>
 </template>
