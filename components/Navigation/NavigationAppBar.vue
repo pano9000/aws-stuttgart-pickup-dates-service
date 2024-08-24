@@ -8,7 +8,7 @@
     </template>
 
     <v-app-bar-title>
-      <NuxtLink to="/">
+      <NuxtLink to="/" class="nuxtlink">
         Application Bar
       </NuxtLink>
     </v-app-bar-title>

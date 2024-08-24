@@ -23,7 +23,7 @@
 
       <template v-for="actionCard in actionCards" :key="actionCard[0]">
         <v-col cols="12" md="6" lg="auto">
-          <NuxtLink :to="actionCard[0]">
+          <NuxtLink :to="actionCard[0]" class="nuxtlink">
             <v-card :title="actionCard[1]" class="pa-8" color="primary" link>
               <v-card-text class="pa-4">
                 <v-icon :icon="actionCard[2]" size="4rem"/>
@@ -47,9 +47,3 @@
 
 
 </script>
-
-<style scoped>
-  a {
-    text-decoration: none;
-  }
-</style>

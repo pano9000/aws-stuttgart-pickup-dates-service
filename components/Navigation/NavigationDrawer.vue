@@ -5,7 +5,7 @@
   >
     <v-list>
       <template v-for="item in items" :key="item[0]">
-        <NuxtLink :to="item[0]">
+        <NuxtLink :to="item[0]" class="nuxtlink">
           <v-list-item link :title="item[1]"/>
         </NuxtLink>
       </template>
