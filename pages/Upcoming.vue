@@ -14,7 +14,7 @@
     <h1>Upcoming Pickups</h1>
 
     <div v-if="apiUpcoming?.data" class="eventcards">
-      <Card
+      <EventCard
         v-for="event in apiUpcoming?.data?.value?.data"
         :key="`${event.date}_${event.type}_${event.schedule}`"
         :event-data=event
@@ -36,6 +36,7 @@
 
   import type { AwsApiServiceResponseAll } from "~/server/services/AwsApiService.js"
   import { useCookieUserConfig } from "~/composables/useCookieUserConfig";
+import EventCard from "~/components/EventCard.vue";
 
   const { cookieStreet, cookieLanguage, hasSetStreet } = useCookieUserConfig();
   const streetname = toRef(() => cookieStreet.value.streetname);
