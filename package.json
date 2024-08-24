@@ -34,7 +34,6 @@
   "devDependencies": {
     "@mocks-server/main": "^4.1.0",
     "@nuxt/test-utils": "^3.13.1",
-    "@tabler/icons-vue": "^3.11.0",
     "@types/luxon": "^3.4.2",
     "@types/morgan": "^1.9.9",
     "@vitest/coverage-v8": "^1.6.0",

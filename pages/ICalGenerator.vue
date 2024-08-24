@@ -1,7 +1,7 @@
 <template>
-  <div>
-  <LocationPicker/>
   <v-container>
+    <WarnNoSetStreet/>
+
   <h1 class="text-h3 text-center">Generate Custom iCal Calendar</h1>
 
   <p>Use the options below to generate a custom iCal Calendar for the Pickup Dates</p>
@@ -20,12 +20,12 @@
             mandatory
           >
             <v-btn
-              v-for="eventType in eventTypeColorTuple" :key="eventType[0]" 
+              v-for="eventType in eventTypeMap.entries()" :key="eventType[0]" 
               :value="eventType[0]"
-              :color="eventType[1]"
+              :color="eventType[1].color"
               class="custom-transform-class text-none"
             >
-              <CardIcon :event-type="eventType[0]" class="position-relative"/>
+              <v-icon :icon="eventType[1].icon" size="2rem"/>
               <!-- @TODO there must be a more performatn way than the one below / bitmask maybe? -->
               <v-icon
                 v-show="formatOptions.type?.includes(eventType[0])"
@@ -220,18 +220,17 @@
   </v-card>
 
 </v-container>
-</div>
 
 </template>
 
 <script setup lang="ts">
-  import CardIcon from "~/components/CardIcon.vue";
   import TimeRangeInput from "~/components/TimeRangeInput.vue";
   import { useCookieUserConfig } from "~/composables/useCookieUserConfig";
   import { useCopyToClipboard } from "~/composables/useCopyToClipboard";
   import type { ICalOptions } from "~/server/services/TransformDataService";
   import type { AwsApiServiceEventTypeName } from "~/server/services/AwsApiService";
-  
+  import eventTypeMap from "~/utils/eventTypeMap"
+
   type UiICalFormatOptions = Omit<ICalOptions, "startTime" | "endTime" | "translated"> & {
     startTime?: string;
     endTime?: string;
@@ -296,16 +295,10 @@
       : "Pickup Recycleable Waste (bi-weekly)"
   });
 
-  const eventTypeColorTuple: [eventType: AwsApiServiceEventTypeName, color: string][] = [
-    ["paper", "#6B975E"], //
-    ["recycle", "#F3C200"],
-    ["residual", "black"], // AWS uses #3C4146
-    ["organic", "brown"] // AWS used #8D6146
-  ];
 
   //workaround due to some hydration mismatch issue in vuetify, when setting the values server side already
   onMounted( () => {
-    formatOptions.value.type = eventTypeColorTuple.map(eventType => eventType[0])
+    formatOptions.value.type = Array.from(eventTypeMap.keys())
   })
 
 </script>
