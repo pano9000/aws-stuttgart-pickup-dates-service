@@ -32,6 +32,7 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
+    "@mdi/js": "^7.4.47",
     "@mocks-server/main": "^4.1.0",
     "@nuxt/test-utils": "^3.13.1",
     "@types/luxon": "^3.4.2",
