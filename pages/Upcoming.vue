@@ -3,7 +3,11 @@
     <h1>Upcoming Pickups</h1>
     <p>The next upcoming pickups for {{ `${streetname} ${streetno}` }}</p>
 
-    <BaseEventDisplay :event-data="apiData"/>
+    <BaseEventDisplay
+      :event-data="apiData"
+      :fetch-status="apiStatus"
+      :fetch-error="apiError"
+    />
 </v-container>
 </template>
 
@@ -19,7 +23,7 @@ import BaseEventDisplay from "~/components/EventDisplay/BaseEventDisplay.vue";
 
   //@TODO https://nuxt.com/docs/guide/recipes/custom-usefetch#custom-usefetch
   //@TODO - fix empty api call, when no streetname/streetno is set
-  const { data: apiData, status, error, refresh, clear } = await useFetch<AwsApiServiceResponseAll>("/api/v1/upcoming", {
+  const { data: apiData, status: apiStatus, error: apiError } = await useFetch<AwsApiServiceResponseAll>("/api/v1/upcoming", {
     query: {
       streetname: streetname,
       streetno: streetno

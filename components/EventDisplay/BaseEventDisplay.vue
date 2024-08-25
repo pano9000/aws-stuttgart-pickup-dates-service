@@ -1,5 +1,13 @@
 <template>
   <WarnNoSetStreet/>
+
+  <v-container v-if="props.fetchError">
+    <v-alert 
+      type="error"
+      title="Uh oh! An Unexpected Error Ocurred."
+      text="Please check your address and try again later or kindly report the issue."
+    />
+  </v-container>
   <v-container v-if="props.eventData">
 
     <EventDisplayModeSelector v-model="displayMode"/>
@@ -7,6 +15,7 @@
     <EventDisplayGrid
       v-if="displayMode === 'grid'"
       :event-data="props.eventData"
+      :is-loading="props.fetchStatus === 'pending'"
     />
 
     <EventDisplayList
@@ -22,9 +31,9 @@
   </v-container>
   <v-container v-else>
     <v-alert 
-      type="error"
-      title="Uh oh! An Unexpected Error Ocurred."
-      text="Please check your address and try again later or kindly report the issue."
+      type="info"
+      title="Nothing to see here"
+      text="It looks like there is no data to display."
     />
   </v-container>
 
@@ -36,10 +45,15 @@
   import EventDisplayModeSelector from "./EventDisplayModeSelector.vue";
   import EventDisplayGrid from "./EventDisplayGrid.vue";
   import EventDisplayCalendar from "./EventDisplayCalendar.vue";
-
+  import type { AsyncDataRequestStatus } from "#app";
+  import type { FetchError } from 'ofetch'
   const displayMode = ref<"grid"|"calendar"|"list">();
 
-  const props = defineProps<{ eventData: AwsApiServiceResponseAll | null }>();
+  const props = defineProps<{ 
+    eventData: AwsApiServiceResponseAll | null;
+    fetchStatus: AsyncDataRequestStatus;
+    fetchError: FetchError<unknown> | null;
+  }>();
   //const { cookieStreet, hasSetStreet } = useCookieUserConfig();
 
   //workaround due to some hydration mismatch issue in vuetify, when setting the values server side already
