@@ -3,7 +3,11 @@
     <h1>All Pickups</h1>
     <p>All of the pickups for {{ `${streetname} ${streetno}` }}</p>
 
-    <BaseEventDisplay :event-data="apiData"/>
+    <BaseEventDisplay
+      :event-data="apiData"
+      :fetch-status="apiStatus"
+      :fetch-error="apiError"
+    />
   </v-container>
 </template>
 
@@ -20,7 +24,7 @@
 
   //@TODO https://nuxt.com/docs/guide/recipes/custom-usefetch#custom-usefetch
   //@TODO - fix empty api call, when no streetname/streetno is set
-  const { data: apiData, status, error, refresh, clear } = await useFetch<AwsApiServiceResponseAll>("/api/v1/all", {
+  const { data: apiData, status: apiStatus, error: apiError } = await useFetch<AwsApiServiceResponseAll>("/api/v1/all", {
     query: {
       streetname: streetname,
       streetno: streetno
