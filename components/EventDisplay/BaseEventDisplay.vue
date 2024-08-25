@@ -4,8 +4,8 @@
   <v-container v-if="props.fetchError">
     <v-alert 
       type="error"
-      title="Uh oh! An Unexpected Error Ocurred."
-      text="Please check your address and try again later or kindly report the issue."
+      :title="i18n.t('baseEventDisplay.fetchErrorTitle')"
+      :text="i18n.t('baseEventDisplay.fetchErrorText')"
     />
   </v-container>
   <v-container v-if="props.eventData">
@@ -32,8 +32,8 @@
   <v-container v-else>
     <v-alert 
       type="info"
-      title="Nothing to see here"
-      text="It looks like there is no data to display."
+      :title="i18n.t('baseEventDisplay.fetchNoDataTitle')"
+      :text="i18n.t('baseEventDisplay.fetchNoDataText')"
     />
   </v-container>
 
@@ -47,6 +47,9 @@
   import EventDisplayCalendar from "./EventDisplayCalendar.vue";
   import type { AsyncDataRequestStatus } from "#app";
   import type { FetchError } from 'ofetch'
+
+  const { i18n, multiMergeLocaleMessage } = useCustomI18n();
+
   const displayMode = ref<"grid"|"calendar"|"list">();
 
   const props = defineProps<{ 
@@ -55,6 +58,28 @@
     fetchError: FetchError<unknown> | null;
   }>();
   //const { cookieStreet, hasSetStreet } = useCookieUserConfig();
+
+  multiMergeLocaleMessage("baseEventDisplay", [
+    [
+      "fetchErrorTitle", {"de": "Ups! Ein unerwarteter Fehler ist aufgetreten.", "en": "Uh oh! An Unexpected Error Ocurred."}
+    ],
+    [
+      "fetchErrorText", {
+        "de": "Bitte prüfen Sie Ihre ausgewählte Addresse und probieren es später erneut oder bitte melden Sie das Problem.", 
+        "en": "Please check your selected address and try again later or kindly report the issue."
+      }
+    ],
+    [
+      "fetchNoDataTitle", {"de": "Es gibt nichts zu sehen", "en": "Nothing to see here"}
+    ],
+    [
+      "fetchNoDataText", {
+        "de": "Es sieht so aus, als wenn es keine Daten zum Anzeigen gibt.",
+        "en": "It looks like there is no data to display."
+      }
+    ],
+  ]);
+
 
   //workaround due to some hydration mismatch issue in vuetify, when setting the values server side already
   onMounted( () => {
