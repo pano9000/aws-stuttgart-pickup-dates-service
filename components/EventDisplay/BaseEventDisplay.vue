@@ -15,6 +15,7 @@
     <EventDisplayGrid
       v-if="displayMode === 'grid'"
       :event-data="props.eventData"
+      :is-loading="props.fetchStatus === 'pending'"
     />
 
     <EventDisplayList
