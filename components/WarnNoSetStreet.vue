@@ -12,9 +12,10 @@
   const { hasSetStreet } = useCookieUserConfig();
   const { i18n, multiMergeLocaleMessage } = useCustomI18n();
 
-  multiMergeLocaleMessage("warnNoSetStreet", [[
+  multiMergeLocaleMessage("warnNoSetStreet", [
+    [
       "infoText", {
-        de: "Bitte wählen Sie zuerst eine Adresse mit dem Addressauswähler aus.", 
+        de: "Bitte wählen Sie zuerst eine Adresse mit dem Adressauswähler aus.", 
         en: "Please select an Address with the location picker first."
       }
     ]
