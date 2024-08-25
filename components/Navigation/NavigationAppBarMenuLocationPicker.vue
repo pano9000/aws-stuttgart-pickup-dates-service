@@ -8,7 +8,7 @@
   >
     <template #activator="{ props }">
       <v-btn 
-        icon="mdi-office-building-marker"
+        :icon="mdiOfficeBuildingMarker"
         v-bind="props"
         :color="(!hasSetStreet) ? 'red' : undefined"
       />
@@ -19,6 +19,7 @@
 
 <script setup lang="ts">
   import BaseLocationPicker from '../LocationPicker/BaseLocationPicker.vue';
+  import { mdiOfficeBuildingMarker } from "@mdi/js";
   const { hasSetStreet } = useCookieUserConfig();
 
 </script>

@@ -1,10 +1,16 @@
 import type { AwsApiServiceEventTypeName } from "~/server/services/AwsApiService";
+import { 
+  mdiTrashCanOutline,
+  mdiCarrot,
+  mdiRecycle,
+  mdiNewspaperVariantOutline
+} from "@mdi/js";
 
 const eventTypeMap = new Map<AwsApiServiceEventTypeName, {icon: string, color: string}>([
-  ["residual",  {icon: "mdi-trash-can-outline", color: "grey-darken-4"}],
-  ["organic",   {icon: "mdi-carrot", color: "brown"}],
-  ["recycle",   {icon: "mdi-recycle", color: "yellow-accent-2"}],
-  ["paper",     {icon: "mdi-newspaper-variant-outline", color: "green-accent-4"}]
+  ["residual",  {icon: mdiTrashCanOutline,          color: "grey-darken-4"}],
+  ["organic",   {icon: mdiCarrot,                   color: "brown"}],
+  ["recycle",   {icon: mdiRecycle,                  color: "yellow-accent-2"}],
+  ["paper",     {icon: mdiNewspaperVariantOutline,  color: "green-accent-4"}]
 ]);
 
 export default eventTypeMap

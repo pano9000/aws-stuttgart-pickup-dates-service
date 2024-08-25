@@ -6,7 +6,7 @@
     <template #activator="{ props }">
       <v-btn
         v-bind="props"
-        icon="mdi-translate-variant"
+        :icon="mdiTranslateVariant"
       />
     </template>
 
@@ -31,6 +31,7 @@
 </template>
 
 <script setup lang="ts">
+  import { mdiTranslateVariant } from "@mdi/js"
 
 const languages = [
   "DE",

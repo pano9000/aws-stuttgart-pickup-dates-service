@@ -17,7 +17,7 @@
             :is-enabled="isLocationPickerActive"
             mode="streetname"
             no-data-text="Street Name"
-            icon="mdi-home-city"
+            :icon="mdiHomeCity"
             label="Street Name"
           />
         </v-col>
@@ -30,7 +30,7 @@
             :is-enabled="isLocationPickerActive"
             mode="streetno"
             no-data-text="Street Number"
-            icon="mdi-numeric"
+            :icon="mdiNumeric"
             label="Street Number"
           />
         </v-col>
@@ -45,14 +45,14 @@
                 v-if="isLocationPickerActive || !hasSetStreet"
                 :disabled="!form?.isValid"
                 type="submit"
-                icon="mdi-check-bold"
+                :icon="mdiCheckBold"
                 v-bind="props"
               />
 
               <v-btn
                 v-else 
                 type="button"
-                icon="mdi-pencil"
+                :icon="mdiPencil"
                 v-bind="props" 
                 @click="isLocationPickerActive = !isLocationPickerActive"
               />
@@ -67,6 +67,7 @@
 <script setup lang="ts">
 import { VForm } from 'vuetify/components';
 import { useCookieUserConfig } from '~/composables/useCookieUserConfig';
+import { mdiHomeCity, mdiNumeric, mdiCheckBold, mdiPencil } from "@mdi/js";
 
 const { cookieStreet, hasSetStreet } = useCookieUserConfig();
 

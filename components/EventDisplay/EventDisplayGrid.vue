@@ -54,7 +54,7 @@
           <v-btn
             :disabled="page === 1"
             density="comfortable"
-            icon="mdi-arrow-left"
+            :icon="mdiArrowLeft"
             variant="tonal"
             rounded
             @click="prevPage"
@@ -67,7 +67,7 @@
           <v-btn
             :disabled="page >= pageCount"
             density="comfortable"
-            icon="mdi-arrow-right"
+            :icon="mdiArrowRight"
             variant="tonal"
             rounded
             @click="nextPage"
@@ -92,6 +92,7 @@
   import type { AwsApiServiceResponseAll } from "~/server/services/AwsApiService.js"
   import EventCard from "../EventCard.vue";
   import WarnNoSetStreet from "../WarnNoSetStreet.vue";
+  import { mdiArrowRight, mdiArrowLeft } from "@mdi/js";
 
   const currPage = ref(1);
   const props = defineProps<{ 
