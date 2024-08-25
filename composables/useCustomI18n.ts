@@ -29,14 +29,4 @@ function createMultiMergeLocaleMessageFunction(i18n: ReturnType<typeof useI18n>)
 
 }
 
-// function multiMergeLocaleMessage(i18n: ReturnType<typeof useI18n>, componentName: string, customMessages: MultiMergeLocale[]) {
-//   customMessages.forEach(customMessage => {
-//     const keyName = `${componentName}.${customMessage[0]}`;
-//     for (const locale in customMessage[1]) {
-//       i18n.mergeLocaleMessage(locale, { [keyName]: customMessage[1][locale] })
-//     }
-//   })
-// }
-
-
 export type MultiMergeLocale = [messageName: string, messages: { [locale: string]: string }]
