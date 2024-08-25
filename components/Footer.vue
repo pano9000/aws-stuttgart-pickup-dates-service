@@ -19,7 +19,7 @@
               target="_blank"
               v-bind="props"
             >
-              <v-icon icon="mdi-github"/>
+              <v-icon :icon="mdiGithub"/>
             </a>
             </template>
         </v-tooltip>
@@ -32,5 +32,5 @@
 </template>
 
 <script setup lang="ts">
-
+import { mdiGithub } from '@mdi/js';
 </script>

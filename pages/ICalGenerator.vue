@@ -29,7 +29,7 @@
               <!-- @TODO there must be a more performatn way than the one below / bitmask maybe? -->
               <v-icon
                 v-show="formatOptions.type?.includes(eventType[0])"
-                icon="mdi-check" 
+                :icon="mdiCheck" 
                 class="position-absolute top-0"
               />
               {{ eventType[0] }}
@@ -56,7 +56,7 @@
             <TimeRangeInput 
               v-model:start-time="formatOptions.startTime"
               v-model:end-time="formatOptions.endTime"
-              icon="mdi-clock-outline"
+              :icon="mdiClockOutline"
             />
           </v-input>
         </v-col>
@@ -72,7 +72,7 @@
             :hide-details="true"
           >
             <template #label>
-              <v-icon icon="mdi-hours-24"/>
+              <v-icon :icon="mdiHours24"/>
               <span>All Day</span>
             </template>
           </v-checkbox>
@@ -97,7 +97,7 @@
             <NumberInput
               id="numberinput__alarm"
               v-model:input-number="formatOptions.alarm"
-              icon="mdi-bell-outline"
+              :icon="mdiBellOutline"
               label="minute(s) before"
               :min=0
               :max=720
@@ -118,7 +118,7 @@
             :hide-details="true"
           >
           <template #label>
-            <v-icon icon="mdi-bell-off-outline"/>
+            <v-icon :icon="mdiBellOffOutline"/>
             <span>Disable Alarm</span>
           </template>
 
@@ -141,7 +141,7 @@
             <NumberInput
               :id="'numberinput__offset'"
               v-model:input-number="formatOptions.offsetEvent"
-              icon="mdi-rewind-outline"
+              :icon="mdiRewindOutline"
               :label="'day(s) earlier'"
               :min=0
               :max=7
@@ -197,7 +197,7 @@
           <v-tooltip :text="(!copiedToClipboard) ? 'Copy to Clipboard' : 'Copied'" location="top">
             <template #activator="{ props }">
               <v-btn 
-                :icon="(!copiedToClipboard) ? 'mdi-clipboard-text-outline' : 'mdi-clipboard-check-outline'"
+                :icon="(!copiedToClipboard) ? mdiClipboardTextOutline : mdiClipboardCheckOutline"
                 v-bind="props" 
                 @click="() => copyToClipboardHandler(icalUrl.toString())"
               />
@@ -229,7 +229,17 @@
   import { useCopyToClipboard } from "~/composables/useCopyToClipboard";
   import type { ICalOptions } from "~/server/services/TransformDataService";
   import type { AwsApiServiceEventTypeName } from "~/server/services/AwsApiService";
-  import eventTypeMap from "~/utils/eventTypeMap"
+  import eventTypeMap from "~/utils/eventTypeMap";
+  import { 
+    mdiClipboardTextOutline, 
+    mdiClipboardCheckOutline, 
+    mdiCheck, 
+    mdiClockOutline, 
+    mdiHours24, 
+    mdiRewindOutline, 
+    mdiBellOutline,
+    mdiBellOffOutline
+  } from "@mdi/js";
 
   type UiICalFormatOptions = Omit<ICalOptions, "startTime" | "endTime" | "translated"> & {
     startTime?: string;

@@ -24,12 +24,14 @@
 </template>
 
 <script setup lang="ts">
+  import { mdiViewGridOutline, mdiFormatListBulleted, mdiCalendarMonth } from "@mdi/js";
+
   const modelDisplayMode = defineModel<"grid"|"calendar"|"list">("displayMode");
 
   const displayModes: [value: string, icon: string, tooltip: string][] = [
-    ["grid", "mdi-view-grid-outline", "Display as Grid"],
-    ["list", "mdi-format-list-bulleted", "Display as List"],
-    ["calendar", "mdi-calendar-month", "Display as Calendar"]
+    ["grid", mdiViewGridOutline, "Display as Grid"],
+    ["list", mdiFormatListBulleted, "Display as List"],
+    ["calendar", mdiCalendarMonth, "Display as Calendar"]
   ];
 
 </script>

@@ -33,16 +33,15 @@
         </v-col>
       </template>
     </v-row>
-
   </v-container>
 </template>
 
 <script setup lang="ts">
-
+  import { mdiCalendar, mdiCalendarMultiselect, mdiCalendarExport } from '@mdi/js';
   const actionCards: [url: string, title: string, icon: string][] = [
-    ["/upcoming", "Show Upcoming Pickups", "mdi-calendar"],
-    ["/all", "Show All Pickups", "mdi-calendar-multiselect"],
-    ["/icalgenerator", "Generate Custom iCal Link", "mdi-calendar-export"]
+    ["/upcoming", "Show Upcoming Pickups", mdiCalendar],
+    ["/all", "Show All Pickups", mdiCalendarMultiselect],
+    ["/icalgenerator", "Generate Custom iCal Link", mdiCalendarExport]
   ]
 
 
