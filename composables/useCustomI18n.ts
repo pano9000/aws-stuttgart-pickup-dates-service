@@ -14,7 +14,7 @@ export function useCustomI18n() {
   };
 
 }
-
+//@TODO add support for interpolations?
 function createMultiMergeLocaleMessageFunction(i18n: ReturnType<typeof useI18n>) {
   const locali18n = i18n;
 
