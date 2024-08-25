@@ -18,10 +18,7 @@
         <v-container>
 
           <v-row>
-            <v-col
-              v-for="(_, k) in 3"
-              :key="k"
-            >
+            <v-col v-for="i in 3" :key="i">
               <v-skeleton-loader
                 class="border"
                 type="image, heading"
