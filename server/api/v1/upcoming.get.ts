@@ -28,7 +28,9 @@ export default defineEventHandler(async (event) => {
       "content-type": getMIMEType(validatedQuery.format)
     });
 
-    generalLogger.info(`Operation successful`, loggerMeta.withData(apiData))
+    // @TODO: fix below -this fails for CSV/iCal type responses of course
+    //generalLogger.info(`Operation successful`, loggerMeta.withData({information: apiData.information, dataExample: apiData.data?.[0]}))
+    generalLogger.info(`Operation successful`, loggerMeta);
 
     return apiData;
   }
