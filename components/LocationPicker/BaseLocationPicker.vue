@@ -16,9 +16,8 @@
             v-model:streetno="streetno"
             :is-enabled="isLocationPickerActive"
             mode="streetname"
-            no-data-text="Street Name"
             :icon="mdiHomeCity"
-            label="Street Name"
+            :label="i18n.t('baseLocationPicker.labelStreetName')"
           />
         </v-col>
 
@@ -29,15 +28,14 @@
             v-model:streetno="streetno"
             :is-enabled="isLocationPickerActive"
             mode="streetno"
-            no-data-text="Street Number"
             :icon="mdiNumeric"
-            label="Street Number"
+            :label="i18n.t('baseLocationPicker.labelStreetNo')"
           />
         </v-col>
 
         <v-col cols="auto">
           <v-tooltip
-            :text="(isLocationPickerActive || !hasSetStreet) ? `Save` : `Edit`"
+            :text="(isLocationPickerActive || !hasSetStreet) ? i18n.t('baseLocationPicker.btnSave') : i18n.t('baseLocationPicker.btnEdit')"
             location="top"
           >
             <template #activator="{ props }">
@@ -70,13 +68,19 @@ import { useCookieUserConfig } from '~/composables/useCookieUserConfig';
 import { mdiHomeCity, mdiNumeric, mdiCheckBold, mdiPencil } from "@mdi/js";
 
 const { cookieStreet, hasSetStreet } = useCookieUserConfig();
+const { i18n, multiMergeLocaleMessage } = useCustomI18n();
 
 const streetname = ref(cookieStreet.value.streetname);
 const streetno = ref(cookieStreet.value.streetno);
 const isLocationPickerActive = ref(false);
 const form = ref<InstanceType<typeof VForm>|null>();
 
-
+multiMergeLocaleMessage("baseLocationPicker", [
+  ["labelStreetName", {de: "Straßenname", en: "Street Name"}],
+  ["labelStreetNo", {de: "Hausnummer", en: "Street Number"}],
+  ["btnEdit", {de: "Bearbeiten", en: "Edit"}],
+  ["btnSave", {de: "Speichern", en: "Save"}],
+])
 
 function storeStreetInCookieHandler() {
   if (form?.value?.isValid) {

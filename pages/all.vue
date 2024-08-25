@@ -1,7 +1,7 @@
 <template>
   <v-container>
-    <h1>All Pickups</h1>
-    <p>All of the pickups for {{ `${streetname} ${streetno}` }}</p>
+    <h1>{{ i18n.t("all.pageTitle") }}</h1>
+    <p>{{ i18n.t("all.pageSubtitle", { address: `${streetname} ${streetno}` }) }}</p>
 
     <BaseEventDisplay
       :event-data="apiData"
@@ -17,8 +17,14 @@
   import { useCookieUserConfig } from "~/composables/useCookieUserConfig";
   import BaseEventDisplay from "~/components/EventDisplay/BaseEventDisplay.vue";
 
-
   const { cookieStreet } = useCookieUserConfig();
+  const { i18n, multiMergeLocaleMessage }  = useCustomI18n();
+
+  multiMergeLocaleMessage("all", [
+    ["pageTitle", {de: "Alle Abholungen", en: "All Pickups"}],
+    ["pageSubtitle", {de: "Alle geplanten Abholungen für { address }", en: "All scheduled pickups for { address }"}],
+  ]);
+
   const streetname = toRef(() => cookieStreet.value.streetname);
   const streetno = toRef(() => cookieStreet.value.streetno);
 

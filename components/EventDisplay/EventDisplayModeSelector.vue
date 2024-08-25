@@ -9,11 +9,11 @@
       v-for="displayMode in displayModes"
       :key="displayMode[0]"
     >
-      <v-tooltip :text="displayMode[2]" location="top">
+      <v-tooltip :text="i18n.t(displayMode[2])" location="top">
         <template #activator="{ props }">
           <v-btn
-            :icon="displayMode[1]" 
-            :value="displayMode[0]" 
+            :icon="displayMode[1]"
+            :value="displayMode[0]"
             v-bind="props"
           />
         </template>
@@ -27,11 +27,18 @@
   import { mdiViewGridOutline, mdiFormatListBulleted, mdiCalendarMonth } from "@mdi/js";
 
   const modelDisplayMode = defineModel<"grid"|"calendar"|"list">("displayMode");
+  const { i18n, multiMergeLocaleMessage } = useCustomI18n();
+
+  multiMergeLocaleMessage("eventDisplayModeSelector", [
+    ["displayGrid", {"de": "Als Raster anzeigen", "en": "Display as Grid"}],
+    ["displayList", {"de": "Als Liste anzeigen", "en": "Display as List"}],
+    ["displayCalendar", {"de": "Als Kalender anzeigen", "en": "Display as Calendar"}],
+  ]);
 
   const displayModes: [value: string, icon: string, tooltip: string][] = [
-    ["grid", mdiViewGridOutline, "Display as Grid"],
-    ["list", mdiFormatListBulleted, "Display as List"],
-    ["calendar", mdiCalendarMonth, "Display as Calendar"]
+    ["grid", mdiViewGridOutline, "eventDisplayModeSelector.displayGrid"],
+    ["list", mdiFormatListBulleted, "eventDisplayModeSelector.displayList"],
+    ["calendar", mdiCalendarMonth, "eventDisplayModeSelector.displayCalendar"]
   ];
 
 </script>

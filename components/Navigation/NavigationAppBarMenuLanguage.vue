@@ -12,8 +12,9 @@
 
     <v-list>
       <v-list-item
-        v-for="language in languages"
+        v-for="language in i18n.availableLocales"
         :key="language"
+        @click="setLanguage(language)"
       >
       <template #default>
         <div class="d-flex ga-2 align-center">
@@ -33,9 +34,14 @@
 <script setup lang="ts">
   import { mdiTranslateVariant } from "@mdi/js"
 
-const languages = [
-  "DE",
-  "EN"
-]
+ // using setLocale in the click event aboveseems to be causing
+ // a full refetch of apiData with useFetch -> 
+ // instead set the local.value directly like above to avoid this
+ const i18n = useI18n();
+ const { cookieLanguage } = useCookieUserConfig();
 
+ function setLanguage(localeCode: string) {
+   cookieLanguage.value = localeCode;
+   i18n.locale.value = localeCode;
+ }
 </script>

@@ -2,14 +2,14 @@
   <v-container>
     <WarnNoSetStreet/>
 
-  <h1 class="text-h3 text-center">Generate Custom iCal Calendar</h1>
+  <h1 class="text-h3 text-center">{{i18n.t("iCalGen.pageTitle")}}</h1>
 
-  <p>Use the options below to generate a custom iCal Calendar for the Pickup Dates</p>
+  <p>{{ i18n.t("iCalGen.pageSubtitle") }}</p>
 
   <v-card
     class="my-4 pa-4"
-    title="Pickup Events"
-    subtitle="Select the type of pickups that you want to appear as events in the calendar"
+    :title="i18n.t('iCalGen.pickupEventsTitle')"
+    :subtitle="i18n.t('iCalGen.pickupEventsSubtitle')"
   >
     <v-card-text>
       <v-row>
@@ -32,7 +32,7 @@
                 :icon="mdiCheck" 
                 class="position-absolute top-0"
               />
-              {{ eventType[0] }}
+              {{ i18n.t(`waste_${eventType[0]}`) }}
             </v-btn>
           </v-btn-toggle>
         </v-col>
@@ -43,8 +43,8 @@
 
   <v-card
     class="my-4 pa-4"
-    title="Event Times"
-    subtitle="Set the start and end time of the iCal events"
+    :title="i18n.t('iCalGen.eventTimesTitle')"
+    :subtitle="i18n.t('iCalGen.eventTimesSubtitle')"
   >
     <v-card-text class="my-2">
       <v-row>
@@ -68,12 +68,11 @@
         <v-col cols="auto">
           <v-checkbox
             v-model="formatOptions.allDay"
-            label="All Day"
             :hide-details="true"
           >
             <template #label>
               <v-icon :icon="mdiHours24"/>
-              <span>All Day</span>
+              <span>{{ i18n.t('iCalGen.labelAllDay') }}</span>
             </template>
           </v-checkbox>
         </v-col>
@@ -84,8 +83,8 @@
 
   <v-card
     class="my-4 pa-4"
-    title="Event Alarm"
-    subtitle="Set an alarm notification before for the event"
+    :title="i18n.t('iCalGen.eventAlarmTitle')"
+    :subtitle="i18n.t('iCalGen.eventAlarmSubtitle')"
   >
     <v-card-text>
       <v-row>
@@ -98,7 +97,7 @@
               id="numberinput__alarm"
               v-model:input-number="formatOptions.alarm"
               :icon="mdiBellOutline"
-              label="minute(s) before"
+              :label="i18n.t('iCalGen.labelAlarmMinutesBefore')"
               :min=0
               :max=720
               :step=5
@@ -114,12 +113,11 @@
         <v-col cols="auto">
           <v-checkbox
             v-model="disabledAlarm"
-            label="Disable Alarm"
             :hide-details="true"
           >
           <template #label>
             <v-icon :icon="mdiBellOffOutline"/>
-            <span>Disable Alarm</span>
+            <span>{{i18n.t('iCalGen.labelAlarmDisable')}}</span>
           </template>
 
           </v-checkbox>
@@ -130,8 +128,8 @@
 
   <v-card 
     class="my-4 pa-4"
-    title="Offset Event"
-    subtitle="Set if you want to show the event before the actual pickup day"
+    :title="i18n.t('iCalGen.eventOffsetTitle')"
+    :subtitle="i18n.t('iCalGen.eventOffsetSubtitle')"
   >
 
     <v-card-text>
@@ -142,7 +140,7 @@
               :id="'numberinput__offset'"
               v-model:input-number="formatOptions.offsetEvent"
               :icon="mdiRewindOutline"
-              :label="'day(s) earlier'"
+              :label="i18n.t('iCalGen.labelOffsetDaysEarlier')"
               :min=0
               :max=7
             />
@@ -154,25 +152,25 @@
         color="info"
         icon="$info"
         title="Info"
-        text="Use this, if you want the event to appear in your calendar before the actual pickup happens. This way you can use the calendar event as reminder to put out the trash, e.g. the night before the pickup happens."
+        :text="i18n.t('iCalGen.eventOffsetInfo')"
       />
     </v-card-text>
   </v-card>
 
   <v-card
     class="my-4 pa-4"
-    title="Event Title"
-    subtitle="Set the event title"
+    :title="i18n.t('iCalGen.eventTitleTitle')"
+    :subtitle="i18n.t('iCalGen.eventTitleSubtitle')"
   >
     <v-card-text>
       <v-text-field
         v-model="formatOptions.customSummary"
-        label="Event Title"
+        :label="i18n.t('iCalGen.labelEventTitle')"
       />
 
       <v-text-field
         v-model="eventSummaryPreview"
-        label="Event Title Preview"
+        :label="i18n.t('iCalGen.labelEventTitlePreview')"
         :readonly="true"
       />
   
@@ -181,7 +179,7 @@
         icon="$info"
         title="Info"
       >
-        <p>You can use %1 and %2 as placeholders for the event type and the event schedule frequency.</p>
+        <p> {{ i18n.t('iCalGen.eventTitlePlaceholderInfo') }}</p>
       </v-alert>
 
     </v-card-text>
@@ -189,12 +187,12 @@
 
   <v-card
     class="my-4 pa-4"
-    title="Your custom iCal Link"
+    :title="i18n.t('iCalGen.yourIcalLink')"
   >
     <v-card-text>
       <v-row wrap="nowrap">
         <v-col cols="auto">
-          <v-tooltip :text="(!copiedToClipboard) ? 'Copy to Clipboard' : 'Copied'" location="top">
+          <v-tooltip :text="(!copiedToClipboard) ? i18n.t('iCalGen.tooltipClipboardCopy') : i18n.t('iCalGen.tooltipClipboardCopied')" location="top">
             <template #activator="{ props }">
               <v-btn 
                 :icon="(!copiedToClipboard) ? mdiClipboardTextOutline : mdiClipboardCheckOutline"
@@ -249,6 +247,59 @@
 
   const { cookieStreet, cookieLanguage } = useCookieUserConfig();
   const { copiedToClipboard, copyToClipboardHandler } = useCopyToClipboard();
+  const { i18n, multiMergeLocaleMessage }  = useCustomI18n();
+
+  multiMergeLocaleMessage("iCalGen", [
+    ["pageTitle", {de: "iCal-Kalendar-Link Erstellen", en: "Generate iCal-Calendar-Link"}],
+    [
+      "pageSubtitle", {
+        de: "Benutzen Sie die Optionen unten, um einen benutzerdefinierten iCal-Kalender-Link für die Abholungen zu erstellen, den Sie in Ihre Kalender-Anwendung einbinden können.", 
+        en: "Use the options below to generate a custom iCal Calendar link for the pickup dates, that you can import into your calendar application"
+      }
+    ],
+    ["pickupEventsTitle", {de: "Abholungen", en: "Pickup Events"}],
+    [
+      "pickupEventsSubtitle", {
+        de: "Wählen Sie die Art der Abholungen, die als Ereignis im Kalender angezeigt werden sollen",
+        en: "Select the type of pickups that you want to appear as events in the calendar"
+      }
+    ],
+    ["eventTimesTitle", {de: "Ereignis-Dauer", en: "Event Duration"}],
+    [
+      "eventTimesSubtitle", {
+        de: "Stellen Sie die Start- und Endzeit des Kalender-Eintrags ein",
+        en: "Set the start and end time of the calendar events"
+      }
+    ],
+    ["labelAllDay", {de: "Ganztätig", en: "Allday"}],
+    ["eventAlarmTitle", {de: "Ereignis-Erinnerung", en: "Event Alarm"}],
+    ["eventAlarmSubtitle", {de: "Stellen Sie eine Erinnerung vor dem Ereignis ein", en: "Set an alarm notification before the event"}],
+    ["labelAlarmMinutesBefore", {de: "Minute(n) vorher", en: "minute(s) before"}],
+    ["labelAlarmDisable", {de: "Erinnerung deaktivieren", en: "Disable Alarm"}],
+    ["eventOffsetTitle", {de: "Ereignis-Offset", en: "Offset Event"}],
+    ["eventOffsetSubtitle", {de: "Stellen Sie ein, ob Sie das Ereignis vor dem Abholungstag anzeigen möchten", en: "Set if you want to show the event before the actual pickup day"}],
+    ["labelOffsetDaysEarlier", {de: "Tag(e) vorher", en: "day(s) earlier"}],
+    [
+      "eventOffsetInfo", {
+      de: "Verwenden Sie dies, wenn Sie das Ereignis in Ihrem Kalender bereits vor der tatsächlichen Abholung angezeigt haben wollen. Dies kann nützlich sein, um sich bspw. am Abend vorher eine Erinnerung zu setzen, den Müll rechtzeitig bereitzustellen.", 
+      en: "Use this, if you want the event to appear in your calendar before the actual pickup happens. This can be useful e.g. to set yourself a reminder to put out the trash, e.g. the night before the pickup happens."}
+    ],
+    ["eventTitleTitle", {de: "Ereignis-Titel", en: "Event Title"}],
+    ["eventTitleSubtitle", {de: "Stellen Sie den Titel ein, wie das Ereignis im Kalender angezeigt werden soll", en: "Set the title that will be shown in the calendar"}],
+    ["labelEventTitle", {de: "Ereignis-Titel-Vorlage", en: "Event Title Template"}],
+    ["labelEventTitlePreview", {de: "Ereignis-Titel-Vorschau", en: "Event Title Preview"}],
+    ["eventTitleDefaultTitle", {de: "Abholung %1 (%2)", en: "Pickup %1 (%2)"}],
+    [
+      "eventTitlePlaceholderInfo", {
+      de: "Verwenden Sie '%1' und '%2' als Platzhalter für die Abholungsart und die Abholfrequenz", 
+      en: "You can use '%1' and '%2' as placeholders for the event type and the event schedule frequency."}
+    ],
+
+    ["yourIcalLink", {de: "Ihr benutzerdefinierter iCal-Link", en: "Your Custom iCal Link"}],
+    ["tooltipClipboardCopy", {de: "Kopieren", en: "Copy"}],
+    ["tooltipClipboardCopied", {de: "Kopiert", en: "Copied"}],
+
+  ]);
 
   const formatOptions = ref<UiICalFormatOptions>({
     type: [],
@@ -257,7 +308,7 @@
     alarm: 15,
     allDay: false,
     offsetEvent: 0,
-    customSummary: "Pickup %1 (%2)"
+    customSummary: i18n.t("iCalGen.eventTitleDefaultTitle")
   });
 
   const disabledAlarm = ref<boolean>(false);
@@ -301,8 +352,8 @@
 
   const eventSummaryPreview = computed( () => {
     return (formatOptions.value.customSummary && formatOptions.value.customSummary?.length > 0) 
-      ? formatOptions.value.customSummary?.replaceAll("%1", "Recycleable Waste").replaceAll("%2", "bi-weekly")
-      : "Pickup Recycleable Waste (bi-weekly)"
+      ? formatOptions.value.customSummary?.replaceAll("%1", i18n.t("waste_residual")).replaceAll("%2", i18n.t("schedule_W2"))
+      : `${i18n.t("waste_residual")} (${i18n.t("schedule_W2")})`
   });
 
 

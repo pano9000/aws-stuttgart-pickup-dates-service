@@ -1,7 +1,17 @@
-//@TODO check how to make this work with @nuxtjs/i18n
-const i18nConfig = {
+import type { DateTimeOptions } from "vue-i18n"
+
+const dateFormatOptions: DateTimeOptions = {
+  year: "numeric",
+  month: "2-digit",
+  day: "2-digit",
+  hour: "2-digit",
+  minute: "2-digit",
+  hour12: false
+};
+
+
+export default {
   legacy: false,
-  locale: "de",
   messages: {
     en: {
       waste_paper: "Waste Paper",
@@ -29,7 +39,14 @@ const i18nConfig = {
       term_offset: "Offset", //@TODO find translation
       csv_header: "Datum,Art,Turnus,Außerplanmäßiger Turnus,Straßenname,Straßennr\r\n"
     }
+  },
+  datetimeFormats: {
+    "de": {
+      short: dateFormatOptions
+    },
+    "en": {
+      short: dateFormatOptions
+    }
   }
-}
+};
 
-export default i18nConfig
