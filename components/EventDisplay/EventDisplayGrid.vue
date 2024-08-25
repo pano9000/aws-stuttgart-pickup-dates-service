@@ -5,12 +5,33 @@
       :items="props.eventData.data"
       :page="currPage"
       :items-per-page="12"
+      :loading="props.isLoading"
     >
+
       <template #header>
         <v-toolbar class="px-2">
           <div>header</div>
         </v-toolbar>
       </template>
+
+      <template #loader>
+        <v-container>
+
+          <v-row>
+            <v-col
+              v-for="(_, k) in 3"
+              :key="k"
+            >
+              <v-skeleton-loader
+                class="border"
+                type="image, heading"
+              />
+            </v-col>
+          </v-row>
+        </v-container>
+
+      </template>
+
       <template #default="{ items }">
         <v-container>
           <v-row>
@@ -76,7 +97,10 @@
   import WarnNoSetStreet from "../WarnNoSetStreet.vue";
 
   const currPage = ref(1);
-  const props = defineProps<{ eventData: AwsApiServiceResponseAll | null }>();
+  const props = defineProps<{ 
+    eventData: AwsApiServiceResponseAll | null;
+    isLoading: boolean
+  }>();
   //const { cookieStreet, hasSetStreet } = useCookieUserConfig();
 
 </script>
