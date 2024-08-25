@@ -36,10 +36,15 @@
   import EventDisplayModeSelector from "./EventDisplayModeSelector.vue";
   import EventDisplayGrid from "./EventDisplayGrid.vue";
   import EventDisplayCalendar from "./EventDisplayCalendar.vue";
-
+  import type { AsyncDataRequestStatus } from "#app";
+  import type { FetchError } from 'ofetch'
   const displayMode = ref<"grid"|"calendar"|"list">();
 
-  const props = defineProps<{ eventData: AwsApiServiceResponseAll | null }>();
+  const props = defineProps<{ 
+    eventData: AwsApiServiceResponseAll | null;
+    fetchStatus: AsyncDataRequestStatus;
+    fetchError: FetchError<unknown> | null;
+  }>();
   //const { cookieStreet, hasSetStreet } = useCookieUserConfig();
 
   //workaround due to some hydration mismatch issue in vuetify, when setting the values server side already
