@@ -1,5 +1,13 @@
 <template>
   <WarnNoSetStreet/>
+
+  <v-container v-if="props.fetchError">
+    <v-alert 
+      type="error"
+      title="Uh oh! An Unexpected Error Ocurred."
+      text="Please check your address and try again later or kindly report the issue."
+    />
+  </v-container>
   <v-container v-if="props.eventData">
 
     <EventDisplayModeSelector v-model="displayMode"/>
@@ -22,9 +30,9 @@
   </v-container>
   <v-container v-else>
     <v-alert 
-      type="error"
-      title="Uh oh! An Unexpected Error Ocurred."
-      text="Please check your address and try again later or kindly report the issue."
+      type="info"
+      title="Nothing to see here"
+      text="It looks like there is no data to display."
     />
   </v-container>
 
