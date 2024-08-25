@@ -11,7 +11,7 @@
       </v-col>
       <v-col cols="3">
         <v-tooltip
-          :text="'Check Sourcecode on GitHub'"
+          :text="i18n.t('footer.checkSource')"
         >
           <template #activator="{ props }">
             <a
@@ -33,4 +33,10 @@
 
 <script setup lang="ts">
 import { mdiGithub } from '@mdi/js';
+
+const {i18n, multiMergeLocaleMessage} = useCustomI18n();
+
+multiMergeLocaleMessage("footer", [
+  ["checkSource", {de: "Quellcode auf GitHub einsehen", en: "Check Source Code on GitHub"}]
+])
 </script>
