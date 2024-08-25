@@ -1,7 +1,7 @@
 <template>
   <v-container>
-    <h1>Upcoming Pickups</h1>
-    <p>The next upcoming pickups for {{ `${streetname} ${streetno}` }}</p>
+    <h1>{{ i18n.t("upcoming.pageTitle") }}</h1>
+    <p>{{ i18n.t("upcoming.pageSubtitle", { address: `${streetname} ${streetno}` }) }}</p>
 
     <BaseEventDisplay
       :event-data="apiData"
@@ -17,7 +17,14 @@
   import { useCookieUserConfig } from "~/composables/useCookieUserConfig";
 import BaseEventDisplay from "~/components/EventDisplay/BaseEventDisplay.vue";
 
-  const { cookieStreet, cookieLanguage, hasSetStreet } = useCookieUserConfig();
+  const { cookieStreet } = useCookieUserConfig();
+
+  const { i18n, multiMergeLocaleMessage }  = useCustomI18n();
+  multiMergeLocaleMessage("upcoming", [
+    ["pageTitle", {de: "Bevorstehende Abholungen", en: "Upcoming Pickups"}],
+    ["pageSubtitle", {de: "Die bevorstehende Abholungen für { address }", en: "The next upcoming pickups for { address }"}],
+  ]);
+
   const streetname = toRef(() => cookieStreet.value.streetname);
   const streetno = toRef(() => cookieStreet.value.streetno);
 
