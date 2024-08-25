@@ -39,12 +39,12 @@ export default defineNuxtConfig({
     typeCheck: true
   },
 
-
-/*
   i18n: {
-    vueI18n: "./plugins/i18n.config.ts"
-  }
-*/
+    locales: ["de", "en"],
+    defaultLocale: "de",
+    detectBrowserLanguage: false,
+    vueI18n: "./i18n/i18n.config.ts"
+  },
 
   /* @TODO: configure correctly */
   runtimeConfig: {
