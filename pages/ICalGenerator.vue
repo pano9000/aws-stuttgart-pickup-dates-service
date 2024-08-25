@@ -192,15 +192,7 @@
     <v-card-text>
       <v-row wrap="nowrap">
         <v-col cols="auto">
-          <v-tooltip :text="(!copiedToClipboard) ? i18n.t('iCalGen.tooltipClipboardCopy') : i18n.t('iCalGen.tooltipClipboardCopied')" location="top">
-            <template #activator="{ props }">
-              <v-btn 
-                :icon="(!copiedToClipboard) ? mdiClipboardTextOutline : mdiClipboardCheckOutline"
-                v-bind="props" 
-                @click="() => copyToClipboardHandler(icalUrl.toString())"
-              />
-            </template>
-          </v-tooltip>
+          <CopyToClipboardButton :text-to-copy="icalUrl.toString()"/>
         </v-col>
         <v-col>
           <v-text-field
@@ -223,14 +215,12 @@
 
 <script setup lang="ts">
   import TimeRangeInput from "~/components/TimeRangeInput.vue";
+  import CopyToClipboardButton from "~/components/CopyToClipboardButton.vue";
   import { useCookieUserConfig } from "~/composables/useCookieUserConfig";
-  import { useCopyToClipboard } from "~/composables/useCopyToClipboard";
   import type { ICalOptions } from "~/server/services/TransformDataService";
   import type { AwsApiServiceEventTypeName } from "~/server/services/AwsApiService";
   import eventTypeMap from "~/utils/eventTypeMap";
   import { 
-    mdiClipboardTextOutline, 
-    mdiClipboardCheckOutline, 
     mdiCheck, 
     mdiClockOutline, 
     mdiHours24, 
@@ -246,7 +236,6 @@
   }
 
   const { cookieStreet, cookieLanguage } = useCookieUserConfig();
-  const { copiedToClipboard, copyToClipboardHandler } = useCopyToClipboard();
   const { i18n, multiMergeLocaleMessage }  = useCustomI18n();
 
   multiMergeLocaleMessage("iCalGen", [
@@ -294,11 +283,7 @@
       de: "Verwenden Sie '%1' und '%2' als Platzhalter für die Abholungsart und die Abholfrequenz", 
       en: "You can use '%1' and '%2' as placeholders for the event type and the event schedule frequency."}
     ],
-
     ["yourIcalLink", {de: "Ihr benutzerdefinierter iCal-Link", en: "Your Custom iCal Link"}],
-    ["tooltipClipboardCopy", {de: "Kopieren", en: "Copy"}],
-    ["tooltipClipboardCopied", {de: "Kopiert", en: "Copied"}],
-
   ]);
 
   const formatOptions = ref<UiICalFormatOptions>({
