@@ -38,7 +38,7 @@
               :key="`${event.raw.date}_${event.raw.type}_${event.raw.schedule}`"
             >
               <v-col cols="4">
-                <EventCard
+                <EventDisplayCard
                   :event-data=event.raw
                 />
               </v-col>
@@ -47,7 +47,7 @@
           </v-row>
 
           <ol v-else-if="props.displayMode === 'list'" style="list-style: none;">
-            <EventList
+            <EventDisplayListItem
               v-for="event in items"
               :key="`${event.raw.date}_${event.raw.type}_${event.raw.schedule}`"
               :event-data=event.raw
@@ -103,7 +103,8 @@
 
 <script setup lang="ts">
   import type { AwsApiServiceResponseAll } from "~/server/services/AwsApiService.js"
-  import EventCard from "../EventCard.vue";
+  import EventDisplayCard from "./EventDisplayCard.vue";
+  import EventDisplayListItem from "./EventDisplayListItem.vue";
   import WarnNoSetStreet from "../WarnNoSetStreet.vue";
   import { mdiArrowRight, mdiArrowLeft } from "@mdi/js";
 
