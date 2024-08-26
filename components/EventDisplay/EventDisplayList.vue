@@ -9,7 +9,7 @@
     >
 
       <template #header>
-        <v-toolbar class="px-2">
+        <v-toolbar class="px-2 elevation-2">
           <div>header list</div>
         </v-toolbar>
       </template>
@@ -30,17 +30,16 @@
       </template>
 
       <template #default="{ items }">
-        <v-container>
+        <v-container class="bg-grey-lighten-5 rounded-b-lg elevation-2" >
           <ol style="list-style: none;">
             <EventList
               v-for="event in items"
               :key="`${event.raw.date}_${event.raw.type}_${event.raw.schedule}`"
               :event-data=event.raw
-              />
+            />
           </ol>
 
         </v-container>
-
       </template>
 
       <template #footer="{ page, pageCount, prevPage, nextPage }">
