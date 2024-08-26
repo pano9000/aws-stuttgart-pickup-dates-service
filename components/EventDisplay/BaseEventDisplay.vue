@@ -26,6 +26,7 @@
     <EventDisplayCalendar
       v-else-if="displayMode === 'calendar'"
       :event-data="props.eventData"
+      :is-loading="props.fetchStatus === 'pending'"
     />
 
   </v-container>
