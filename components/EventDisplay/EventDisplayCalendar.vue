@@ -3,13 +3,12 @@
     <ScheduleXCalendar :calendar-app="calendarApp" />
   </ClientOnly>
 </template>
-  
+
 
 <script setup lang="ts">
 import { ScheduleXCalendar } from "@schedule-x/vue"
 import {
   createCalendar,
-  createViewDay,
   createViewMonthAgenda,
   createViewMonthGrid,
   createViewWeek,
@@ -31,10 +30,11 @@ const eventsComp = computed( () => {
   return props.eventData.data.map(event => {
     return {
       id: `${event.type}_${event.date}_${event.schedule}`,
-      title: i18n.t(`waste_${event.type}`),
+      title: `${i18n.t(`waste_${event.type}`)}`,
       start: event.date,
       end: event.date,
-      location: props.eventData?.information.streetname + " " + props.eventData?.information.streetno
+      location: props.eventData?.information.streetname + " " + props.eventData?.information.streetno,
+      calendarId: event.type
     }
   })
 
@@ -44,6 +44,22 @@ const eventsComp = computed( () => {
 // For updating events, use the events service plugin
 const calendarApp = createCalendar({
   selectedDate: (new Date().toISOString()).slice(0,10),
+  minDate: `${(new Date()).getFullYear()}-01-01`,
+  maxDate: `${(new Date()).getFullYear() + 2}-01-01`,
+  monthGridOptions: {
+    nEventsPerDay: 4
+  },
+  calendars: {
+    /*
+    residual: {
+      colorName: "residual",
+      lightColors: {
+        main: "#f9d71c",
+        container: "#fff5aa",
+        onContainer: "#594800",
+      },
+    }*/
+  },
   views: [
     // createViewWeek(),
     createViewMonthGrid(),
