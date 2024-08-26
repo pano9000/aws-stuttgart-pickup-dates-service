@@ -8,28 +8,19 @@
       :text="i18n.t('baseEventDisplay.fetchErrorText')"
     />
   </v-container>
+
   <v-container v-if="props.eventData">
 
     <EventDisplayModeSelector v-model="displayMode"/>
 
-    <EventDisplayGrid
-      v-if="displayMode === 'grid'"
+    <EventDisplayDataIterator
       :event-data="props.eventData"
       :is-loading="props.fetchStatus === 'pending'"
-    />
-
-    <EventDisplayList
-      v-else-if="displayMode === 'list'"
-      :event-data="props.eventData"
-      :is-loading="props.fetchStatus === 'pending'"
-    />
-
-    <EventDisplayCalendar
-      v-else-if="displayMode === 'calendar'"
-      :event-data="props.eventData"
+      :display-mode="displayMode"
     />
 
   </v-container>
+
   <v-container v-else>
     <v-alert 
       type="info"
@@ -41,11 +32,10 @@
 </template>
 
 <script setup lang="ts">
-  import type { AwsApiServiceResponseAll } from "~/server/services/AwsApiService.js"
   import WarnNoSetStreet from "../WarnNoSetStreet.vue";
   import EventDisplayModeSelector from "./EventDisplayModeSelector.vue";
-  import EventDisplayGrid from "./EventDisplayGrid.vue";
-  import EventDisplayCalendar from "./EventDisplayCalendar.vue";
+  import EventDisplayDataIterator from "./EventDisplayDataIterator.vue";
+  import type { AwsApiServiceResponseAll } from "~/server/services/AwsApiService.js"
   import type { AsyncDataRequestStatus } from "#app";
   import type { FetchError } from 'ofetch'
 

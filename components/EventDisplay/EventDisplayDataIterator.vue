@@ -30,20 +30,33 @@
       </template>
 
       <template #default="{ items }">
-        <v-container>
-          <v-row>
+        <v-container class="bg-grey-lighten-5 rounded-b-lg elevation-2" >
+
+          <v-row v-if="props.displayMode === 'grid'">
             <template
-            v-for="event in items"
-            :key="`${event.raw.date}_${event.raw.type}_${event.raw.schedule}`"
+              v-for="event in items"
+              :key="`${event.raw.date}_${event.raw.type}_${event.raw.schedule}`"
             >
               <v-col cols="4">
                 <EventCard
-                :event-data=event.raw
+                  :event-data=event.raw
                 />
               </v-col>
 
             </template>
           </v-row>
+
+          <ol v-else-if="props.displayMode === 'list'" style="list-style: none;">
+            <EventList
+              v-for="event in items"
+              :key="`${event.raw.date}_${event.raw.type}_${event.raw.schedule}`"
+              :event-data=event.raw
+            />
+          </ol>
+
+          <ol v-else-if="props.displayMode === 'calendar'" style="list-style: none;">
+            <v-alert>Calendar view #TODO</v-alert>
+          </ol>
 
         </v-container>
 
@@ -97,7 +110,8 @@
   const currPage = ref(1);
   const props = defineProps<{ 
     eventData: AwsApiServiceResponseAll | null;
-    isLoading: boolean
+    isLoading: boolean;
+    displayMode: "grid" | "list" | "calendar" | undefined;
   }>();
   //const { cookieStreet, hasSetStreet } = useCookieUserConfig();
 
