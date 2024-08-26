@@ -9,8 +9,16 @@
     >
 
       <template #header>
-        <v-toolbar class="px-2 elevation-2">
-          <EventDisplayModeSelector v-model="displayMode"/>
+        <v-toolbar class="px-4 elevation-2">
+          <div>
+            <div class="text-center">Display Mode</div>
+            <EventDisplayModeSelector v-model="displayMode"/>
+          </div>
+          <v-spacer></v-spacer>
+          <div>
+            <div class="text-center">Type Filter</div>
+            <EventTypeSelector/>
+          </div>
         </v-toolbar>
       </template>
 
@@ -108,6 +116,7 @@
   import WarnNoSetStreet from "../WarnNoSetStreet.vue";
   import { mdiArrowRight, mdiArrowLeft } from "@mdi/js";
   import EventDisplayModeSelector from "./EventDisplayModeSelector.vue";
+import EventTypeSelector from "../EventTypeSelector.vue";
 
   const displayMode = ref<"grid"|"calendar"|"list">();
 
