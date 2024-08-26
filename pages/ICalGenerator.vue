@@ -14,27 +14,7 @@
     <v-card-text>
       <v-row>
         <v-col cols="auto">
-          <v-btn-toggle
-            v-model="formatOptions.type"
-            multiple
-            mandatory
-          >
-            <v-btn
-              v-for="eventType in eventTypeMap.entries()" :key="eventType[0]" 
-              :value="eventType[0]"
-              :color="eventType[1].color"
-              class="custom-transform-class text-none"
-            >
-              <v-icon :icon="eventType[1].icon" size="2rem"/>
-              <!-- @TODO there must be a more performatn way than the one below / bitmask maybe? -->
-              <v-icon
-                v-show="formatOptions.type?.includes(eventType[0])"
-                :icon="mdiCheck" 
-                class="position-absolute top-0"
-              />
-              {{ i18n.t(`waste_${eventType[0]}`) }}
-            </v-btn>
-          </v-btn-toggle>
+          <EventTypeSelector v-model="formatOptions.type" :show-label="true"/>
         </v-col>
       </v-row>
     </v-card-text>
@@ -216,12 +196,13 @@
 <script setup lang="ts">
   import TimeRangeInput from "~/components/TimeRangeInput.vue";
   import CopyToClipboardButton from "~/components/CopyToClipboardButton.vue";
+  import EventTypeSelector from "~/components/EventTypeSelector.vue";
   import { useCookieUserConfig } from "~/composables/useCookieUserConfig";
   import type { ICalOptions } from "~/server/services/TransformDataService";
   import type { AwsApiServiceEventTypeName } from "~/server/services/AwsApiService";
   import eventTypeMap from "~/utils/eventTypeMap";
+
   import { 
-    mdiCheck, 
     mdiClockOutline, 
     mdiHours24, 
     mdiRewindOutline, 
