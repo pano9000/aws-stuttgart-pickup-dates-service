@@ -9,8 +9,8 @@
     >
 
       <template #header>
-        <v-toolbar class="px-2">
-          <div>header</div>
+        <v-toolbar class="px-2 elevation-2">
+          <EventDisplayModeSelector v-model="displayMode"/>
         </v-toolbar>
       </template>
 
@@ -32,7 +32,7 @@
       <template #default="{ items }">
         <v-container class="bg-grey-lighten-5 rounded-b-lg elevation-2" >
 
-          <v-row v-if="props.displayMode === 'grid'">
+          <v-row v-if="displayMode === 'grid'">
             <template
               v-for="event in items"
               :key="`${event.raw.date}_${event.raw.type}_${event.raw.schedule}`"
@@ -46,7 +46,7 @@
             </template>
           </v-row>
 
-          <ol v-else-if="props.displayMode === 'list'" style="list-style: none;">
+          <ol v-else-if="displayMode === 'list'" style="list-style: none;">
             <EventDisplayListItem
               v-for="event in items"
               :key="`${event.raw.date}_${event.raw.type}_${event.raw.schedule}`"
@@ -54,7 +54,7 @@
             />
           </ol>
 
-          <ol v-else-if="props.displayMode === 'calendar'" style="list-style: none;">
+          <ol v-else-if="displayMode === 'calendar'" style="list-style: none;">
             <v-alert>Calendar view #TODO</v-alert>
           </ol>
 
@@ -107,13 +107,20 @@
   import EventDisplayListItem from "./EventDisplayListItem.vue";
   import WarnNoSetStreet from "../WarnNoSetStreet.vue";
   import { mdiArrowRight, mdiArrowLeft } from "@mdi/js";
+  import EventDisplayModeSelector from "./EventDisplayModeSelector.vue";
+
+  const displayMode = ref<"grid"|"calendar"|"list">();
 
   const currPage = ref(1);
   const props = defineProps<{ 
     eventData: AwsApiServiceResponseAll | null;
     isLoading: boolean;
-    displayMode: "grid" | "list" | "calendar" | undefined;
   }>();
   //const { cookieStreet, hasSetStreet } = useCookieUserConfig();
 
+
+  //workaround due to some hydration mismatch issue in vuetify, when setting the values server side already
+  onMounted( () => {
+    displayMode.value = "grid"
+  })
 </script>

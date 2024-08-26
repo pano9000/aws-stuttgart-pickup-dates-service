@@ -3,6 +3,7 @@
     v-model="modelDisplayMode"
     color="primary"
     mandatory
+    variant="outlined"
   >
 
     <template 

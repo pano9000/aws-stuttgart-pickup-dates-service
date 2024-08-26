@@ -11,13 +11,10 @@
 
   <v-container v-if="props.eventData">
 
-    <EventDisplayModeSelector v-model="displayMode"/>
-
     <EventDisplayDataIterator
       :event-data="props.eventData"
       :is-loading="props.fetchStatus === 'pending'"
-      :display-mode="displayMode"
-    />
+      />
 
   </v-container>
 
@@ -33,15 +30,12 @@
 
 <script setup lang="ts">
   import WarnNoSetStreet from "../WarnNoSetStreet.vue";
-  import EventDisplayModeSelector from "./EventDisplayModeSelector.vue";
   import EventDisplayDataIterator from "./EventDisplayDataIterator.vue";
   import type { AwsApiServiceResponseAll } from "~/server/services/AwsApiService.js"
   import type { AsyncDataRequestStatus } from "#app";
   import type { FetchError } from 'ofetch'
 
   const { i18n, multiMergeLocaleMessage } = useCustomI18n();
-
-  const displayMode = ref<"grid"|"calendar"|"list">();
 
   const props = defineProps<{ 
     eventData: AwsApiServiceResponseAll | null;
@@ -70,10 +64,4 @@
       }
     ],
   ]);
-
-
-  //workaround due to some hydration mismatch issue in vuetify, when setting the values server side already
-  onMounted( () => {
-    displayMode.value = "grid"
-  })
 </script>
