@@ -1,6 +1,6 @@
 <template>
   <v-btn-toggle
-    v-model="modelDisplayMode"
+    v-model="eventDisplayMode"
     color="primary"
     mandatory
     variant="outlined"
@@ -27,7 +27,9 @@
 <script setup lang="ts">
   import { mdiViewGridOutline, mdiFormatListBulleted, mdiCalendarMonth } from "@mdi/js";
 
-  const modelDisplayMode = defineModel<"grid"|"calendar"|"list">("displayMode");
+  const { eventDisplayMode } = useCookieUserConfig();
+  eventDisplayMode.value = eventDisplayMode.value || "grid";
+
   const { i18n, multiMergeLocaleMessage } = useCustomI18n();
 
   multiMergeLocaleMessage("eventDisplayModeSelector", [

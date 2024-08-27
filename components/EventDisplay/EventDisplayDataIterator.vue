@@ -12,7 +12,7 @@
         <v-toolbar class="px-4 elevation-2">
           <div>
             <div class="text-center">Display Mode</div>
-            <EventDisplayModeSelector v-model="displayMode"/>
+            <EventDisplayModeSelector/>
           </div>
           <v-spacer></v-spacer>
           <div>
@@ -40,7 +40,7 @@
       <template #default="{ items }">
         <v-container class="bg-grey-lighten-5 rounded-b-lg elevation-2" >
 
-          <v-row v-if="displayMode === 'grid'">
+          <v-row v-if="!displayMode || displayMode === 'grid'">
             <template
               v-for="event in items"
               :key="`${event.raw.date}_${event.raw.type}_${event.raw.schedule}`"
@@ -118,7 +118,7 @@
   import EventDisplayModeSelector from "./EventDisplayModeSelector.vue";
 import EventTypeSelector from "../EventTypeSelector.vue";
 
-  const displayMode = ref<"grid"|"calendar"|"list">();
+  const { eventDisplayMode: displayMode } = useCookieUserConfig();
 
   const currPage = ref(1);
   const props = defineProps<{ 
@@ -127,9 +127,4 @@ import EventTypeSelector from "../EventTypeSelector.vue";
   }>();
   //const { cookieStreet, hasSetStreet } = useCookieUserConfig();
 
-
-  //workaround due to some hydration mismatch issue in vuetify, when setting the values server side already
-  onMounted( () => {
-    displayMode.value = "grid"
-  })
 </script>
