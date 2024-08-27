@@ -2,7 +2,7 @@
   <WarnNoSetStreet/>
   <v-container v-if="props.eventData">
     <v-data-iterator
-      :items="props.eventData.data"
+      :items="filteredEventsByType"
       :page="currPage"
       :items-per-page="12"
       :loading="props.isLoading"
@@ -17,7 +17,7 @@
           <v-spacer></v-spacer>
           <div>
             <div class="text-center">Type Filter</div>
-            <EventTypeSelector/>
+            <EventTypeSelector v-model="selectedEventTypes"/>
           </div>
         </v-toolbar>
       </template>
@@ -110,14 +110,14 @@
 </template>
 
 <script setup lang="ts">
-  import type { AwsApiServiceResponseAll } from "~/server/services/AwsApiService.js"
+  import type { AwsApiServiceEventTypeName, AwsApiServiceResponseAll } from "~/server/services/AwsApiService.js"
   import EventDisplayCard from "./EventDisplayCard.vue";
   import EventDisplayListItem from "./EventDisplayListItem.vue";
   import WarnNoSetStreet from "../WarnNoSetStreet.vue";
   import { mdiArrowRight, mdiArrowLeft } from "@mdi/js";
   import EventDisplayModeSelector from "./EventDisplayModeSelector.vue";
 import EventTypeSelector from "../EventTypeSelector.vue";
-
+  import { eventTypeMap } from "#imports";
   const { eventDisplayMode: displayMode } = useCookieUserConfig();
 
   const currPage = ref(1);
@@ -126,5 +126,16 @@ import EventTypeSelector from "../EventTypeSelector.vue";
     isLoading: boolean;
   }>();
   //const { cookieStreet, hasSetStreet } = useCookieUserConfig();
+
+  const selectedEventTypes = ref<AwsApiServiceEventTypeName[]>();
+
+  const filteredEventsByType = computed( () => {
+    return props.eventData?.data.filter( entry => selectedEventTypes.value?.includes(entry.type)) || []
+  })
+
+  //workaround due to some hydration mismatch issue in vuetify, when setting the values server side already
+  onMounted( () => {
+    selectedEventTypes.value = Array.from(eventTypeMap.keys())
+  })
 
 </script>
