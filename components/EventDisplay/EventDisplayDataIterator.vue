@@ -4,9 +4,9 @@
     <v-data-iterator
       :items="filteredEventsByType"
       :page="currPage"
-      :items-per-page="12"
+      :items-per-page="eventsPerPage"
       :loading="props.isLoading"
-    >
+      >
 
       <template #header>
         <v-toolbar class="px-4 elevation-2">
@@ -14,7 +14,16 @@
             <div class="text-center">Display Mode</div>
             <EventDisplayModeSelector/>
           </div>
-          <v-spacer></v-spacer>
+          <div>
+            <v-select
+              v-model="eventsPerPage"
+              :items="[6,12,24]"
+              type="number"
+              label="Qty"
+            />
+
+          </div>
+          <v-spacer/>
           <div>
             <div class="text-center">Type Filter</div>
             <EventTypeSelector v-model="selectedEventTypes"/>
@@ -116,11 +125,12 @@
   import WarnNoSetStreet from "../WarnNoSetStreet.vue";
   import { mdiArrowRight, mdiArrowLeft } from "@mdi/js";
   import EventDisplayModeSelector from "./EventDisplayModeSelector.vue";
-import EventTypeSelector from "../EventTypeSelector.vue";
+  import EventTypeSelector from "../EventTypeSelector.vue";
   import { eventTypeMap } from "#imports";
   const { eventDisplayMode: displayMode } = useCookieUserConfig();
 
-  const currPage = ref(1);
+  const eventsPerPage = ref<number>(12);
+  const currPage = ref<number>(1);
   const props = defineProps<{ 
     eventData: AwsApiServiceResponseAll | null;
     isLoading: boolean;
