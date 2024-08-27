@@ -27,7 +27,7 @@
   import { mdiCheck } from "@mdi/js";
   import type { AwsApiServiceEventTypeName } from "~/server/services/AwsApiService";
 
-  const modelSelectedEvents = defineModel<AwsApiServiceEventTypeName[]>("selectedEvents", {default: []});
+  const modelSelectedEvents = defineModel<AwsApiServiceEventTypeName[]>({default: []});
   const props = defineProps<{
     showLabel?: boolean;
   }>();
