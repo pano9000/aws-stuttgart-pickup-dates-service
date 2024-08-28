@@ -125,18 +125,18 @@
   import { mdiArrowRight, mdiArrowLeft } from "@mdi/js";
   import EventDisplayModeSelector from "./EventDisplayModeSelector.vue";
   import EventDisplayTypeFilterMenu from "./EventDisplayTypeFilterMenu.vue";
-  import { eventTypeMap } from "#imports";
+  import EventDisplayItemsPerPageSelector from "./EventDisplayItemsPerPageSelector.vue";
+
   const { eventDisplayMode: displayMode } = useCookieUserConfig();
 
   const eventsPerPage = ref<number>(12);
   const currPage = ref<number>(1);
+  const selectedEventTypes = ref<AwsApiServiceEventTypeName[]>();
+
   const props = defineProps<{ 
     eventData: AwsApiServiceResponseAll | null;
     isLoading: boolean;
   }>();
-  //const { cookieStreet, hasSetStreet } = useCookieUserConfig();
-
-  const selectedEventTypes = ref<AwsApiServiceEventTypeName[]>();
 
   const filteredEventsByType = computed( () => {
     return props.eventData?.data.filter( entry => selectedEventTypes.value?.includes(entry.type)) || []
