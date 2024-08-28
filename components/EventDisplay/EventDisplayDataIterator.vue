@@ -25,8 +25,7 @@
           </div>
           <v-spacer/>
           <div>
-            <div class="text-center">Type Filter</div>
-            <EventTypeSelector v-model="selectedEventTypes"/>
+            <EventDisplayTypeFilterMenu v-model="selectedEventTypes"/>
           </div>
         </v-toolbar>
       </template>
@@ -125,7 +124,7 @@
   import WarnNoSetStreet from "../WarnNoSetStreet.vue";
   import { mdiArrowRight, mdiArrowLeft } from "@mdi/js";
   import EventDisplayModeSelector from "./EventDisplayModeSelector.vue";
-  import EventTypeSelector from "../EventTypeSelector.vue";
+  import EventDisplayTypeFilterMenu from "./EventDisplayTypeFilterMenu.vue";
   import { eventTypeMap } from "#imports";
   const { eventDisplayMode: displayMode } = useCookieUserConfig();
 
