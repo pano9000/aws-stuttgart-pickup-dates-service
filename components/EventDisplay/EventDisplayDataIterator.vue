@@ -9,23 +9,10 @@
       >
 
       <template #header>
-        <v-toolbar class="px-4 elevation-2">
-          <div>
-            <div class="text-center">Display Mode</div>
-            <EventDisplayModeSelector/>
-          </div>
-          <div>
-            <v-select
-              v-model="eventsPerPage"
-              :items="[6,12,24]"
-              type="number"
-              label="Qty"
-            />
-
-          </div>
-          <v-spacer/>
-          <div>
+        <v-toolbar class="px-4 elevation-2 ">
+          <div class="d-flex ga-2 w-100  justify-space-between">
             <EventDisplayTypeFilterMenu v-model="selectedEventTypes"/>
+            <EventDisplayModeSelector/>
           </div>
         </v-toolbar>
       </template>
@@ -79,6 +66,11 @@
       </template>
 
       <template #footer="{ page, pageCount, prevPage, nextPage }">
+        <v-row>
+          <v-col>
+            <v-spacer/>
+          </v-col>
+          <v-col>
         <div class="d-flex align-center justify-center pa-4">
           <v-btn
             :disabled="page === 1"
@@ -102,6 +94,15 @@
             @click="nextPage"
           />
         </div>
+          </v-col>
+          <v-col>
+            <EventDisplayItemsPerPageSelector
+              v-model="eventsPerPage"
+              :items="[6, 12, 18, 24, 30]"
+            />
+          </v-col>
+      </v-row>
+
       </template>
 
     </v-data-iterator>
