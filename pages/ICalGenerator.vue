@@ -200,7 +200,6 @@
   import { useCookieUserConfig } from "~/composables/useCookieUserConfig";
   import type { ICalOptions } from "~/server/services/TransformDataService";
   import type { AwsApiServiceEventTypeName } from "~/server/services/AwsApiService";
-  import eventTypeMap from "~/utils/eventTypeMap";
 
   import { 
     mdiClockOutline, 
@@ -321,11 +320,5 @@
       ? formatOptions.value.customSummary?.replaceAll("%1", i18n.t("waste_residual")).replaceAll("%2", i18n.t("schedule_W2"))
       : `${i18n.t("waste_residual")} (${i18n.t("schedule_W2")})`
   });
-
-
-  //workaround due to some hydration mismatch issue in vuetify, when setting the values server side already
-  onMounted( () => {
-    formatOptions.value.type = Array.from(eventTypeMap.keys())
-  })
 
 </script>

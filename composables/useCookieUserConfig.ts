@@ -1,3 +1,5 @@
+import type { AwsApiServiceEventTypeName } from "~/server/services/AwsApiService";
+
 export function useCookieUserConfig() {
 
   //@TODO can we get rid of the default here?
@@ -15,6 +17,7 @@ export function useCookieUserConfig() {
   
   const cookieEventDisplayItemsPerPage = useCookie<number>("eventDisplayItemsPerPage");
   const cookieEventDisplayMode = useCookie<"grid" | "list" | "calendar">("eventDisplayMode");
+  const cookieEventTypeSelector = useCookie<AwsApiServiceEventTypeName[]>("eventTypeSelector");
 
   return {
     cookieStreet,
@@ -22,5 +25,6 @@ export function useCookieUserConfig() {
     hasSetStreet,
     cookieEventDisplayMode,
     cookieEventDisplayItemsPerPage,
+    cookieEventTypeSelector,
   }
 }

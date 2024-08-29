@@ -27,16 +27,21 @@
   import { mdiCheck } from "@mdi/js";
   import type { AwsApiServiceEventTypeName } from "~/server/services/AwsApiService";
 
+  const { i18n } = useCustomI18n();
+  const { cookieEventTypeSelector } = useCookieUserConfig();
+
   const modelSelectedEvents = defineModel<AwsApiServiceEventTypeName[]>({default: []});
+
   const props = defineProps<{
     showLabel?: boolean;
   }>();
-  const { i18n } = useCustomI18n();
 
+  modelSelectedEvents.value = cookieEventTypeSelector.value || Array.from(eventTypeMap.keys());
 
-  //workaround due to some hydration mismatch issue in vuetify, when setting the values server side already
-  onMounted( () => {
-    modelSelectedEvents.value = Array.from(eventTypeMap.keys())
-  })
+  watch(modelSelectedEvents, (value) => {
+    if (value) cookieEventTypeSelector.value = value
+  });
+
+  //@TODO change logic of the filter, so that empty means all, and we only collect the events we don't want to display
 
 </script>
