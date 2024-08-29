@@ -130,7 +130,7 @@
 
   const { eventDisplayMode: displayMode } = useCookieUserConfig();
 
-  const eventsPerPage = ref<number>(12);
+  const eventsPerPage = ref<number>();
   const currPage = ref<number>(1);
   const selectedEventTypes = ref<AwsApiServiceEventTypeName[]>();
 

@@ -15,6 +15,13 @@
   }>();
 
   const { i18n, multiMergeLocaleMessage } = useCustomI18n();
+  const { cookieEventDisplayItemsPerPage } = useCookieUserConfig();
+
+  modelItemsPerPage.value = cookieEventDisplayItemsPerPage.value || 12;
+
+  watch(modelItemsPerPage, (value) => {
+    if (value) cookieEventDisplayItemsPerPage.value = value
+  });
 
   multiMergeLocaleMessage("eventDisplayItemsPerPageSelector", [
     ["tooltip", {"de": "Einträge pro Seite", "en": "Items per Page"}],

@@ -12,12 +12,15 @@ export function useCookieUserConfig() {
 
   const cookieLanguage = useCookie<string>("lang");
   const hasSetStreet = computed<boolean>( () => !!cookieStreet.value.streetname && !!cookieStreet.value.streetno);
+  
+  const cookieEventDisplayItemsPerPage = useCookie<number>("eventDisplayItemsPerPage");
   const eventDisplayMode = useCookie<"grid" | "list" | "calendar">("eventDisplayMode");
 
   return {
     cookieStreet,
     cookieLanguage,
     hasSetStreet,
-    eventDisplayMode
+    eventDisplayMode,
+    cookieEventDisplayItemsPerPage,
   }
 }
