@@ -128,7 +128,7 @@
   import EventDisplayTypeFilterMenu from "./EventDisplayTypeFilterMenu.vue";
   import EventDisplayItemsPerPageSelector from "./EventDisplayItemsPerPageSelector.vue";
 
-  const { eventDisplayMode: displayMode } = useCookieUserConfig();
+  const { cookieEventDisplayMode: displayMode } = useCookieUserConfig();
 
   const eventsPerPage = ref<number>();
   const currPage = ref<number>(1);

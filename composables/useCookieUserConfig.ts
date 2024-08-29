@@ -14,13 +14,13 @@ export function useCookieUserConfig() {
   const hasSetStreet = computed<boolean>( () => !!cookieStreet.value.streetname && !!cookieStreet.value.streetno);
   
   const cookieEventDisplayItemsPerPage = useCookie<number>("eventDisplayItemsPerPage");
-  const eventDisplayMode = useCookie<"grid" | "list" | "calendar">("eventDisplayMode");
+  const cookieEventDisplayMode = useCookie<"grid" | "list" | "calendar">("eventDisplayMode");
 
   return {
     cookieStreet,
     cookieLanguage,
     hasSetStreet,
-    eventDisplayMode,
+    cookieEventDisplayMode,
     cookieEventDisplayItemsPerPage,
   }
 }
