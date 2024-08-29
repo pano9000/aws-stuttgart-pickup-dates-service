@@ -1,7 +1,6 @@
 <template>
   <v-select
     v-model="modelItemsPerPage"
-    v-bind="tooltipProps"
     :items="props.items"
     hide-details
     type="number"
