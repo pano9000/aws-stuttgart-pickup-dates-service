@@ -10,9 +10,7 @@
 
 <script setup lang="ts">
   const modelItemsPerPage = defineModel<number>();
-  const props = defineProps<{
-    items: number[]
-  }>();
+  const props = defineProps<{items: number[]}>();
 
   const { i18n, multiMergeLocaleMessage } = useCustomI18n();
   const { cookieEventDisplayItemsPerPage } = useCookieUserConfig();
