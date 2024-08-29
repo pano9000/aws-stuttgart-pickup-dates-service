@@ -14,6 +14,13 @@
               :icon="mdiFilterMenu"
               :color="isFilteringByType ? 'green' : undefined"
             />
+            <!-- @TODO add correct ARIA props -->
+            <span
+              v-show="isFilteringByType"
+              class="text-disabled"
+            >
+              {{ i18n.t("eventDisplayTypeFilterMenu.labelActiveFilter")}}
+            </span>
             </template>
 
             <template #default>
@@ -32,10 +39,10 @@
 
   const modelSelectedEventTypes = defineModel<AwsApiServiceEventTypeName[]>();
   const isFilteringByType = computed(() => (modelSelectedEventTypes.value?.length != eventTypeMap.size) ? true : false)
-
   const { i18n, multiMergeLocaleMessage } = useCustomI18n();
 
   multiMergeLocaleMessage("eventDisplayTypeFilterMenu", [
     ["tooltip", {"de": "Nach Abholart filtern", "en": "Filter by Pickup Type"}],
+    ["labelActiveFilter", {"de": "Filter aktiv", "en": "Active Filter"}]
   ]);
 </script>
