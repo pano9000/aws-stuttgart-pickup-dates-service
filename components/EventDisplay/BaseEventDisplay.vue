@@ -1,7 +1,7 @@
 <template>
   <WarnNoSetStreet/>
 
-  <v-container v-if="props.fetchError">
+  <v-container v-if="fetchError">
     <v-alert 
       type="error"
       :title="i18n.t('baseEventDisplay.fetchErrorTitle')"
@@ -9,11 +9,11 @@
     />
   </v-container>
 
-  <v-container v-if="props.eventData">
+  <v-container v-if="eventData">
 
     <EventDisplayDataIterator
-      :event-data="props.eventData"
-      :is-loading="props.fetchStatus === 'pending'"
+      :event-data="eventData"
+      :is-loading="fetchStatus === 'pending'"
       />
 
   </v-container>
@@ -32,17 +32,30 @@
   import WarnNoSetStreet from "../WarnNoSetStreet.vue";
   import EventDisplayDataIterator from "./EventDisplayDataIterator.vue";
   import type { AwsApiServiceResponseAll } from "~/server/services/AwsApiService.js"
-  import type { AsyncDataRequestStatus } from "#app";
-  import type { FetchError } from 'ofetch'
 
   const { i18n, multiMergeLocaleMessage } = useCustomI18n();
 
-  const props = defineProps<{ 
-    eventData: AwsApiServiceResponseAll | null;
-    fetchStatus: AsyncDataRequestStatus;
-    fetchError: FetchError<unknown> | null;
+  const props = defineProps<{
+    apiEndpoint: string;
   }>();
-  //const { cookieStreet, hasSetStreet } = useCookieUserConfig();
+
+  const { cookieStreet } = useCookieUserConfig();
+
+  const streetname = toRef(() => cookieStreet.value.streetname);
+  const streetno = toRef(() => cookieStreet.value.streetno);
+
+  //@TODO https://nuxt.com/docs/guide/recipes/custom-usefetch#custom-usefetch
+  //@TODO - fix empty api call, when no streetname/streetno is set
+  const { data: eventData, status: fetchStatus, error: fetchError } = await useFetch<AwsApiServiceResponseAll>(props.apiEndpoint, {
+    query: {
+      streetname: streetname,
+      streetno: streetno
+    },
+  });
+
+
+
+
 
   multiMergeLocaleMessage("baseEventDisplay", [
     [
