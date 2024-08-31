@@ -1,5 +1,5 @@
 <template>
-  <v-container>
+  <v-container class="bg-grey-lighten-5 rounded-b-lg elevation-2">
     <v-card
       class="my-4 pa-4"
       :title="i18n.t('exportCustomizerICal.pickupEventsTitle')"
