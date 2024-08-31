@@ -26,6 +26,7 @@
               <EventDisplayExportAsMenuItem
                 title="iCalendar"
                 :export-url="getButtonApiUrl('ical')"
+                :export-customizer-component="ExportCustomizerICal"
               />
             </v-list>
           </template>
@@ -41,6 +42,7 @@
   import { mdiExportVariant } from "@mdi/js";
   import getApiUrl from "~/utils/getApiUrl.ts";
   import type { RetrieveDataFacadeFormat } from "~/server/services/RetrieveDataFacade";
+  import ExportCustomizerICal from "../ExportCustomizer/ExportCustomizerICal.vue";
 
   const props = defineProps<{
     apiEndpoint: string;
