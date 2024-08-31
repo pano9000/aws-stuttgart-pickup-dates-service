@@ -88,7 +88,7 @@ export class RedisService {
       const loggerMeta = new LoggerMeta("RedisService.jsonSET", operationId);
       this.#logger.debug("Operation started", loggerMeta.withData({key}));
 
-      const result = this.#client.multi()
+      const result = await this.#client.multi()
         .call("JSON.SET", key, "$", JSON.stringify(value))
         .call("EXPIRE", key, SECONDS_IN_A_WEEK)
         .exec()
