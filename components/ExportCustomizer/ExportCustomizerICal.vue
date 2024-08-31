@@ -1,5 +1,5 @@
 <template>
-  <v-container class="bg-grey-lighten-5 rounded-b-lg elevation-2">
+  <BaseExportCustomizer>
     <v-card
       class="my-4 pa-4"
       :title="i18n.t('exportCustomizerICal.pickupEventsTitle')"
@@ -183,14 +183,14 @@
       </v-card-text>
     </v-card>
 
-  </v-container>
-
+</BaseExportCustomizer>
 </template>
 
 <script setup lang="ts">
   import TimeRangeInput from "~/components/TimeRangeInput.vue";
   import CopyToClipboardButton from "~/components/CopyToClipboardButton.vue";
   import EventTypeSelector from "~/components/EventTypeSelector.vue";
+  import BaseExportCustomizer from "./BaseExportCustomizer.vue";
   import { useCookieUserConfig } from "~/composables/useCookieUserConfig";
   import type { ICalOptions } from "~/server/services/TransformDataService";
   import type { AwsApiServiceEventTypeName } from "~/server/services/AwsApiService";
