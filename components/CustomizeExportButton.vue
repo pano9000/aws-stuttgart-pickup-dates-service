@@ -1,5 +1,5 @@
 <template>
-  <v-dialog max-width="50vw" max-height="50vh">
+  <v-dialog>
     <template #activator="{ props: dialogActivatorProps }">
       <BaseToolTipButton 
         v-slot="tooltipActivator"
@@ -16,6 +16,7 @@
     <template #default="{ isActive }">
       <component :is="props.exportCustomizerComponent" v-if="exportCustomizerComponent && isActive"/>
     </template>
+
   </v-dialog>
 </template>
 
