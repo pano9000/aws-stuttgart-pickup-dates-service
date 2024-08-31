@@ -4,7 +4,7 @@
      <!-- @TODO: check accessibility! -->
      <DownloadButton :download-url="props.exportUrl"/>
      <CopyToClipboardButton :text-to-copy="props.exportUrl"/>
-     <CustomizeExportButton :export-customizer-component="props.exportCustomizer"/>
+     <CustomizeExportButton :export-customizer-component="props.exportCustomizerComponent"/>
    </v-list-item>
  </template>
  
