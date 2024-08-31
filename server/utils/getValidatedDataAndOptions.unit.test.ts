@@ -55,10 +55,10 @@ describe("getValidatedDataAndOptions Unit Test", async () => {
     assert.lengthOf(defaultSchemaQueryICal.schemaQueryICal.parse.mock.calls, 0)
   })
 
-  test("when format is csv, should call schemaQuery and return undefined formatOptions", async () => {
+  test("when format is csv, should call schemaQuery and return formatOptions only with translated prop", async () => {
     const result = getValidatedQueryAndOptions({streetname: "abc", streetno: "123", format: "csv"})
     assert.isArray(result);
-    assert.isUndefined(result[1]);
+    assert.property(result[1], "translated");
     //@ts-expect-error - Property 'mock' does not exist on type
     assert.lengthOf(schemaQuery.parse.mock.calls, 1)
     //@ts-expect-error - Property 'mock' does not exist on type
