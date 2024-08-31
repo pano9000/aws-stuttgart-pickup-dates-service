@@ -94,8 +94,8 @@ describe("RetrieveDataFacade Unit Tests", async () => {
 
 
   describe("getAll", () => {
-    test("w/ existing address in redis, should call the RedisService 1x, and not call the AwsApiService", async () => {
-      const mockRedisServiceInstance = createMockRedisService("address_königstr.|10", fakeDataSuccess, "OK");
+    test("w/ existing address in redis, should call RedisService' jsonGET once, and not call the AwsApiService' getAll", async () => {
+      const mockRedisServiceInstance = createMockRedisService("address_königstr.|10", fakeDataSuccess, [ [ null, "OK" ], [ null, 1 ] ]);
       const mockAwsApiServiceInstance = createMockAwsApiService("whatever")
 
       //@ts-expect-error - using mocked instances
@@ -109,7 +109,7 @@ describe("RetrieveDataFacade Unit Tests", async () => {
 
     test("w/o existing address in redis, should execute refetchFromAwsApi before returning data from redis", async () => {
 
-      const mockRedisServiceInstance = createMockRedisService("address_königstr.|10", null, "OK");
+      const mockRedisServiceInstance = createMockRedisService("address_königstr.|10", null, [ [ null, "OK" ], [ null, 1 ] ]);
       // overwrite jsonGET method -> needs to return 'null', if value is not in redis first, then later resolve with successfull data
       mockRedisServiceInstance.jsonGET.mockResolvedValueOnce(null).mockResolvedValueOnce(fakeDataSuccess)
 
@@ -131,7 +131,7 @@ describe("RetrieveDataFacade Unit Tests", async () => {
 
     test("w/o existing address in redis, should execute refetchFromAwsApi and throw an error, if anything fails during refetchFromAwsApi", async () => {
 
-      const mockRedisServiceInstance = createMockRedisService("address_königstr.|10", null, "OK");
+      const mockRedisServiceInstance = createMockRedisService("address_königstr.|10", null, [ [ null, "OK" ], [ null, 1 ] ]);
       // overwrite jsonGET method -> needs to return 'null', if value is not in redis first, then later resolve with successfull data
       mockRedisServiceInstance.jsonGET.mockResolvedValueOnce(null).mockResolvedValueOnce(fakeDataSuccess)
       mockRedisServiceInstance.jsonSET.mockImplementationOnce(() => { throw new Error("FakeRedisError during JSON.SET")});
@@ -158,29 +158,36 @@ describe("RetrieveDataFacade Unit Tests", async () => {
 
 
     test("should call redis with extra filter, when one typeFilter is provided", async () => {
-      const mockRedisServiceInstance = createMockRedisService("address_königstr.|10", fakeDataSuccess, "OK");
+      const mockRedisServiceInstance = createMockRedisService("address_königstr.|10", fakeDataSuccess, [ [ null, "OK" ], [ null, 1 ] ]);
       const mockAwsApiServiceInstance = createMockAwsApiService("whatever")
 
       //@ts-expect-error - due to mocked instances
       const retrieveDataFacadeInstance = new RetrieveDataFacade(mockAwsApiServiceInstance, mockRedisServiceInstance);
 
       await retrieveDataFacadeInstance.getAll(testOptions.validWOneTypeFilter);
-
-      assert.deepEqual(mockRedisServiceInstance.jsonGET.mock.calls, [ [ 'address_königstr.|10', `$.data[?(@.type == "${testOptions.validWOneTypeFilter.typeFilter}")]` ] ]);
+      // key, filter, operationId
+      const expectedCall = [ 
+        [ "address_königstr.|10", `$.data[?(@.type == "${testOptions.validWOneTypeFilter.typeFilter}")]`, "" ] 
+      ]
+      assert.deepEqual(mockRedisServiceInstance.jsonGET.mock.calls, expectedCall);
 
     })
 
 
     test("should call redis with extra filters, when two typeFilters are provided", async () => {
-      const mockRedisServiceInstance = createMockRedisService("address_königstr.|10", fakeDataSuccess, "OK");
+      const mockRedisServiceInstance = createMockRedisService("address_königstr.|10", fakeDataSuccess, [ [ null, "OK" ], [ null, 1 ] ]);
       const mockAwsApiServiceInstance = createMockAwsApiService("whatever")
 
       //@ts-expect-error - due to mocked instances
       const retrieveDataFacadeInstance = new RetrieveDataFacade(mockAwsApiServiceInstance, mockRedisServiceInstance);
 
       await retrieveDataFacadeInstance.getAll(testOptions.validWTwoTypeFilter);
-      //@ts-expect-error ignore that it could be undefined -> here it should not be
-      const expectedCall = [ [ 'address_königstr.|10', `$.data[?(@.type == "${testOptions.validWTwoTypeFilter.typeFilter[0]}") || (@.type == "${testOptions.validWTwoTypeFilter.typeFilter[1]}")]` ] ]
+
+      // key, filter, operationId
+      const expectedCall = [ 
+        //@ts-expect-error ignore that it could be undefined -> here it should not be
+        [ 'address_königstr.|10', `$.data[?(@.type == "${testOptions.validWTwoTypeFilter.typeFilter[0]}") || (@.type == "${testOptions.validWTwoTypeFilter.typeFilter[1]}")]`, ""] 
+      ]
       assert.deepEqual(mockRedisServiceInstance.jsonGET.mock.calls, expectedCall);
 
     })
@@ -188,7 +195,7 @@ describe("RetrieveDataFacade Unit Tests", async () => {
 
   describe("getRemaining", () => {
     test("w/ existing address in redis, should call the RedisService 1x, and not call the AwsApiService", async () => {
-      const mockRedisServiceInstance = createMockRedisService("address_königstr.|10", fakeDataSuccess, "OK");
+      const mockRedisServiceInstance = createMockRedisService("address_königstr.|10", fakeDataSuccess, [ [ null, "OK" ], [ null, 1 ] ]);
       const mockAwsApiServiceInstance = createMockAwsApiService("whatever")
 
       //@ts-expect-error - using mocked instances
@@ -202,7 +209,7 @@ describe("RetrieveDataFacade Unit Tests", async () => {
 
     test("w/o existing address in redis, should execute refetchFromAwsApi before returning data from redis", async () => {
 
-      const mockRedisServiceInstance = createMockRedisService("address_königstr.|10", null, "OK");
+      const mockRedisServiceInstance = createMockRedisService("address_königstr.|10", null, [ [ null, "OK" ], [ null, 1 ] ]);
       // overwrite jsonGET method -> needs to return 'null', if value is not in redis first, then later resolve with successfull data
       mockRedisServiceInstance.jsonGET.mockResolvedValueOnce(null).mockResolvedValueOnce(fakeDataSuccess)
 
@@ -224,7 +231,7 @@ describe("RetrieveDataFacade Unit Tests", async () => {
 
     test("w/o existing address in redis, should execute refetchFromAwsApi and throw an error, if anything fails during refetchFromAwsApi", async () => {
 
-      const mockRedisServiceInstance = createMockRedisService("address_königstr.|10", null, "OK");
+      const mockRedisServiceInstance = createMockRedisService("address_königstr.|10", null, [ [ null, "OK" ], [ null, 1 ] ]);
       // overwrite jsonGET method -> needs to return 'null', if value is not in redis first, then later resolve with successfull data
       mockRedisServiceInstance.jsonGET.mockResolvedValueOnce(null).mockResolvedValueOnce(fakeDataSuccess)
       mockRedisServiceInstance.jsonSET.mockImplementationOnce(() => { throw new Error("FakeRedisError during JSON.SET")});
@@ -256,7 +263,7 @@ describe("RetrieveDataFacade Unit Tests", async () => {
       const fakeDate = new Date("2024-07-24")
       vi.setSystemTime(fakeDate)
 
-      const mockRedisServiceInstance = createMockRedisService("address_königstr.|10", fakeDataSuccess, "OK");
+      const mockRedisServiceInstance = createMockRedisService("address_königstr.|10", fakeDataSuccess, [ [ null, "OK" ], [ null, 1 ] ]);
       const mockAwsApiServiceInstance = createMockAwsApiService("whatever")
 
       //@ts-expect-error - using mocked instances
@@ -272,7 +279,7 @@ describe("RetrieveDataFacade Unit Tests", async () => {
   describe("Data transforming", async () => {
 
     test("when called with format 'csv' should call the TransformDataService's toCSV method", async () => {
-      const mockRedisServiceInstance = createMockRedisService("address_königstr.|10", fakeDataSuccess, "OK");
+      const mockRedisServiceInstance = createMockRedisService("address_königstr.|10", fakeDataSuccess, [ [ null, "OK" ], [ null, 1 ] ]);
       const mockAwsApiServiceInstance = createMockAwsApiService("whatever");
       const mockTransformDataService = createMockTransformDataService("whatever");
 
@@ -286,7 +293,7 @@ describe("RetrieveDataFacade Unit Tests", async () => {
     })
 
     test("when called with format 'ical' should call the TransformDataService's toICal method", async () => {
-      const mockRedisServiceInstance = createMockRedisService("address_königstr.|10", fakeDataSuccess, "OK");
+      const mockRedisServiceInstance = createMockRedisService("address_königstr.|10", fakeDataSuccess, [ [ null, "OK" ], [ null, 1 ] ]);
       const mockAwsApiServiceInstance = createMockAwsApiService("whatever");
       const mockTransformDataService = createMockTransformDataService("whatever");
 
@@ -300,7 +307,7 @@ describe("RetrieveDataFacade Unit Tests", async () => {
     })
 
     test("when called with format 'ical' and formatOptions should call the TransformDataService's toICal method with those options", async () => {
-      const mockRedisServiceInstance = createMockRedisService("address_königstr.|10", fakeDataSuccess, "OK");
+      const mockRedisServiceInstance = createMockRedisService("address_königstr.|10", fakeDataSuccess, [ [ null, "OK" ], [ null, 1 ] ]);
       const mockAwsApiServiceInstance = createMockAwsApiService("whatever");
       const mockTransformDataService = createMockTransformDataService("whatever");
 
@@ -314,7 +321,7 @@ describe("RetrieveDataFacade Unit Tests", async () => {
     })
 
     test("when called with format 'json' should return without calling TransformDataService", async () => {
-      const mockRedisServiceInstance = createMockRedisService("address_königstr.|10", fakeDataSuccess, "OK");
+      const mockRedisServiceInstance = createMockRedisService("address_königstr.|10", fakeDataSuccess, [ [ null, "OK" ], [ null, 1 ] ]);
       const mockAwsApiServiceInstance = createMockAwsApiService("whatever");
       const mockTransformDataService = createMockTransformDataService("whatever");
 
@@ -327,7 +334,7 @@ describe("RetrieveDataFacade Unit Tests", async () => {
     })
 
     test("when called with unknown format 'abc' should default to json and return without extra transformation", async () => {
-      const mockRedisServiceInstance = createMockRedisService("address_königstr.|10", fakeDataSuccess, "OK");
+      const mockRedisServiceInstance = createMockRedisService("address_königstr.|10", fakeDataSuccess, [ [ null, "OK" ], [ null, 1 ] ]);
       const mockAwsApiServiceInstance = createMockAwsApiService("whatever");
       const mockTransformDataService = createMockTransformDataService("whatever");
 
