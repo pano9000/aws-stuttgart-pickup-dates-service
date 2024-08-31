@@ -3,6 +3,8 @@ import type { RedisOptions } from "ioredis";
 import type { Logger } from "winston";
 import { generalLogger, LoggerMeta } from "../utils/winstonLogger";
 
+const SECONDS_IN_A_WEEK = 60 * 60 * 24 * 7;
+
 export class RedisService {
 
   #client: Redis;
@@ -86,9 +88,13 @@ export class RedisService {
       const loggerMeta = new LoggerMeta("RedisService.jsonSET", operationId);
       this.#logger.debug("Operation started", loggerMeta.withData({key}));
 
-      const result = await this.#client.call("JSON.SET", key, "$", JSON.stringify(value))
-      //@TODO validate and error handle
+      const result = this.#client.multi()
+        .call("JSON.SET", key, "$", JSON.stringify(value))
+        .call("EXPIRE", key, SECONDS_IN_A_WEEK)
+        .exec()
+      ;
 
+      //@TODO validate and error handle
       this.#logger.debug("Operation successful", loggerMeta);
 
       return result
