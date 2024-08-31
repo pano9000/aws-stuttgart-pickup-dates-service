@@ -1,18 +1,21 @@
 <template>
-  <v-tooltip :text="i18n.t(`downloadButton.tooltipDownload`)" location="top">
-    <template #activator="{ props: activatorProps }">
-      <v-btn 
-        :icon="mdiDownload"
-        v-bind="activatorProps" 
-        :href="props.downloadUrl"
-        target="_blank"
-      />
-    </template>
-  </v-tooltip>
+  <BaseToolTipButton 
+    v-slot="tooltipActivator"
+    :tooltip-title="i18n.t(`downloadButton.tooltipDownload`)"
+  >
+    <v-btn
+      :icon="mdiDownload"
+      :href="props.downloadUrl"
+      target="_blank"
+      v-bind="tooltipActivator"
+    />
+  </BaseToolTipButton>
+
 </template>
 
 <script setup lang="ts">
   import { mdiDownload } from "@mdi/js"
+  import BaseToolTipButton from "./BaseToolTipButton.vue";
 
   const { i18n, multiMergeLocaleMessage }  = useCustomI18n();
 
