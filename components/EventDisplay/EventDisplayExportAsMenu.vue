@@ -13,9 +13,20 @@
 
           <template #default>
             <v-list>
-              <EventDisplayExportAsMenuItem title="CSV" :export-url="getButtonApiUrl('csv')"/>
-              <EventDisplayExportAsMenuItem title="JSON" :export-url="getButtonApiUrl('json')"/>
-              <EventDisplayExportAsMenuItem title="iCalendar" :export-url="getButtonApiUrl('ical')"/>
+              <EventDisplayExportAsMenuItem 
+                title="CSV" 
+                :export-url="getButtonApiUrl('csv')"
+              />
+
+              <EventDisplayExportAsMenuItem
+                title="JSON"
+                :export-url="getButtonApiUrl('json')"
+              />
+
+              <EventDisplayExportAsMenuItem
+                title="iCalendar"
+                :export-url="getButtonApiUrl('ical')"
+              />
             </v-list>
           </template>
 
