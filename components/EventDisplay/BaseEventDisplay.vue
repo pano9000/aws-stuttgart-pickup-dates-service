@@ -14,6 +14,7 @@
     <EventDisplayDataIterator
       :event-data="eventData"
       :is-loading="fetchStatus === 'pending'"
+      :api-endpoint="props.apiEndpoint"
       />
 
   </v-container>

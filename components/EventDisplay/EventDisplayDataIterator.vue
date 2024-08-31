@@ -13,7 +13,7 @@
           <div class="d-flex ga-2 w-100  justify-space-between">
             <div class="d-flex ga-2">
             <EventDisplayTypeFilterMenu v-model="selectedEventTypes"/>
-              <EventDisplayExportAsMenu/>
+              <EventDisplayExportAsMenu :api-endpoint="props.apiEndpoint"/>
             </div>
             <EventDisplayModeSelector/>
 
@@ -142,6 +142,7 @@
   const props = defineProps<{ 
     eventData: AwsApiServiceResponseAll | null;
     isLoading: boolean;
+    apiEndpoint: string;
   }>();
 
   const filteredEventsByType = computed( () => {

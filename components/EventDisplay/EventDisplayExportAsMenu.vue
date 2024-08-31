@@ -13,10 +13,9 @@
 
           <template #default>
             <v-list>
-              <EventDisplayExportAsMenuItem title="CSV" :export-url="'http://abc.de'"/>
-              <EventDisplayExportAsMenuItem title="JSON" :export-url="'http://abc.de'"/>
-
-              <v-list-item @click="() => console.log('TODO iCal export')">iCal</v-list-item>
+              <EventDisplayExportAsMenuItem title="CSV" :export-url="getButtonApiUrl('csv')"/>
+              <EventDisplayExportAsMenuItem title="JSON" :export-url="getButtonApiUrl('json')"/>
+              <EventDisplayExportAsMenuItem title="iCalendar" :export-url="getButtonApiUrl('ical')"/>
             </v-list>
           </template>
 
@@ -27,15 +26,28 @@
 </template>
 
 <script setup lang="ts">
-  import type { AwsApiServiceEventTypeName } from "~/server/services/AwsApiService";
   import EventDisplayExportAsMenuItem from "./EventDisplayExportAsMenuItem.vue";
   import { mdiExportVariant } from "@mdi/js";
+  import getApiUrl from "~/utils/getApiUrl.ts";
+  import type { RetrieveDataFacadeFormat } from "~/server/services/RetrieveDataFacade";
 
-  // const props = defineProps<{
-  //   selectedEventTypes: AwsApiServiceEventTypeName[];
-  // }>();
+  const props = defineProps<{
+    apiEndpoint: string;
+  }>();
 
   const { i18n, multiMergeLocaleMessage } = useCustomI18n();
+  const { cookieEventTypeSelector, cookieLanguage, cookieStreet } = useCookieUserConfig();
+
+  function getButtonApiUrl(format: RetrieveDataFacadeFormat) {
+    return getApiUrl({
+      endpointName: props.apiEndpoint,
+      streetname: cookieStreet.value.streetname,
+      streetno: cookieStreet.value.streetno,
+      eventTypes: cookieEventTypeSelector.value,
+      format: format,
+      language: cookieLanguage.value
+    })
+  }
 
   multiMergeLocaleMessage("eventDisplayExportAsMenu", [
     ["tooltip", {"de": "Daten Exportieren", "en": "Export Data"}],
