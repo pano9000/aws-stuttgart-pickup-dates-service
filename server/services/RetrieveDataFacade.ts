@@ -108,8 +108,8 @@ export class RetrieveDataFacade {
       const redisKey = this.redisService.getRedisKey(options.streetname, options.streetno);
       const awsApiData = await this.awsApiService.getAll(options.streetname, options.streetno, operationId);
       const redisSave = await this.redisService.jsonSET(redisKey, awsApiData, operationId); // this throws, if saving was not succesful
-      //@TODO set expiration date - so that refetch is forced 
-      if (redisSave !== "OK") throw new Error("saving to redis failed, aborting!")
+
+      if (!redisSave || redisSave[0][1] !== "OK") throw new Error("saving to redis failed, aborting!");
     }
     catch(error) {
       //@TODO handle errors?
