@@ -12,12 +12,23 @@ export function useCookieUserConfig() {
     }
   });
 
-  const cookieLanguage = useCookie<string>("lang");
   const hasSetStreet = computed<boolean>( () => !!cookieStreet.value.streetname && !!cookieStreet.value.streetno);
   
-  const cookieEventDisplayItemsPerPage = useCookie<number>("eventDisplayItemsPerPage");
-  const cookieEventDisplayMode = useCookie<"grid" | "list" | "calendar">("eventDisplayMode");
-  const cookieEventTypeSelector = useCookie<AwsApiServiceEventTypeName[]>("eventTypeSelector");
+  const cookieLanguage = useCookie<string>("lang", { 
+    default: () => "de"
+  });
+
+  const cookieEventDisplayItemsPerPage = useCookie<number>("eventDisplayItemsPerPage", {
+    default: () => 6
+  });
+
+  const cookieEventDisplayMode = useCookie<"grid" | "list" | "calendar">("eventDisplayMode", {
+    default: () => "grid"
+  });
+
+  const cookieEventTypeSelector = useCookie<AwsApiServiceEventTypeName[]>("eventTypeSelector", {
+    default: () => ["residual", "organic", "recycle", "paper"]
+  });
 
   return {
     cookieStreet,
