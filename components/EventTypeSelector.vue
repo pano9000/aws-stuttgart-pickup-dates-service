@@ -4,21 +4,26 @@
     multiple
     mandatory
   >
-    <v-btn
+    <BaseToolTipButton 
       v-for="eventType in eventTypeMap.entries()" :key="eventType[0]" 
-      :value="eventType[0]"
-      :color="eventType[1].color"
-      class="custom-transform-class text-none"
+      v-slot="tooltipActivator"
+      :tooltip-title="i18n.t(`waste_${eventType[0]}`)"
     >
-      <v-icon :icon="eventType[1].icon" size="2rem"/>
-      <!-- @TODO there must be a more performatn way than the one below / bitmask maybe? -->
-      <v-icon
-        v-show="modelSelectedEvents?.includes(eventType[0])"
-        :icon="mdiCheck" 
-        class="position-absolute top-0 right-0"
-      />
-        {{ props.showLabel ? i18n.t(`waste_${eventType[0]}`) : undefined }}
-    </v-btn>
+      <v-btn
+        v-bind="tooltipActivator"
+        :value="eventType[0]"
+        :color="eventType[1].color"
+        class="custom-transform-class text-none"
+      >
+        <v-icon :icon="eventType[1].icon" size="2rem"/>
+        <!-- @TODO there must be a more performatn way than the one below / bitmask maybe? -->
+        <v-icon
+          v-show="modelSelectedEvents?.includes(eventType[0])"
+          :icon="mdiCheck" 
+          class="position-absolute top-0 right-0"
+        />
+      </v-btn>
+    </BaseToolTipButton>
   </v-btn-toggle>
 </template>
 
@@ -31,10 +36,6 @@
   const { cookieEventTypeSelector } = useCookieUserConfig();
 
   const modelSelectedEvents = defineModel<AwsApiServiceEventTypeName[]>({default: []});
-
-  const props = defineProps<{
-    showLabel?: boolean;
-  }>();
 
   modelSelectedEvents.value = cookieEventTypeSelector.value || Array.from(eventTypeMap.keys());
 
