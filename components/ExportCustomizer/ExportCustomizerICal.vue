@@ -8,7 +8,7 @@
       <v-card-text>
         <v-row>
           <v-col cols="auto">
-            <EventTypeSelector v-model="formatOptions.type" :show-label="true"/>
+            <EventTypeSelector v-model="formatOptions.type"/>
           </v-col>
         </v-row>
       </v-card-text>
