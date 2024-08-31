@@ -23,7 +23,6 @@
   import { mdiViewGridOutline, mdiFormatListBulleted, mdiCalendarMonth } from "@mdi/js";
 
   const { cookieEventDisplayMode } = useCookieUserConfig();
-  cookieEventDisplayMode.value = cookieEventDisplayMode.value || "grid";
 
   const { i18n, multiMergeLocaleMessage } = useCustomI18n();
 
