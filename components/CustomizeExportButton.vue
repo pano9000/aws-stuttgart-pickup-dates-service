@@ -1,5 +1,5 @@
 <template>
-  <v-dialog>
+  <v-dialog max-width="50rem" max-height="80vh">
     <template #activator="{ props: dialogActivatorProps }">
       <BaseToolTipButton 
         v-slot="tooltipActivator"
