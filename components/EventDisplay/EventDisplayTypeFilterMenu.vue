@@ -11,16 +11,9 @@
           <template #activator="{ props: menuProps }">
             <v-btn
               v-bind="menuProps"
-              :icon="mdiFilterMenu"
+              :icon="isFilteringByType ? mdiFilterCheck : mdiFilter "
               :color="isFilteringByType ? 'green' : undefined"
             />
-            <!-- @TODO add correct ARIA props -->
-            <span
-              v-show="isFilteringByType"
-              class="text-disabled"
-            >
-              {{ i18n.t("eventDisplayTypeFilterMenu.labelActiveFilter")}}
-            </span>
             </template>
 
             <template #default>
@@ -35,7 +28,7 @@
 <script setup lang="ts">
   import type { AwsApiServiceEventTypeName } from "~/server/services/AwsApiService";
   import EventTypeSelector from "../EventTypeSelector.vue";
-  import { mdiFilterMenu } from "@mdi/js";
+  import { mdiFilter, mdiFilterCheck } from "@mdi/js";
 
   const modelSelectedEventTypes = defineModel<AwsApiServiceEventTypeName[]>();
   const isFilteringByType = computed(() => (modelSelectedEventTypes.value?.length != eventTypeMap.size) ? true : false)
