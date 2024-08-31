@@ -5,7 +5,6 @@
         v-slot="tooltipActivator"
         :tooltip-title="i18n.t(`customizeExportButton.tooltipCustomize`)"
       >
-        {{ props.exportCustomizerComponent }}
         <v-btn
           :icon="mdiCogOutline"
           v-bind="{...tooltipActivator, ...dialogActivatorProps}"
