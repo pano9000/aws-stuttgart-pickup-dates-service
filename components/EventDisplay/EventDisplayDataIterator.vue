@@ -11,8 +11,12 @@
       <template #header>
         <v-toolbar class="px-4 elevation-2 ">
           <div class="d-flex ga-2 w-100  justify-space-between">
+            <div class="d-flex ga-2">
             <EventDisplayTypeFilterMenu v-model="selectedEventTypes"/>
+              <EventDisplayExportAsMenu :api-endpoint="props.apiEndpoint"/>
+            </div>
             <EventDisplayModeSelector/>
+
           </div>
         </v-toolbar>
       </template>
@@ -127,6 +131,7 @@
   import EventDisplayModeSelector from "./EventDisplayModeSelector.vue";
   import EventDisplayTypeFilterMenu from "./EventDisplayTypeFilterMenu.vue";
   import EventDisplayItemsPerPageSelector from "./EventDisplayItemsPerPageSelector.vue";
+  import EventDisplayExportAsMenu from "./EventDisplayExportAsMenu.vue";
 
   const { cookieEventDisplayMode: displayMode } = useCookieUserConfig();
 
@@ -137,6 +142,7 @@
   const props = defineProps<{ 
     eventData: AwsApiServiceResponseAll | null;
     isLoading: boolean;
+    apiEndpoint: string;
   }>();
 
   const filteredEventsByType = computed( () => {

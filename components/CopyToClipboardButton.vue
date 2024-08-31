@@ -1,13 +1,15 @@
 <template>
-  <v-tooltip :text="i18n.t(`clipboardCopyButton.tooltip${(!copiedToClipboard) ? 'Copy' : 'Copied'}`)" location="top">
-    <template #activator="{ props: activatorProps }">
-      <v-btn 
-        :icon="(!copiedToClipboard) ? mdiClipboardTextOutline : mdiClipboardCheckOutline"
-        v-bind="activatorProps" 
-        @click="() => copyToClipboardHandler(props.textToCopy)"
-      />
-    </template>
-  </v-tooltip>
+  <BaseToolTipButton 
+    v-slot="tooltipActivator"
+    :tooltip-title="i18n.t(`clipboardCopyButton.tooltip${(!copiedToClipboard) ? 'Copy' : 'Copied'}`)"
+  >
+    <v-btn
+      :icon="(!copiedToClipboard) ? mdiClipboardTextOutline : mdiClipboardCheckOutline"
+      v-bind="tooltipActivator"
+      @click="() => copyToClipboardHandler(props.textToCopy)"
+    />
+  </BaseToolTipButton>
+
 </template>
 
 <script setup lang="ts">
