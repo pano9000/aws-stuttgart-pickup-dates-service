@@ -17,7 +17,6 @@
     <template #default="{ isActive }">
       <component :is="props.exportCustomizerComponent" v-if="exportCustomizerComponent && isActive"/>
     </template>
-
   </v-dialog>
 </template>
 
