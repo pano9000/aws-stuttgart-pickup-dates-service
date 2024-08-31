@@ -40,6 +40,8 @@
  const i18n = useI18n();
  const { cookieLanguage } = useCookieUserConfig();
 
+ i18n.locale.value = cookieLanguage.value;
+
  function setLanguage(localeCode: string) {
    cookieLanguage.value = localeCode;
    i18n.locale.value = localeCode;
