@@ -26,11 +26,13 @@ services:
       - redis
     restart: unless-stopped
     build:
-      context: ../
-      dockerfile: ./docker/Dockerfile
+      context: ./
+      dockerfile: ./docker/nuxt/Dockerfile
       target: nuxt_run
     environment:
       - TZ=UTC
+    env_file:
+      - ".env-nuxt.${AWSAPPENV_DOCKER_BUILDENV_CODE}"
     networks:
       - appnetwork
     healthcheck:
