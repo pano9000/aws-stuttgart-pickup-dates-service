@@ -1,5 +1,4 @@
 <template>
-  <WarnNoSetStreet/>
   <v-container v-if="props.eventData">
     <v-data-iterator
       :items="filteredEventsByType"
