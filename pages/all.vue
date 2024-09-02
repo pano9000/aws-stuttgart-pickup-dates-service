@@ -1,7 +1,7 @@
 <template>
   <v-container>
     <h1>{{ i18n.t("all.pageTitle") }}</h1>
-    <p>{{ i18n.t("all.pageSubtitle", { address: `${cookieStreet.streetname} ${cookieStreet.streetno}` }) }}</p>
+    <p v-show="hasSetStreet">{{ i18n.t("all.pageSubtitle", { address: `${cookieStreet.streetname} ${cookieStreet.streetno}` }) }}</p>
 
     <BaseEventDisplay api-endpoint="/api/v1/all"/>
   </v-container>
@@ -11,7 +11,7 @@
   import BaseEventDisplay from "~/components/EventDisplay/BaseEventDisplay.vue";
   import { useCookieUserConfig } from "~/composables/useCookieUserConfig";
 
-  const { cookieStreet } = useCookieUserConfig();
+  const { cookieStreet, hasSetStreet } = useCookieUserConfig();
   const { i18n, multiMergeLocaleMessage } = useCustomI18n();
 
   multiMergeLocaleMessage("all", [
