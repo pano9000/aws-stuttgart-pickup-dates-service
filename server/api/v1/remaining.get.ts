@@ -1,5 +1,6 @@
 import { retrieveDataFacade } from "~/server/services/RetrieveDataFacade";
 import getMIMEType from "~/server/utils/getMIMEType";
+import getFilename from "~/server/utils/getFilename";
 import getValidatedDataAndOptions from "~/server/utils/getValidatedDataAndOptions";
 
 export default defineEventHandler(async (event) => {
@@ -24,7 +25,10 @@ export default defineEventHandler(async (event) => {
     );
 
     setResponseHeaders(event, {
-      "content-type": getMIMEType(validatedQuery.format)
+      "content-type": getMIMEType(validatedQuery.format),
+      "content-disposition": `attachment; filename="${
+        getFilename(validatedQuery.streetname, validatedQuery.streetno, validatedQuery.format)
+      }"`
     });
 
     // @TODO: fix below -this fails for CSV/iCal type responses of course
