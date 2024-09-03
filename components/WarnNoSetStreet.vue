@@ -1,10 +1,9 @@
 <template>
   <v-alert
     v-if="!hasSetStreet"
-    type="info"
-  >
-    {{ i18n.t("warnNoSetStreet.infoText") }}
-  </v-alert>
+    type="warning"
+    :title="i18n.t('warnNoSetStreet.infoText')"
+  />
 </template>
 
 <script setup lang="ts">
@@ -15,7 +14,7 @@
   multiMergeLocaleMessage("warnNoSetStreet", [
     [
       "infoText", {
-        de: "Bitte wählen Sie zuerst eine Adresse mit dem Adressauswähler aus.", 
+        de: "Bitte wählen Sie zuerst eine Adresse mit dem Adressauswähler aus.",
         en: "Please select an Address with the location picker first."
       }
     ]
