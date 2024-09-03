@@ -17,12 +17,15 @@ export class RedisService {
     this.#client = new ioredis({
       port: connectionOptions.port,
       host: connectionOptions.host,
-      password: connectionOptions.password
+      password: connectionOptions.password,
+      enableReadyCheck: true,
+      retryStrategy(times) {
+        if (times > 3) throw new Error("Connecting to Redis Server failed!");
+        return Math.min(times * 50, 2000); // ioredis default delay behaviour
+      },
     })
 
     this.#logger = logger;
-
-    //@TODO -> fail if ECONNREFUSED at startup, otherwise we end up in an endless loop
 
   }
 
