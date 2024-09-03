@@ -122,14 +122,6 @@
     </v-data-iterator>
 
   </v-container>
-  <v-container v-else>
-    <v-alert 
-      type="error"
-      title="Uh oh! An Unexpected Error Ocurred."
-      text="Please check your address and try again later or kindly report the issue."
-    />
-  </v-container>
-
 </template>
 
 <script setup lang="ts">
