@@ -1,5 +1,5 @@
 <template>
-  <v-container v-if="props.eventData">
+  <v-container>
     <v-data-iterator
       :items="filteredEventsByType"
       :page="currPage"
@@ -36,8 +36,7 @@
       </template>
 
       <template #default="{ items }">
-        <v-container class="bg-grey-lighten-5 rounded-b-lg elevation-2" >
-
+        <v-container class="bg-grey-lighten-5 rounded-b-lg elevation-2">
           <v-row v-if="!displayMode || displayMode === 'grid'">
             <template
               v-for="event in items"
@@ -65,8 +64,20 @@
           </ol>
 
         </v-container>
-
       </template>
+
+      <template #no-data>
+        <v-container class="bg-grey-lighten-5 rounded-b-lg elevation-2">
+          <WarnNoSetStreet/>
+          <v-alert
+            v-if="hasSetStreet"
+            type="info"
+            :title="i18n.t('baseEventDisplay.fetchNoDataTitle')"
+            :text="i18n.t('baseEventDisplay.fetchNoDataText')"
+          />
+        </v-container>
+      </template>
+
 
       <template #footer="{ page, pageCount, prevPage, nextPage }">
         <v-row>
@@ -132,7 +143,8 @@
   import EventDisplayItemsPerPageSelector from "./EventDisplayItemsPerPageSelector.vue";
   import EventDisplayExportAsMenu from "./EventDisplayExportAsMenu.vue";
 
-  const { cookieEventDisplayMode: displayMode } = useCookieUserConfig();
+  const { cookieEventDisplayMode: displayMode, hasSetStreet } = useCookieUserConfig();
+  const { i18n, multiMergeLocaleMessage } = useCustomI18n();
 
   const eventsPerPage = ref<number>();
   const currPage = ref<number>(1);
@@ -152,5 +164,17 @@
   onMounted( () => {
     selectedEventTypes.value = Array.from(eventTypeMap.keys())
   })
+
+  multiMergeLocaleMessage("baseEventDisplay", [
+  [
+      "fetchNoDataTitle", {"de": "Es gibt nichts zu sehen", "en": "Nothing to see here"}
+    ],
+    [
+      "fetchNoDataText", {
+        "de": "Es sieht so aus, als wenn es keine Daten zum Anzeigen gibt.",
+        "en": "It looks like there is no data to display."
+      }
+    ],
+  ])
 
 </script>
