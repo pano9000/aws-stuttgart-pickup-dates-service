@@ -20,6 +20,8 @@ COPY --chown=node:node ./composables ./composables
 COPY --chown=node:node ./i18n ./i18n
 COPY --chown=node:node ./assets ./assets
 COPY --chown=node:node ./utils ./utils
+COPY --chown=node:node ./plugins ./plugins
+
 
 
 
