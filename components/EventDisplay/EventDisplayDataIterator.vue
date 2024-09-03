@@ -11,7 +11,7 @@
         <v-toolbar class="px-4 elevation-2 ">
           <div class="d-flex ga-2 w-100  justify-space-between">
             <div class="d-flex ga-2">
-            <EventDisplayTypeFilterMenu v-model="selectedEventTypes"/>
+              <EventDisplayTypeFilterMenu v-model="selectedEventTypes"/>
               <EventDisplayExportAsMenu :api-endpoint="props.apiEndpoint"/>
             </div>
             <EventDisplayModeSelector/>
