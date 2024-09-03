@@ -1,5 +1,30 @@
 services:
 
+  nginx:
+    depends_on:
+      - nuxt
+    restart: unless-stopped
+    build:
+      context: ./
+      dockerfile: ./docker/nginx/Dockerfile
+    environment:
+      - TZ=UTC
+      - AWSAPPENV_DOCKER_NGINX_CONTAINERPORT=${AWSAPPENV_DOCKER_NGINX_CONTAINERPORT}
+      - AWSAPPENV_DOCKER_WEBSERVER_CONTAINERPORT=${AWSAPPENV_DOCKER_WEBSERVER_CONTAINERPORT}
+      - AWSAPPENV_DOCKER_HOSTNAME=${AWSAPPENV_DOCKER_HOSTNAME}
+    networks:
+      - appnetwork
+    ports:
+      - ${AWSAPPENV_DOCKER_NGINX_CONTAINERPORT}:${AWSAPPENV_DOCKER_NGINX_CONTAINERPORT}
+    healthcheck:
+      test: ["CMD-SHELL", "service nginx status"]
+      interval: 3600s
+      timeout: 10s
+      retries: 3
+      start_interval: 15s
+      start_period: 30s
+
+
   redis:
     image: redis/redis-stack:7.2.0-v11 #for prod: redis-stack-server -> no redis-insight included
     restart: unless-stopped
@@ -21,6 +46,7 @@ services:
       start_interval: 15s
       start_period: 15s
 
+
   nuxt:
     depends_on:
       - redis
@@ -31,19 +57,18 @@ services:
       target: nuxt_run
     environment:
       - TZ=UTC
+      - NITRO_PORT=${AWSAPPENV_DOCKER_WEBSERVER_CONTAINERPORT}
     env_file:
       - ".env-nuxt.${AWSAPPENV_DOCKER_BUILDENV_CODE}"
     networks:
       - appnetwork
     healthcheck:
-      test: ["CMD-SHELL", "node -e \"fetch('http://$(hostname):${AWSAPPENV_DOCKER_APP_CONTAINERPORT}/healthcheck').then(res => res.ok)\""]
+      test: ["CMD-SHELL", "node -e \"fetch('http://$(hostname):${AWSAPPENV_DOCKER_WEBSERVER_CONTAINERPORT}/healthcheck').then(res => res.ok)\""]
       interval: 3600s
       timeout: 10s
       retries: 3
       start_interval: 15s
       start_period: 15s
-
-
 
 networks:
   appnetwork:
