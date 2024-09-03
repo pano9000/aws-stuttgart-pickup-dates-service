@@ -40,23 +40,26 @@
     apiEndpoint: string;
   }>();
 
-  const { cookieStreet } = useCookieUserConfig();
+  const { cookieStreet, hasSetStreet } = useCookieUserConfig();
 
   const streetname = toRef(() => cookieStreet.value.streetname);
   const streetno = toRef(() => cookieStreet.value.streetno);
 
-  //@TODO https://nuxt.com/docs/guide/recipes/custom-usefetch#custom-usefetch
-  //@TODO - fix empty api call, when no streetname/streetno is set
-  const { data: eventData, status: fetchStatus, error: fetchError } = await useFetch<AwsApiServiceResponseAll>(props.apiEndpoint, {
-    query: {
-      streetname: streetname,
-      streetno: streetno
-    },
+  const {
+    data: eventData,
+    status: fetchStatus,
+    error: fetchError,
+    execute: fetchExecute
+  } = await useFetch<AwsApiServiceResponseAll>(props.apiEndpoint, {
+    query: { streetname, streetno },
+    immediate: false,
   });
 
+  if (hasSetStreet.value) await fetchExecute();
 
-
-
+  watch(hasSetStreet, async (curr, _old) => {
+    if (curr) await fetchExecute();
+  });
 
   multiMergeLocaleMessage("baseEventDisplay", [
     [
