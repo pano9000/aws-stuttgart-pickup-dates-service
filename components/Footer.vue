@@ -8,6 +8,7 @@
       <v-spacer cols="3"/>
       <v-col cols="6">
         2024 — Panagiotis Papadopoulos (@pano9000)
+        <NuxtLink to="impressum" class="nuxtlink">{{ i18n.t('legalNotice.pageTitle') }}</NuxtLink>
       </v-col>
       <v-col cols="3">
         <v-tooltip
