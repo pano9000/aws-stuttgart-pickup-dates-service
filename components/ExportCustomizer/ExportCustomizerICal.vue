@@ -167,6 +167,7 @@
         <v-row wrap="nowrap">
           <v-col cols="auto">
             <CopyToClipboardButton :text-to-copy="icalUrl.toString()"/>
+            <DownloadButton :download-url="icalUrl.toString()"/>
           </v-col>
           <v-col>
             <v-text-field
