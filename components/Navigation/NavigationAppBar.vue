@@ -16,7 +16,7 @@
     <template #append>
       <NavigationAppBarMenuLocationPicker/>
       <NavigationAppBarMenuLanguage/>
-      <v-btn :icon="mdiDotsVertical"/>
+      <!-- <v-btn :icon="mdiDotsVertical"/> -->
     </template>
 
   </v-app-bar>
@@ -25,7 +25,7 @@
 <script setup lang="ts">
   import NavigationAppBarMenuLanguage from './NavigationAppBarMenuLanguage.vue';
   import NavigationAppBarMenuLocationPicker from "./NavigationAppBarMenuLocationPicker.vue"
-  import { mdiDotsVertical } from "@mdi/js";
+  //import { mdiDotsVertical } from "@mdi/js";
 
   const activeDrawer = defineModel<boolean>("activeDrawer", {default: false})
 </script>
