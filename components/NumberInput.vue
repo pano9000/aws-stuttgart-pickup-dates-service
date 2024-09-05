@@ -53,7 +53,4 @@
   background-color: gainsboro; /*@TODO: check how to use same style as vuetify here*/
 }
 
-.wat input {
-  background-color: yellow;
-}
 </style>
