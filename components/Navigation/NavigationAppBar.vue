@@ -9,7 +9,7 @@
 
     <v-app-bar-title>
       <NuxtLink to="/" class="nuxtlink">
-        Application Bar
+        {{ i18n.t("navigationAppBar.title")}}
       </NuxtLink>
     </v-app-bar-title>
 
@@ -26,6 +26,10 @@
   import NavigationAppBarMenuLanguage from './NavigationAppBarMenuLanguage.vue';
   import NavigationAppBarMenuLocationPicker from "./NavigationAppBarMenuLocationPicker.vue"
   //import { mdiDotsVertical } from "@mdi/js";
-
+  const { i18n, multiMergeLocaleMessage } = useCustomI18n();
   const activeDrawer = defineModel<boolean>("activeDrawer", {default: false})
+
+  multiMergeLocaleMessage("navigationAppBar", [
+    ["title", {de: "Müll-Abfuhrtermine-Tool", en: "Trash Collection Dates Tool"}],
+  ]);
 </script>
