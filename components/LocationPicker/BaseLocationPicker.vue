@@ -2,6 +2,9 @@
   <v-card 
     class="pa-8"
   >
+    <v-card-title>
+      {{ i18n.t('baseLocationPicker.title') }}
+    </v-card-title>
     <v-form 
       ref="form"
       class="d-flex align-baseline ga-4"
@@ -76,6 +79,7 @@ const isLocationPickerActive = ref(false);
 const form = ref<InstanceType<typeof VForm>|null>();
 
 multiMergeLocaleMessage("baseLocationPicker", [
+  ["title", {de: "Adresse Auswählen", en: "Select Address"}],
   ["labelStreetName", {de: "Straßenname", en: "Street Name"}],
   ["labelStreetNo", {de: "Hausnummer", en: "Street Number"}],
   ["btnEdit", {de: "Bearbeiten", en: "Edit"}],
