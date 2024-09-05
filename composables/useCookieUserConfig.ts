@@ -35,6 +35,10 @@ export function useCookieUserConfig() {
     setDefaultCookieSettings<AwsApiServiceEventTypeName[]>(["residual", "organic", "recycle", "paper"])
   );
 
+  const cookieHideCookieNotice = useCookie("hideCookieNotice",
+    setDefaultCookieSettings(false)
+  );
+
   return {
     cookieStreet,
     cookieLanguage,
@@ -42,5 +46,6 @@ export function useCookieUserConfig() {
     cookieEventDisplayMode,
     cookieEventDisplayItemsPerPage,
     cookieEventTypeSelector,
+    cookieHideCookieNotice
   }
 }
