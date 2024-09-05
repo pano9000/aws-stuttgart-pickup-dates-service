@@ -12,6 +12,9 @@ export default defineNuxtPlugin((app) => {
     defaults: {
       global: {
         ripple: false,
+      },
+      VDialog: {
+        "maxWidth": "50rem",
       }
     },
     ssr: true
