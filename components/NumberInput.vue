@@ -43,6 +43,7 @@
 }
 
 .numberinput__wrap input {
+  padding: .25rem;
   border: 1px solid black; 
   border-radius: 5px; /*@TODO: check how to use same style as vuetify here*/
 }
