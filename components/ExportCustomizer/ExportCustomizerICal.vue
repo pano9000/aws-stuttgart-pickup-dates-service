@@ -161,7 +161,7 @@
 
     <v-card
       class="my-4 pa-4"
-      :title="i18n.t('exportCustomizerICal.yourIcalLink')"
+      :title="i18n.t('exportCustomizerICal.yourIcalLinkTitle')"
     >
       <v-card-text>
         <v-row wrap="nowrap">
@@ -178,7 +178,11 @@
               :hide-details="true"
             />
           </v-col>
-
+        </v-row>
+        <v-row>
+          <v-col>
+            <v-alert type="info">{{ i18n.t("exportCustomizerICal.yourIcalLinkTitleInfo") }}</v-alert>
+          </v-col>
         </v-row>
 
       </v-card-text>
@@ -251,7 +255,10 @@
       de: "Verwenden Sie '%1' und '%2' als Platzhalter für die Abholungsart und die Abholfrequenz", 
       en: "You can use '%1' and '%2' as placeholders for the event type and the event schedule frequency."}
     ],
-    ["yourIcalLink", {de: "Ihr benutzerdefinierter iCal-Link", en: "Your Custom iCal Link"}],
+    ["yourIcalLinkTitle", {de: "Ihr benutzerdefinierter iCalendar-Link", en: "Your Customized iCalendar Link"}],
+    ["yourIcalLinkTitleInfo", {
+      de: "Laden Sie sich die iCalendar-Datei herunter oder benutzen Sie den Link, um Ihren benutzerdefinierten Kalender in Ihrem Kalender-Dienst zu importieren", 
+      en: "Download the iCalendar-File or use the link to import your customized Calendar into your calender service."}],
   ]);
 
   const formatOptions = ref<UiICalFormatOptions>({
