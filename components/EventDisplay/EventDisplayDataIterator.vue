@@ -96,7 +96,7 @@
           />
 
           <div class="mx-2 text-caption">
-            Page {{ page }} of {{ pageCount }}
+            {{ i18n.t('baseEventDisplay.paginationIndicator', {pageCurr: page, pageTotal: pageCount}) }}
           </div>
 
           <v-btn
@@ -158,15 +158,17 @@
   })
 
   multiMergeLocaleMessage("baseEventDisplay", [
-  [
-      "fetchNoDataTitle", {"de": "Es gibt nichts zu sehen", "en": "Nothing to see here"}
-    ],
+    [ "fetchNoDataTitle", {"de": "Es gibt nichts zu sehen", "en": "Nothing to see here"} ],
     [
       "fetchNoDataText", {
         "de": "Es sieht so aus, als wenn es keine Daten zum Anzeigen gibt.",
         "en": "It looks like there is no data to display."
       }
     ],
+    [ "paginationIndicator", {
+      "de": "Seite {pageCurr} von {pageTotal}",
+      "en": "Page {pageCurr} of {pageTotal}"
+    }]
   ])
 
 </script>
