@@ -4,10 +4,24 @@
     eager
   >
     <template #activator="{ props }">
-      <v-btn
-        v-bind="props"
-        :icon="mdiTranslateVariant"
-      />
+      <div v-bind="props">
+        <v-btn :prepend-icon="mdiTranslateVariant">
+          <v-chip variant="elevated">
+          <template #prepend>
+            <v-img
+              :src="`/img/flag_${cookieLanguage}.svg`"
+              min-width="1.5rem"
+              inline
+            />
+          </template>
+          <template #default>
+            <span class="mx-2">
+              {{ cookieLanguage }}
+            </span>
+          </template>
+          </v-chip>
+        </v-btn>
+      </div>
     </template>
 
     <v-list>
@@ -23,7 +37,7 @@
             min-width="2rem"
             inline
           />
-          <span>{{ language }}</span>
+          <span>{{ language.toUpperCase() }}</span>
         </div>
       </template>
       </v-list-item>
