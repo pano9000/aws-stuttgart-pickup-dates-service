@@ -42,7 +42,7 @@
               v-for="event in items"
               :key="`${event.raw.date}_${event.raw.type}_${event.raw.schedule}`"
             >
-              <v-col cols="4">
+              <v-col sm="auto" md="4" lg="3">
                 <EventDisplayCard
                   :event-data=event.raw
                 />
