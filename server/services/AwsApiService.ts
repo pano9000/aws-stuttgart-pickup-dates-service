@@ -251,12 +251,12 @@ const SchemaAwsApiRawResponseEvent = z.object({
 
 const SchemaAwsApiRawResponse = z.object({
   SERVLET: z.object({
-    SESSIONDATA: z.object({
-      APPLICATIONNAME: z.string(),
-      BUILD: z.string(),
-      MODULNAME: z.string(),
-      SESSIONID: z.string(),
-    }),
+    /*SESSIONDATA: z.object({
+      APPLICATIONNAME: z.string().optional(),
+      BUILD: z.string().optional(),
+      MODULNAME: z.string().optional(),
+      SESSIONID: z.string().optional(),
+    }),*/
     DIALOG: z.object({
       TERMINELIST: z.object({
         TERMIN: z.array(SchemaAwsApiRawResponseEvent),
