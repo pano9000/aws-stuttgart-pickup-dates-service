@@ -79,7 +79,7 @@
       </template>
 
 
-      <template #footer="{ page, pageCount, prevPage, nextPage }">
+      <template v-if="props.hidePagination !== true" #footer="{ page, pageCount, prevPage, nextPage }">
         <v-row>
           <v-col>
             <v-spacer/>
@@ -146,6 +146,7 @@
     eventData: AwsApiServiceResponseAll | null;
     isLoading: boolean;
     apiEndpoint: string;
+    hidePagination?: boolean;
   }>();
 
   const filteredEventsByType = computed( () => {

@@ -12,6 +12,7 @@
       :event-data="eventData"
       :is-loading="fetchStatus === 'pending'"
       :api-endpoint="props.apiEndpoint"
+      :hide-pagination="props.hidePagination"
     />
   </v-container>
 </template>
@@ -24,6 +25,7 @@
 
   const props = defineProps<{
     apiEndpoint: string;
+    hidePagination?: boolean;
   }>();
 
   const { cookieStreet, hasSetStreet } = useCookieUserConfig();
