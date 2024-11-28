@@ -1,26 +1,24 @@
 <template>
-  <v-menu
-    id="menu-locationpicker"
-    width="100vw"
-    :close-on-content-click="false"
-    open-on-hover
-    eager
-  >
-    <template #activator="{ props }">
-      <div v-bind="props">
-        <v-btn 
+  <v-dialog id="menu-locationpicker">
+
+    <template #activator="{ props: dialogActivatorProps }">
+      <v-btn 
         :prepend-icon="mdiOfficeBuildingMarker"
         :color="(!hasSetStreet) ? 'red' : undefined"
-        >
+        v-bind="{...dialogActivatorProps}"
+      >
         <v-chip
           :text="hasSetStreet ? `${cookieStreet.streetname} ${cookieStreet.streetno}` : i18n.t('locationPickerNavMenuBtn.noAddress')"
           variant="elevated"
         />
-        </v-btn>
-      </div>
+      </v-btn>
     </template>
-    <BaseLocationPicker/>
-  </v-menu>
+
+    <template #default="{ isActive }">
+      <BaseLocationPicker @location-submitted="isActive.value = false"/>
+    </template>
+
+  </v-dialog>
 </template>
 
 <script setup lang="ts">
@@ -33,7 +31,7 @@
   const { i18n, multiMergeLocaleMessage }  = useCustomI18n();
 
   multiMergeLocaleMessage("locationPickerNavMenuBtn", [
-    ["noAddress", {de: "Bitte Adresse Auswählen", en: "Please Select Address"}],
+    ["noAddress", {de: "Bitte Adresse Auswählen", en: "Please Select An Address"}],
   ]);
 
 
