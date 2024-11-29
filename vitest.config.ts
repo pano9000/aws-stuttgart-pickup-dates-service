@@ -4,11 +4,11 @@ import { config } from "dotenv";
 
 export default defineVitestConfig({
   test: {
-    coverage: {
-      provider: "v8"
-    },
+    // coverage: {
+    //   provider: "v8"
+    // },
     env: {
-      ...config({ path: "./.env.DEV" }).parsed,
+      ...config({ path: "./.env-nuxt.DEV" }).parsed,
     }
   }
 })
