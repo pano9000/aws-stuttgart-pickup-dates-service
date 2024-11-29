@@ -1,15 +1,20 @@
 <template>
-  <v-container>
-    <h1>{{ i18n.t("legalNotice.pageTitle") }}</h1>
-    <address>
-      <p v-for="(line) in legalNoticeLines" :key="line">
-        {{ runtimeConfig.public[line] }}
-      </p>
-    </address>
-  </v-container>
+
+  <BasePageTemplate :page-title="i18n.t('legalNotice.pageTitle')">
+    <template #mainContent>
+      <address class="text-left">
+        <p v-for="(line) in legalNoticeLines" :key="line">
+          {{ runtimeConfig.public[line] }}
+        </p>
+      </address>
+    </template>
+  </BasePageTemplate>
+
 </template>
 
 <script setup lang="ts">
+  import BasePageTemplate from '~/components/BasePageTemplate.vue';
+
 
   const { i18n, multiMergeLocaleMessage }  = useCustomI18n();
   const runtimeConfig = useRuntimeConfig();
