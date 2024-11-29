@@ -4,7 +4,8 @@
   "type": "module",
   "scripts": {
     "build": "nuxt build",
-    "dev": "nuxt dev --dotenv .env-nuxt.DEV",
+    "dev": "nuxt dev --dotenv .env-nuxt.LOCALDEV",
+    "devWithRealAPI": "nuxt dev --dotenv .env-nuxt.DEV",
     "mockapi": "node --loader ts-node/esm ./mocks/apiMock.ts",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
