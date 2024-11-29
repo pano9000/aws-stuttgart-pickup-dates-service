@@ -9,7 +9,7 @@
       <h3 class="text-h6 font-weight-bold">{{ i18n.t(`waste_${props.eventData.type}`) }}</h3>
     </v-card-title>
     <v-card-text>
-      <div class="text-h5">{{ i18n.d(props.eventData.date) }}</div>
+      <div class="text-h5">{{ i18n.d(props.eventData.date, "short") }}</div>
       <div>{{ i18n.t(`schedule_${props.eventData.schedule}`) }}</div>
     </v-card-text>
 

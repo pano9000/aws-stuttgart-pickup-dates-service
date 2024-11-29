@@ -13,7 +13,7 @@
 
       <template #default>
         <div>
-          <v-chip>{{ i18n.d(props.eventData.date) }}</v-chip>
+          <v-chip>{{ i18n.d(props.eventData.date, "short") }}</v-chip>
           <v-chip>{{ i18n.t(`waste_${props.eventData.type}`) }}</v-chip>
           <v-chip>{{ i18n.t(`schedule_${props.eventData.schedule}`) }}</v-chip>
         </div>
