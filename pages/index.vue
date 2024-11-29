@@ -1,64 +1,77 @@
 <template>
-  <v-container
-    class="text-center"
+
+  <BasePageTemplate
+    :page-title="i18n.t('pageHome.pageTitle')"
+    :page-subtitle="i18n.t('pageHome.pageSubtitle')"
   >
-    <h1>{{ i18n.t("pageHome.pageTitle") }}</h1>
-    <p>{{ i18n.t("pageHome.pageSubtitle") }}</p>
+    <template #mainContent>
+      <v-row justify="center" class="text-center">
+        <template v-for="actionCard in actionCards" :key="actionCard[0]">
+          <v-col cols="12" md="6" lg="auto">
 
-    <v-row>
+            <template v-if="!hasSetStreet">
+              <v-dialog max-width="50rem" max-height="80vh">
+                <template #activator="{ props: dialogActivatorProps }">
+                  <v-card 
+                    :title="i18n.t(actionCard[1])" class="pa-8" color="primary" link
+                    v-bind="{...dialogActivatorProps}"
+                  >
+                    <v-card-text class="pa-4">
+                      <v-icon :icon="actionCard[2]" size="4rem"/>
+                    </v-card-text>
+                  </v-card>
+                </template>
+                <template #default="{ isActive }">
+                  <BaseLocationPicker @location-submitted="isActive.value = false"/>
+                </template>
 
-      <v-col>
-        <v-card :title="i18n.t('pageHome.cardTitleHowToUse')">
-          <v-card-text>
-            {{ i18n.t('pageHome.cardTextHowToUse') }}
-          </v-card-text>
-        </v-card>
-      </v-col>
+              </v-dialog>
+            </template>
 
-    </v-row>
+            <NuxtLink v-else :to="actionCard[0]" class="nuxtlink">
+              <v-card :title="i18n.t(actionCard[1])" class="pa-8" color="primary" link>
+                <v-card-text class="pa-4">
+                  <v-icon :icon="actionCard[2]" size="4rem"/>
+                </v-card-text>
+              </v-card>
+            </NuxtLink>
 
-    <v-row justify="center">
+          </v-col>
+        </template>
+      </v-row>
+    </template>
+  </BasePageTemplate>
 
-      <template v-for="actionCard in actionCards" :key="actionCard[0]">
-        <v-col cols="12" md="6" lg="auto">
-          <NuxtLink :to="actionCard[0]" class="nuxtlink">
-            <v-card :title="i18n.t(actionCard[1])" class="pa-8" color="primary" link>
-              <v-card-text class="pa-4">
-                <v-icon :icon="actionCard[2]" size="4rem"/>
-              </v-card-text>
-            </v-card>
-          </NuxtLink>
-        </v-col>
-      </template>
-    </v-row>
-  </v-container>
 </template>
 
 <script setup lang="ts">
-  import { mdiCalendar, mdiCalendarMultiselect, mdiCalendarExport } from '@mdi/js';
+  import { mdiCalendar, mdiCalendarMultiselect } from '@mdi/js';
+  import { useCookieUserConfig } from "~/composables/useCookieUserConfig";
+  import BaseLocationPicker from '~/components/LocationPicker/BaseLocationPicker.vue';
+
   const { i18n, multiMergeLocaleMessage } = useCustomI18n();
-  
+  const { hasSetStreet } = useCookieUserConfig();
+
   multiMergeLocaleMessage("pageHome", [
-    //@TODO: fix this mess of a title
-    ["pageTitle", {de: "Stuttgart Müll-Abholtermine-Tool", en: "Stuttgart Trash Pickup Dates Service Tool"}],
+    ["pageTitle", {de: "Müll-Abfuhrtermine-Tool für Stuttgart", en: "Trash Collections Dates Tool for Stuttgart"}],
     [
       "pageSubtitle", {
-        de: "Inoffizielle Hilfswebsite, die Ihnen helfen soll, um die Müll-Abholtermine von Stuttgart's AWS Abfallwirtschaft im Überblick zu behalten", 
-        en: "Unofficial utility web page to help with staying on top of the Trash Pickup Dates from Stuttgart's AWS Abfallwirtschaft"
+        de: "Behalten Sie den Überblick über die Müll-Abfuhrtermine und verpassen Sie keine Abfuhr mehr",
+        en: "Stay on top of the trash collection dates and never miss a collection again"
       }
     ],
     ["cardTitleHowToUse", {de: "Verwendung", en: "How To Use"}],
     ["cardTextHowToUse", {de: "Wählen Sie Ihre Adresse mit dem Addressauswähler oben aus und klicken Sie auf eine der Karten unten.", en: "Select your address by using the Location Picker above, and then click on one of the cards below."}],
-    ["cardTitleUpcomingPickups", {de: "Bevorstehende Abholungen anzeigen", en: "Show Upcoming Pickups"}],
-    ["cardTitleAllPickups", {de: "Alle Abholungen anzeigen", en: "Show All Pickups"}],
-    ["cardTitleCustomIcal", {de: "Eigenen iCal-Link erstellen", en: "Generate Custom iCal Link"}]
+    ["cardTitleUpcomingPickups", {de: "Nächste Abfuhr", en: "Next Collection"}],
+    ["cardTitleAllPickups", {de: "Alle Abfuhren", en: "All Collections"}],
+    //["cardTitleCustomIcal", {de: "iCalendar-Link erstellen", en: "Generate iCalendar Link"}]
 
   ]);
 
   const actionCards: [url: string, title: string, icon: string][] = [
     ["/upcoming", "pageHome.cardTitleUpcomingPickups", mdiCalendar],
     ["/all", "pageHome.cardTitleAllPickups", mdiCalendarMultiselect],
-    ["/icalgenerator", "pageHome.cardTitleCustomIcal", mdiCalendarExport]
+    //["/icalgenerator", "pageHome.cardTitleCustomIcal", mdiCalendarExport]
   ]
 
 
