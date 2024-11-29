@@ -1,66 +1,59 @@
 <template>
-  <v-card 
-    class="pa-8"
-  >
-    <v-card-title>
+  <v-card class="pa-8">
+
+    <v-card-title class="text-center">
       {{ i18n.t('baseLocationPicker.title') }}
     </v-card-title>
-    <v-form 
+
+    <v-form
       ref="form"
-      class="d-flex align-baseline ga-4"
+      class="align-baseline ga-4"
       :disabled="!isLocationPickerActive && hasSetStreet"
       @submit.prevent="storeStreetInCookieHandler"
     >
-      <v-row align="center">
-        <v-col cols="5">
-          <LocationPickerComboBox
-            v-model:input-combo-box="streetname"
-            v-model:streetname="streetname"
-            v-model:streetno="streetno"
-            :is-enabled="isLocationPickerActive"
-            mode="streetname"
-            :icon="mdiHomeCity"
-            :label="i18n.t('baseLocationPicker.labelStreetName')"
-          />
-        </v-col>
 
-        <v-col cols="5">
-          <LocationPickerComboBox
-            v-model:input-combo-box="streetno"
-            v-model:streetname="streetname"
-            v-model:streetno="streetno"
-            :is-enabled="isLocationPickerActive"
-            mode="streetno"
-            :icon="mdiNumeric"
-            :label="i18n.t('baseLocationPicker.labelStreetNo')"
-          />
-        </v-col>
+      <LocationPickerComboBox
+        v-model:input-combo-box="streetname"
+        v-model:streetname="streetname"
+        v-model:streetno="streetno"
+        :is-enabled="isLocationPickerActive"
+        mode="streetname"
+        :icon="mdiHomeCity"
+        :label="i18n.t('baseLocationPicker.labelStreetName')"
+      />
 
-        <v-col cols="auto">
-          <v-tooltip
-            :text="(isLocationPickerActive || !hasSetStreet) ? i18n.t('baseLocationPicker.btnSave') : i18n.t('baseLocationPicker.btnEdit')"
-            location="top"
-          >
-            <template #activator="{ props }">
-              <v-btn
-                v-if="isLocationPickerActive || !hasSetStreet"
-                :disabled="!form?.isValid"
-                type="submit"
-                :icon="mdiCheckBold"
-                v-bind="props"
-              />
+      <LocationPickerComboBox
+        v-model:input-combo-box="streetno"
+        v-model:streetname="streetname"
+        v-model:streetno="streetno"
+        :is-enabled="isLocationPickerActive"
+        mode="streetno"
+        :icon="mdiNumeric"
+        :label="i18n.t('baseLocationPicker.labelStreetNo')"
+      />
 
-              <v-btn
-                v-else 
-                type="button"
-                :icon="mdiPencil"
-                v-bind="props" 
-                @click="isLocationPickerActive = !isLocationPickerActive"
-              />
-            </template>
-          </v-tooltip>
-        </v-col>
-      </v-row>
+      <v-card-actions>
+
+        <v-btn
+          v-if="isLocationPickerActive || !hasSetStreet"
+          type="submit"
+          :disabled="!form?.isValid"
+          block
+          border
+          :text="i18n.t('baseLocationPicker.btnSave')"
+        />
+
+        <v-btn
+          v-else
+          type="button"
+          block
+          border
+          :text="i18n.t('baseLocationPicker.btnChange')"
+          @click="changeAddressHandler"
+        />
+
+      </v-card-actions>
+
     </v-form>
   </v-card>
 </template>
@@ -68,7 +61,7 @@
 <script setup lang="ts">
 import { VForm } from 'vuetify/components';
 import { useCookieUserConfig } from '~/composables/useCookieUserConfig';
-import { mdiHomeCity, mdiNumeric, mdiCheckBold, mdiPencil } from "@mdi/js";
+import { mdiHomeCity, mdiNumeric } from "@mdi/js";
 
 const { cookieStreet, hasSetStreet } = useCookieUserConfig();
 const { i18n, multiMergeLocaleMessage } = useCustomI18n();
@@ -78,21 +71,31 @@ const streetno = ref(cookieStreet.value.streetno);
 const isLocationPickerActive = ref(false);
 const form = ref<InstanceType<typeof VForm>|null>();
 
-multiMergeLocaleMessage("baseLocationPicker", [
-  ["title", {de: "Adresse Auswählen", en: "Select Address"}],
-  ["labelStreetName", {de: "Straßenname", en: "Street Name"}],
-  ["labelStreetNo", {de: "Hausnummer", en: "Street Number"}],
-  ["btnEdit", {de: "Bearbeiten", en: "Edit"}],
-  ["btnSave", {de: "Speichern", en: "Save"}],
-])
+const emits = defineEmits(["locationSubmitted"]);
 
 function storeStreetInCookieHandler() {
   if (form?.value?.isValid) {
     cookieStreet.value.streetname = streetname.value;
     cookieStreet.value.streetno = streetno.value;
-    isLocationPickerActive.value = false
+    isLocationPickerActive.value = false;
+    emits('locationSubmitted')
   }
 }
+
+function changeAddressHandler() {
+  streetname.value = '';
+  streetno.value = '';
+  isLocationPickerActive.value = true;
+}
+
+multiMergeLocaleMessage("baseLocationPicker", [
+  ["title", {de: "Adresse Auswählen", en: "Select Address"}],
+  ["labelStreetName", {de: "Straßenname", en: "Street Name"}],
+  ["labelStreetNo", {de: "Hausnummer", en: "Street Number"}],
+  ["btnSave", {de: "Speichern", en: "Save"}],
+  ["btnChange", {de: "Ändern", en: "Change"}],
+]);
+
 </script>
 
 <style>
