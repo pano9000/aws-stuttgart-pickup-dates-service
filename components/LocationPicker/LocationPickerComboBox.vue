@@ -38,7 +38,7 @@
     ["unknownstreetname", {de: "Unbekannte Straße", en: "Unknown Street Name"}],
     ["unknownstreetno", {de: "Unbekannte Hausnummer", en: "Unknown Street Number"}],
     ["enterstreetname", {de: "Bitte geben Sie eine Straße ein", en: "Please enter a street name"}],
-    ["enterstreetno", {de: "Unbekannte Hausnummer", en: "Unknown Street Number"}],
+    ["enterstreetno", {de: "Bitte geben Sie die Hausnummer ein", en: "Please enter the street number"}],
     ["selectValidEntry", {de: "Bitte wählen Sie einen Eintrag aus den Vorschlägen aus", en: "Please select an entry from the suggestions"}],
     ["labelLoading", {de: "Lädt…", en: "Loading…"}]
   ])
