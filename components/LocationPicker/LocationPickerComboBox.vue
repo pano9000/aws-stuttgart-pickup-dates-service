@@ -51,14 +51,12 @@
     return i18n.t(`locationPickerComboBox.unknown${props.mode}`)
   })
 
-  let hasFetched: true | undefined = undefined;
-  const hasInitialStoredData = computed( () => modelComboBox.value && !hasFetched)
+  // unused for now
+  //const hasFetched = ref<true | undefined>(undefined);
 
   const validationRule = [
     (value: string) => {
-      return (hasInitialStoredData.value)
-        ? true
-        : suggestions.value.includes(value) || i18n.t("locationPickerComboBox.selectValidEntry")
+      return suggestions.value.includes(value) || i18n.t("locationPickerComboBox.selectValidEntry")
     }
   ];
 
@@ -88,7 +86,7 @@
         }
       })
 
-      hasFetched = true;
+      //hasFetched.value = true;
       suggestions.value = response || [];
       isSuggestionsLoading.value = false;
     },
