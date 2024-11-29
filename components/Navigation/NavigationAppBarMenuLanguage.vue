@@ -31,7 +31,7 @@
         @click="setLanguage(language)"
       >
       <template #default>
-        <div class="d-flex ga-2 align-center">
+        <div class="d-flex ga-2 align-center justify-center">
           <v-img
             :src="`/img/flag_${language}.svg`"
             min-width="2rem"
