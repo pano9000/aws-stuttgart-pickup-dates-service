@@ -1,10 +1,13 @@
 <template>
-  <v-container>
-    <h1>{{ i18n.t("all.pageTitle") }}</h1>
-    <p v-show="hasSetStreet">{{ i18n.t("all.pageSubtitle", { address: `${cookieStreet.streetname} ${cookieStreet.streetno}` }) }}</p>
+  <BasePageTemplate
+    :page-title="i18n.t('all.pageTitle')"
+    :page-subtitle="hasSetStreet ? i18n.t('all.pageSubtitle', { address: `${cookieStreet.streetname} ${cookieStreet.streetno}` } ) : undefined"
+  >
+    <template #mainContent>
+      <BaseEventDisplay api-endpoint="/api/v1/all"/>
+    </template>
+  </BasePageTemplate>
 
-    <BaseEventDisplay api-endpoint="/api/v1/all"/>
-  </v-container>
 </template>
 
 <script setup lang="ts">
@@ -15,8 +18,8 @@
   const { i18n, multiMergeLocaleMessage } = useCustomI18n();
 
   multiMergeLocaleMessage("all", [
-    ["pageTitle", {de: "Alle Abholungen", en: "All Pickups"}],
-    ["pageSubtitle", {de: "Alle geplanten Abholungen für { address }", en: "All scheduled pickups for { address }"}],
+    ["pageTitle", {de: "Alle Abholungen", en: "All Collections"}],
+    ["pageSubtitle", {de: "Alle geplanten Abholungen für { address }", en: "All scheduled collections for { address }"}],
   ]);
 
 </script>
