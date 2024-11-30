@@ -31,6 +31,7 @@
                 v-model:start-time="formatOptions.startTime"
                 v-model:end-time="formatOptions.endTime"
                 :icon="mdiClockOutline"
+                :disabled="formatOptions.allDay"
               />
             </v-input>
           </v-col>
@@ -269,7 +270,7 @@
   const formatOptions = ref<UiICalFormatOptions>({
     type: [],
     startTime: "06:30",
-    endTime: "07:00",
+    endTime: "06:45",
     alarm: 15,
     allDay: false,
     offsetEvent: 0,

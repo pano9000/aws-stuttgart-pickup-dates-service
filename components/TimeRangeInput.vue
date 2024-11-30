@@ -4,11 +4,13 @@
     <input
       v-model="modelStartTime"
       type="time"
+      :disabled="props.disabled"
     >
     —
     <input
       v-model="modelEndTime"
       type="time"
+      :disabled="props.disabled"
     >
   </div>
 
@@ -22,6 +24,7 @@
 
   const props = defineProps<{
     icon?: string
+    disabled?: boolean;
   }>();
 
 </script>
