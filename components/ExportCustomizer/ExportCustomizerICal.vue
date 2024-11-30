@@ -219,47 +219,51 @@
 
   multiMergeLocaleMessage("exportCustomizerICal", [
     ["title", {de: "iCalendar-Export", en: "iCalendar Export"}],
-    ["pickupEventsTitle", {de: "Abholungen", en: "Pickup Events"}],
+    ["pickupEventsTitle", {de: "Abholungen", en: "Collections"}],
     [
       "pickupEventsSubtitle", {
-        de: "Wählen Sie die Art der Abholungen, die als Ereignis im Kalender angezeigt werden sollen",
-        en: "Select the type of pickups that you want to appear as events in the calendar"
+        de: "Wählen Sie die Abholungen, die als Ereignis im Kalender angezeigt werden sollen",
+        en: "Select the collections that you want to appear as events in the calendar"
       }
     ],
     ["eventTimesTitle", {de: "Ereignis-Dauer", en: "Event Duration"}],
     [
       "eventTimesSubtitle", {
-        de: "Stellen Sie die Start- und Endzeit des Kalender-Eintrags ein",
+        de: "Stellen Sie die Start- und Endzeit der Kalender-Einträge ein",
         en: "Set the start and end time of the calendar events"
       }
     ],
     ["labelAllDay", {de: "Ganztätig", en: "Allday"}],
-    ["eventAlarmTitle", {de: "Ereignis-Erinnerung", en: "Event Alarm"}],
-    ["eventAlarmSubtitle", {de: "Stellen Sie eine Erinnerung vor dem Ereignis ein", en: "Set an alarm notification before the event"}],
+    ["eventAlarmTitle", {de: "Ereignis-Erinnerungen", en: "Event Alarms"}],
+    ["eventAlarmSubtitle", {
+      de: "Stellen Sie ein, ob und wann der Kalendereintrag eine Erinnerung anzeigen soll",
+      en: "Set, if and when the calendar entry should display an alarm notification"
+    }],
     ["labelAlarmMinutesBefore", {de: "Minute(n) vorher", en: "minute(s) before"}],
-    ["labelAlarmDisable", {de: "Erinnerung deaktivieren", en: "Disable Alarm"}],
+    ["labelAlarmDisable", {de: "Erinnerungen deaktivieren", en: "Disable Alarms"}],
     ["eventOffsetTitle", {de: "Ereignis-Offset", en: "Offset Event"}],
-    ["eventOffsetSubtitle", {de: "Stellen Sie ein, ob Sie das Ereignis vor dem Abholungstag anzeigen möchten", en: "Set if you want to show the event before the actual pickup day"}],
+    ["eventOffsetSubtitle", {de: "Stellen Sie ein, ob Sie das Ereignis vor dem Abholungsdatum anzeigen möchten", en: "Set if you want to show the event before the actual collection date"}],
     ["labelOffsetDaysEarlier", {de: "Tag(e) vorher", en: "day(s) earlier"}],
     [
       "eventOffsetInfo", {
-      de: "Verwenden Sie dies, wenn Sie das Ereignis in Ihrem Kalender bereits vor der tatsächlichen Abholung angezeigt haben wollen. Dies kann nützlich sein, um sich bspw. am Abend vorher eine Erinnerung zu setzen, den Müll rechtzeitig bereitzustellen.", 
-      en: "Use this, if you want the event to appear in your calendar before the actual pickup happens. This can be useful e.g. to set yourself a reminder to put out the trash, e.g. the night before the pickup happens."}
+      de: "Verwenden Sie diese Einstellung, wenn Sie das Ereignis in Ihrem Kalender bereits vor dem tatsächlichen Abholungsdatum angezeigt haben möchten. Dies kann nützlich sein, um sich bspw. am Abend vorher eine Erinnerung zu setzen, den Müll rechtzeitig bereitzustellen.", 
+      en: "Use this option, if you want the event to appear in your calendar before the actual collection date. This can be useful e.g. to set yourself a reminder to put out the trash, the night before the collection happens."}
     ],
     ["eventTitleTitle", {de: "Ereignis-Titel", en: "Event Title"}],
-    ["eventTitleSubtitle", {de: "Stellen Sie den Titel ein, wie das Ereignis im Kalender angezeigt werden soll", en: "Set the title that will be shown in the calendar"}],
+    ["eventTitleSubtitle", {de: "Stellen Sie den Titel ein, wie das Ereignis im Kalender angezeigt werden soll", en: "Set the title that will be shown in the calendar for the event"}],
     ["labelEventTitle", {de: "Ereignis-Titel-Vorlage", en: "Event Title Template"}],
     ["labelEventTitlePreview", {de: "Ereignis-Titel-Vorschau", en: "Event Title Preview"}],
-    ["eventTitleDefaultTitle", {de: "Abholung %1 (%2)", en: "Pickup %1 (%2)"}],
+    ["eventTitleDefaultTitle", {de: "Abholung %1 (%2)", en: "%1 Collection (%2)"}],
     [
       "eventTitlePlaceholderInfo", {
-      de: "Verwenden Sie '%1' und '%2' als Platzhalter für die Abholungsart und die Abholfrequenz", 
-      en: "You can use '%1' and '%2' as placeholders for the event type and the event schedule frequency."}
+        de: "Sie können '%1' (für die Abholungsart) und '%2' (für die Abholfrequenz) als Platzhalter im Titel verwenden.", 
+        en: "You can use '%1' (for the collection type) and '%2' (for the collection frequency) as placeholders in the title."
+      }
     ],
-    ["yourIcalLinkTitle", {de: "Ihr benutzerdefinierter iCalendar-Link", en: "Your Customized iCalendar Link"}],
+    ["yourIcalLinkTitle", {de: "Ihr benutzerdefinierter iCalendar-Export", en: "Your Customized iCalendar Export"}],
     ["yourIcalLinkTitleInfo", {
-      de: "Laden Sie sich die iCalendar-Datei herunter oder benutzen Sie den Link, um Ihren benutzerdefinierten Kalender in Ihrem Kalender-Dienst zu importieren", 
-      en: "Download the iCalendar-File or use the link to import your customized Calendar into your calender service."}],
+      de: "Laden Sie sich die iCalendar-Datei herunter oder benutzen Sie den Link, um die Abholungen in Ihrem Kalender-Dienst zu importieren und synchronisiert zu halten.", 
+      en: "Download the iCalendar-File or use the link to import your the collections into your calender service and keep it synchronized."}],
   ]);
 
   const formatOptions = ref<UiICalFormatOptions>({
