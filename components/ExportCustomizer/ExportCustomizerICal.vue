@@ -1,5 +1,5 @@
 <template>
-  <BaseExportCustomizer>
+  <BaseExportCustomizer :title="i18n.t('exportCustomizerICal.title')">
     <v-card
       class="my-4 pa-4"
       :title="i18n.t('exportCustomizerICal.pickupEventsTitle')"
@@ -218,6 +218,7 @@
   const { i18n, multiMergeLocaleMessage }  = useCustomI18n();
 
   multiMergeLocaleMessage("exportCustomizerICal", [
+    ["title", {de: "iCalendar-Export", en: "iCalendar Export"}],
     ["pickupEventsTitle", {de: "Abholungen", en: "Pickup Events"}],
     [
       "pickupEventsSubtitle", {
