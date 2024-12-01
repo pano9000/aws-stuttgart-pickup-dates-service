@@ -17,7 +17,7 @@ const timeToHourMinuteTupleTransformer = (timeString: string | undefined, ctx: z
 export const schemaQueryICal = schemaQuery.extend({
   startTime: z.string().optional().transform(timeToHourMinuteTupleTransformer),
   endTime: z.string().optional().transform(timeToHourMinuteTupleTransformer),
-  allDay: z.boolean().optional(),
+  allDay: z.coerce.boolean().optional(),
   alarm: z.coerce.number().min(0).max(999_999).optional(),
   offsetEvent: z.coerce.number().min(0).max(999).optional(),
   customSummary: z.string().max(600).optional()
