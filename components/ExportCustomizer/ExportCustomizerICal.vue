@@ -198,7 +198,7 @@
   import EventTypeSelector from "~/components/EventTypeSelector.vue";
   import BaseExportCustomizer from "./BaseExportCustomizer.vue";
   import { useCookieUserConfig } from "~/composables/useCookieUserConfig";
-  import type { ICalOptions } from "~/server/services/TransformDataService";
+  import type { ApiDataTransformerICalOptions } from "~/server/services/ApiDataTransformer/ApiDataTransformerICal";
   import type { AwsApiServiceEventTypeName } from "~/server/services/AwsApiService";
 
   import { 
@@ -209,7 +209,7 @@
     mdiBellOffOutline
   } from "@mdi/js";
 
-  type UiICalFormatOptions = Omit<ICalOptions, "startTime" | "endTime" | "translated"> & {
+  type UiICalFormatOptions = Omit<ApiDataTransformerICalOptions, "startTime" | "endTime" | "translated"> & {
     startTime?: string;
     endTime?: string;
     type?: AwsApiServiceEventTypeName[];
