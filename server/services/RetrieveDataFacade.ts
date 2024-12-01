@@ -11,8 +11,8 @@ import { z } from "zod";
 
 import type { AwsApiService, AwsApiServiceResponseAll, AwsApiServiceEvent, AwsApiServiceEventTypeName } from "./AwsApiService"
 import type { RedisService } from "./RedisService";
-import type { CSVOptions, ICalOptions } from "./TransformDataService";
-
+import type { ApiDataTransformerCSVOptions } from "./ApiDataTransformer/ApiDataTransformerCSV";
+import type { ApiDataTransformerICalOptions } from "./ApiDataTransformer/ApiDataTransformerICal";
 
 export class RetrieveDataFacade {
 
@@ -132,7 +132,7 @@ export class RetrieveDataFacade {
     return `$.data[?${filters.join(" && ")}]`
   }
 
-  #transformData(originalData: AwsApiServiceResponseAll, format: RetrieveDataFacadeFormat, formatOptions?: ICalOptions | CSVOptions) {
+  #transformData(originalData: AwsApiServiceResponseAll, format: RetrieveDataFacadeFormat, formatOptions?: ApiDataTransformerICalOptions | ApiDataTransformerCSVOptions) {
 
     switch (format) {
       case "csv":
@@ -160,7 +160,7 @@ export type RetrieveDataFacadeOptions = {
   streetno: string;
   typeFilter: undefined | AwsApiServiceEventTypeName[];
   format: RetrieveDataFacadeFormat
-  formatOptions?: ICalOptions
+  formatOptions?: ApiDataTransformerICalOptions
   operationId?: string;
 }
 

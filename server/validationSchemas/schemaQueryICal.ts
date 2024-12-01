@@ -1,6 +1,6 @@
 import { z } from "zod"
 import { schemaQuery } from "./schemaQuery";
-import type { HourMinuteTuple } from "~/server/services/TransformDataService"
+import type { HourMinuteTuple } from "~/server/services/ApiDataTransformer/ApiDataTransformerICal"
 
 const timeToHourMinuteTupleTransformer = (timeString: string | undefined, ctx: z.RefinementCtx ) => {
   if (!timeString) return undefined;
