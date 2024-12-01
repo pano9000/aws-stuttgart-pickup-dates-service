@@ -19,17 +19,15 @@
   const { i18n, multiMergeLocaleMessage } = useCustomI18n();
 
   multiMergeLocaleMessage("navigationDrawer", [
-    ["home", {de: "Start", en: "Home"}],
-    ["upcomingPickups", {de: "Bevorstehende Abholungen", en: "Upcoming Pickups"}],
-    ["allPickups", {de: "Alle Abholungen", en: "All Pickups"}],
-    ["icalGenerator", {de: "iCal-Generator", en: "iCal Generator"}],
-  ]) 
+    ["home",                {de: "Start", en: "Home"}],
+    ["upcomingCollections", {de: "Nächste Abfuhr", en: "Upcoming Collections"}],
+    ["allCollections",      {de: "Alle Abfuhren", en: "All Collections"}],
+  ]);
 
   const items = ref<[path: string, name: string][]>([
     ["/",             "navigationDrawer.home"],
-    ["upcoming",      "navigationDrawer.upcomingPickups"],
-    ["all",           "navigationDrawer.allPickups"],
-    ["icalgenerator", "navigationDrawer.icalGenerator"]
+    ["upcoming",      "navigationDrawer.upcomingCollections"],
+    ["all",           "navigationDrawer.allCollections"],
   ])
 
 </script>
