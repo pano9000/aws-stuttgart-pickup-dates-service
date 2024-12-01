@@ -1,15 +1,15 @@
 import { schemaQuery } from "~/server/validationSchemas/schemaQuery";
 import { schemaQueryICal } from "~/server/validationSchemas/schemaQueryICal";
 
-import type { ICalOptions } from "~/server/services/TransformDataService";
+import type { ApiDataTransformerICalOptions } from "~/server/services/ApiDataTransformer/ApiDataTransformerICal";
 import type { QueryObject } from "ufo"
 import type { ApiQueryBase } from "~/server/validationSchemas/schemaQuery"
 import type { ApiQueryICal } from "~/server/validationSchemas/schemaQueryICal"
 
-export default function getValidatedDataAndOptions(query: QueryObject): [validatedData: ApiQueryBase | ApiQueryICal, formatOpions: ICalOptions | undefined] {
+export default function getValidatedDataAndOptions(query: QueryObject): [validatedData: ApiQueryBase | ApiQueryICal, formatOpions: ApiDataTransformerICalOptions | undefined] {
   if (query.format === "ical") {
     const validatedData = schemaQueryICal.parse(query);
-    const formatOptions: ICalOptions = {
+    const formatOptions: ApiDataTransformerICalOptions = {
       startTime: validatedData.startTime,
       endTime: validatedData.endTime,
       allDay: validatedData.allDay,
@@ -23,7 +23,7 @@ export default function getValidatedDataAndOptions(query: QueryObject): [validat
 
   else if (query.format === "csv") {
     const validatedData = schemaQuery.parse(query); //@TODO replace with CSV, when CSV options are implemented
-    const formatOptions: ICalOptions = {
+    const formatOptions: ApiDataTransformerICalOptions = {
       translated: validatedData.translated
     }
     return [validatedData, formatOptions]
