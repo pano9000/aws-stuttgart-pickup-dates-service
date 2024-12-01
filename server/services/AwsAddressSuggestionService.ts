@@ -1,27 +1,31 @@
 import { got as defaultGot } from "got";
 import { z } from "zod";
-import type {Got} from "got";
+import type { Got } from "got";
 import type { Logger } from "winston";
-import { generalLogger } from "../utils/winstonLogger";
+import type { LoggerMeta } from "~/server/utils/winstonLogger";
+import { generalLogger, LoggerMeta as defaultLoggerMeta } from "~/server/utils/winstonLogger";
 
 export class AwsAddressSuggestionService {
 
   #apiUrlStreetName: URL;
   #apiUrlStreetNo: URL;
-  #got: Got;
 
+  #got: Got;
   #logger: Console | Logger;
+  #loggerMeta: typeof LoggerMeta;
 
   constructor(
     apiUrlStreetName: string = process.env.AWSAPPENV_AWS_API_STREETNAME_URL as string, 
     apiUrlStreetNo: string = process.env.AWSAPPENV_AWS_API_STREETNO_URL as string, 
     gotClient: Got = defaultGot, 
-    logger: Console | Logger = generalLogger
+    logger: Console | Logger = generalLogger,
+    loggerMeta: typeof LoggerMeta = defaultLoggerMeta
   ) {
     this.#got = gotClient;
     this.#apiUrlStreetName = new URL(apiUrlStreetName);
     this.#apiUrlStreetNo = new URL(apiUrlStreetNo);
     this.#logger = logger;
+    this.#loggerMeta = loggerMeta;
   }
 
   async #executeRequest(apiUrl: URL) {
@@ -31,7 +35,7 @@ export class AwsAddressSuggestionService {
   }
 
   async getStreetNameSuggestions(streetName: string, operationId: string = "") {
-    const loggerMeta = new LoggerMeta("AwsAddressSuggestionService.getStreetNameSuggestions", operationId);
+    const loggerMeta = new this.#loggerMeta("AwsAddressSuggestionService.getStreetNameSuggestions", operationId);
     this.#logger.debug("Operation started", loggerMeta.withData({streetName}));
     this.#apiUrlStreetName.searchParams.set("street", streetName);
 
@@ -42,7 +46,7 @@ export class AwsAddressSuggestionService {
   }
 
   async getStreetNoSuggestions(streetName: string, streetNo: string, operationId: string = "") {
-    const loggerMeta = new LoggerMeta("AwsAddressSuggestionService.getStreetNoSuggestions", operationId);
+    const loggerMeta = new this.#loggerMeta("AwsAddressSuggestionService.getStreetNoSuggestions", operationId);
     this.#logger.debug("Operation started", loggerMeta.withData({streetName, streetNo}));
 
     this.#apiUrlStreetNo.searchParams.set("street", streetName);
