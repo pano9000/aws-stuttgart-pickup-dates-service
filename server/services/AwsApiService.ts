@@ -3,8 +3,9 @@ import type {Got} from "got";
 import { DateTime } from "luxon";
 import { z, ZodError } from "zod";
 import { AwsApiServiceError } from "./AwsApiServiceError";
+import { generalLogger, LoggerMeta as defaultLoggerMeta } from "~/server/utils/winstonLogger";
 import type { Logger } from "winston";
-import { generalLogger, LoggerMeta } from "../utils/winstonLogger";
+import type { LoggerMeta } from "~/server/utils/winstonLogger";
 
 /**
  * Service to fetch, validate and transform data from the AWS Stuttgart API
@@ -13,6 +14,8 @@ export class AwsApiService {
   #apiUrl: URL;
   #got: Got;
   #logger: Console | Logger;
+  #loggerMeta: typeof LoggerMeta;
+
   #typeNames = new Map<AwsApiRawResponseEventTypeName,AwsApiServiceEventTypeName>([
     ["Restmüll", "residual"],
     ["Biomüll", "organic"],
@@ -25,10 +28,17 @@ export class AwsApiService {
     ["03-wöchentl.", "W3"]
   ]);
 
-  constructor(apiUrl: string = process.env.AWSAPPENV_AWS_API_URL as string, gotClient: Got = defaultGot, logger: Console | Logger = generalLogger) {
+  constructor(
+    apiUrl: string = process.env.AWSAPPENV_AWS_API_URL as string, 
+    gotClient: Got = defaultGot, 
+    logger: Console | Logger = generalLogger,
+    loggerMeta: typeof LoggerMeta = defaultLoggerMeta
+
+  ) {
     this.#got = gotClient;
     this.#apiUrl = new URL(apiUrl);
     this.#logger = logger;
+    this.#loggerMeta = loggerMeta;
   }
 
   async #executeRequest(streetname: string, streetno: string, _operationId: string = ""): Promise<AwsApiRawResponse> {
@@ -42,7 +52,7 @@ export class AwsApiService {
   }
 
   #getHandledError(error: unknown, operationId: string = "") {
-    const loggerMeta = new LoggerMeta("AwsApiService.getHandledError", operationId);
+    const loggerMeta = new this.#loggerMeta("AwsApiService.getHandledError", operationId);
     this.#logger.error("AwsApiService Error", loggerMeta.withData({error}));
 
     switch (true) {
@@ -115,7 +125,7 @@ export class AwsApiService {
 */
   async getRaw(streetname: string, streetno: string, operationId: string = ""): Promise<AwsApiRawResponse> {
     try {
-      const loggerMeta = new LoggerMeta("AwsApiService.getRaw", operationId);
+      const loggerMeta = new this.#loggerMeta("AwsApiService.getRaw", operationId);
       this.#logger.debug("Operation started", loggerMeta.withData({streetname, streetno}));
 
       const apiData = await this.#executeRequest(streetname, streetno);
@@ -130,7 +140,7 @@ export class AwsApiService {
   async getAll(streetname: string, streetno: string, operationId: string = ""): Promise<AwsApiServiceResponseAll> {
 
     try {
-      const loggerMeta = new LoggerMeta("AwsApiService.getAll", operationId);
+      const loggerMeta = new this.#loggerMeta("AwsApiService.getAll", operationId);
       this.#logger.debug("Operation started", loggerMeta.withData({streetname, streetno}));
 
       const apiData = await this.#executeRequest(streetname, streetno);
