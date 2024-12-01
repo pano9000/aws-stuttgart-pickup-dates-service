@@ -1,12 +1,14 @@
 //w 200 status
 export const awsPickupDataSuccess = {
   "SERVLET": {
+/*  We ignore SessionData
     "SESSIONDATA": {
       "APPLICATIONNAME": "Abfuhrtermine",
       "BUILD": "2024-05-08 14:17",
       "MODULNAME": "",
       "SESSIONID": "E7B0FDCC30C32A4AC3195B5313E7176A"
     },
+*/
     "DIALOG": {
       "TERMINELIST": {
         "TERMIN": [
