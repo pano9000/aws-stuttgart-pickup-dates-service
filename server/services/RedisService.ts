@@ -1,18 +1,24 @@
 import { Redis, ReplyError } from "ioredis";
 import type { RedisOptions } from "ioredis";
 import type { Logger } from "winston";
-import { generalLogger, LoggerMeta } from "../utils/winstonLogger";
+import type { LoggerMeta } from "~/server/utils/winstonLogger";
+import { generalLogger, LoggerMeta as defaultLoggerMeta } from "~/server/utils/winstonLogger";
+
 
 const SECONDS_IN_A_WEEK = 60 * 60 * 24 * 7;
 
 export class RedisService {
 
   #client: Redis;
-  #logger: Console | Logger
+  #logger: Console | Logger;
+  #loggerMeta: typeof LoggerMeta;
+
+
   constructor(
     connectionOptions: Pick<RedisOptions, "port" | "host" | "password">, 
     ioredis: typeof Redis = Redis,
-    logger: Console | Logger = generalLogger
+    logger: Console | Logger = generalLogger,
+    loggerMeta: typeof LoggerMeta = defaultLoggerMeta
   ) {
     this.#client = new ioredis({
       port: connectionOptions.port,
@@ -26,7 +32,7 @@ export class RedisService {
     })
 
     this.#logger = logger;
-
+    this.#loggerMeta = loggerMeta;
   }
 
   getRedisKey(streetname: string, streetno: string) {
@@ -35,7 +41,7 @@ export class RedisService {
 
   async jsonGET(key: string, filter?: string, operationId: string = "") {
     try {
-      const loggerMeta = new LoggerMeta("RedisService.jsonGET", operationId);
+      const loggerMeta = new this.#loggerMeta("RedisService.jsonGET", operationId);
       this.#logger.debug("Operation started", loggerMeta.withData({key, filter}));
 
       if (filter) {
@@ -88,7 +94,7 @@ export class RedisService {
   //@TODO: check if there is a type for "JSON parseable thing"?
   async jsonSET(key: string, value: any, operationId = "") {
     try {
-      const loggerMeta = new LoggerMeta("RedisService.jsonSET", operationId);
+      const loggerMeta = new this.#loggerMeta("RedisService.jsonSET", operationId);
       this.#logger.debug("Operation started", loggerMeta.withData({key}));
 
       const result = await this.#client.multi()
@@ -108,6 +114,7 @@ export class RedisService {
   }
 
 }
+
 
 export const redisService = new RedisService({
   port: +(process.env.AWSAPPENV_REDIS_SERVER_PORT as string),
