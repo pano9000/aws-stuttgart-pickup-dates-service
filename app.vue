@@ -2,7 +2,7 @@
   <v-app>
     <BaseNavigation/>
     <!-- max-width="1280px" -->
-    <v-main>
+    <v-main tag="div">
       <BaseCookieNotice/>
       <NuxtPage />
     </v-main>
