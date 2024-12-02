@@ -58,6 +58,7 @@ export default defineNuxtConfig({
       legalNoticeEmail:     process.env.NUXT_PUBLIC_AWSAPPENV_LEGALNOTICE_EMAIL,
       legalNoticePhone:     process.env.NUXT_PUBLIC_AWSAPPENV_LEGALNOTICE_PHONE,
       projectGitUrl:        process.env.NUXT_PUBLIC_AWSAPPENV_PROJECT_GIT_URL,
+      copyrightNotice:      process.env.NUXT_PUBLIC_AWSAPPENV_COPYRIGHT_NOTICE,
     }
 
     /*
