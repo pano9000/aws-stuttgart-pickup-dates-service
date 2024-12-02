@@ -48,6 +48,7 @@ export default defineNuxtConfig({
 
   /* @TODO: configure correctly */
   runtimeConfig: {
+
     public: {
       legalNoticeName1:     process.env.NUXT_PUBLIC_AWSAPPENV_LEGALNOTICE_NAME1,
       legalNoticeName2:     process.env.NUXT_PUBLIC_AWSAPPENV_LEGALNOTICE_NAME2,
@@ -55,7 +56,8 @@ export default defineNuxtConfig({
       legalNoticeAddress2:  process.env.NUXT_PUBLIC_AWSAPPENV_LEGALNOTICE_ADDRESS2,
       legalNoticeAddress3:  process.env.NUXT_PUBLIC_AWSAPPENV_LEGALNOTICE_ADDRESS3,
       legalNoticeEmail:     process.env.NUXT_PUBLIC_AWSAPPENV_LEGALNOTICE_EMAIL,
-      legalNoticePhone:     process.env.NUXT_PUBLIC_AWSAPPENV_LEGALNOTICE_PHONE
+      legalNoticePhone:     process.env.NUXT_PUBLIC_AWSAPPENV_LEGALNOTICE_PHONE,
+      projectGitUrl:        process.env.NUXT_PUBLIC_AWSAPPENV_PROJECT_GIT_URL,
     }
 
     /*

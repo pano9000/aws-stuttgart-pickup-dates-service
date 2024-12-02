@@ -16,8 +16,8 @@
         >
           <template #activator="{ props }">
             <a
-              href="https://github.com/pano9000/aws-stuttgart-pickup-dates-service"
-              target="_blank"
+                :href="runtimeConfig.public.projectGitUrl"
+                target="_blank"
               v-bind="props"
             >
               <v-icon :icon="mdiGithub"/>
@@ -34,6 +34,7 @@
 
 <script setup lang="ts">
 import { mdiGithub } from '@mdi/js';
+const runtimeConfig = useRuntimeConfig();
 
 const {i18n, multiMergeLocaleMessage} = useCustomI18n();
 
