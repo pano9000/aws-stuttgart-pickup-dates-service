@@ -3,32 +3,31 @@
     color="secondary"
     class="elevation-8 flex-0-1"
   >
-  <v-container>
-    <v-row  class="text-center">
-      <v-spacer cols="3"/>
-      <v-col cols="6">
-        <div><NuxtLink to="impressum" class="nuxtlink">{{ i18n.t('legalNotice.pageTitle') }}</NuxtLink></div>
-        <small>2024 — Panagiotis Papadopoulos (@pano9000)</small>
-      </v-col>
-      <v-col cols="3">
-        <v-tooltip
-          :text="i18n.t('footer.checkSource')"
-        >
-          <template #activator="{ props }">
-            <a
+    <v-container>
+      <v-row  class="text-center">
+        <v-spacer cols="3"/>
+        <v-col cols="6">
+          <div><NuxtLink to="impressum" class="nuxtlink">{{ i18n.t('legal_notice') }}</NuxtLink></div>
+          <small>© 2024 — Panagiotis Papadopoulos (@pano9000)</small>
+        </v-col>
+        <v-col cols="3">
+          <v-tooltip
+            :text="i18n.t('footer.checkSource')"
+          >
+            <template #activator="{ props }">
+              <a
                 :href="runtimeConfig.public.projectGitUrl"
                 target="_blank"
-              v-bind="props"
-            >
-              <v-icon :icon="mdiGithub"/>
-            </a>
+                v-bind="props"
+              >
+                <v-icon :icon="mdiGithub"/>
+              </a>
             </template>
-        </v-tooltip>
+          </v-tooltip>
 
-      </v-col>
-    </v-row>
-  </v-container>
-
+        </v-col>
+      </v-row>
+    </v-container>
   </v-footer>
 </template>
 
