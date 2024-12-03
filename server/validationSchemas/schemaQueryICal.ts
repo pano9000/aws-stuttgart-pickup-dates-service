@@ -20,7 +20,7 @@ export const schemaQueryICal = schemaQuery.extend({
   allDay: z.coerce.boolean().optional(),
   alarm: z.coerce.number().min(0).max(999_999).optional(),
   offsetEvent: z.coerce.number().min(0).max(999).optional(),
-  customSummary: z.string().max(600).optional()
+  customSummary: z.string().max(100).optional()
 })
 
 export type ApiQueryICal = z.infer<typeof schemaQueryICal>;
