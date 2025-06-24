@@ -6,6 +6,8 @@ import { useI18n } from "vue-i18n";
 export function useCustomI18n() {
   const i18n = useI18n();
 
+  //@TODO fix type errors
+  //@ts-expect-error - TS error: Property '"en-US"' is missing in type
   const multiMergeLocaleMessage = createMultiMergeLocaleMessageFunction(i18n);
 
   return {
