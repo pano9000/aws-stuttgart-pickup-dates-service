@@ -54,10 +54,15 @@
  const i18n = useI18n();
  const { cookieLanguage } = useCookieUserConfig();
 
+ //@TODO fix type errors
+ //@ts-expect-error - expects "de" | "en" but we pass it "string"
  i18n.locale.value = cookieLanguage.value;
 
  function setLanguage(localeCode: string) {
    cookieLanguage.value = localeCode;
+
+   //@TODO fix type errors
+   //@ts-expect-error - expects "de" | "en" but we pass it "string"
    i18n.locale.value = localeCode;
  }
 </script>
